@@ -1,0 +1,12 @@
+package de.themorpheus.edu.cli;
+
+import com.beust.jcommander.Parameter;
+
+import lombok.Data;
+
+@Data
+public class Options {
+	
+	@Parameter(names = {"--help", "-h"}, help = true, description = "Shows this help/usage page")
+	private boolean help;
+}
