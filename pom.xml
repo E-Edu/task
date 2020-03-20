@@ -10,6 +10,7 @@
 	</parent>
 	<groupId>de.the-morpheus.e-du</groupId>
 	<artifactId>task-service</artifactId>
+	
 	<version>0.1-SNAPSHOT</version>
 	<name>task-service</name>
 	<description>Task-Microservice</description>
