@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "subject")
+@Table(name = "task_subject")
 public class SubjectModel {
 
 	@Id
