@@ -3,7 +3,7 @@ package de.themorpheus.edu.taskservice;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import de.themorpheus.edu.cli.CLIManager;
+import de.themorpheus.edu.taskservice.cli.CLIManager;
 
 @SpringBootApplication
 public class TaskServiceApplication {
