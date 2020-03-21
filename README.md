@@ -4,8 +4,12 @@ This projects contains the source code for the task microservice which
 is responsible for everything related to tasks in the E-Edu system.
 
 ## How to build
+Run:
+```sudo docker build --tag eedu/taskms:latest .```
 
 ## How to start
+Run:
+```sudo docker-compose up```
 
 ## Contribute
 
