@@ -7,7 +7,8 @@ services:
     image: mariadb
     container_name: task_microservice_mariadb
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: "e-edu"
+      MYSQL_PASSWORD: "e-edu"
       MYSQL_DATABASE: task_microservice_db
     ports:
       - 3306:3306
