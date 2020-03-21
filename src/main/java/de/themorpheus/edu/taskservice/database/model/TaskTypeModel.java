@@ -13,4 +13,22 @@ public class TaskTypeModel {
 
 	private String displayName;
 
+	public TaskTypeModel() {
+	}
+
+	public int getTaskTypeId() {
+		return taskTypeId;
+	}
+
+	public void setTaskTypeId(int taskTypeId) {
+		this.taskTypeId = taskTypeId;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
 }
