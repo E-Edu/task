@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
 
@@ -21,6 +22,13 @@ public class TaskModel {
 	private String task;
 	private int necessaryPoints;
 	private boolean verified;
+
+	@ManyToOne
+	private SubjectModel subjectId;
+	@ManyToOne
+	private TaskTypeModel taskTypeId;
+	@ManyToOne
+	private DifficultyModel difficultyId;
 
 	public TaskModel(String task) {
 		this.task = task;
