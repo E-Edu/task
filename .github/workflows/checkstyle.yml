@@ -1,0 +1,15 @@
+name: Checkstyle
+
+on: [push, pull_request]
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    name: Checkstyle
+    steps:
+      - uses: actions/checkout@master
+      - name: Setup java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - run: mvn checkstyle:check
