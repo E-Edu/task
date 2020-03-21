@@ -43,8 +43,8 @@ public class CLIManager {
 			
 			if(optCommand.isPresent()) {
 				Command<?> command = optCommand.get();
-				CommandExecuter<JCommander, Object> executor = (CommandExecuter<JCommander, Object>) command.getExecuter();
-				executor.execute(commander, command.getArgs());
+				CommandExecuter<JCommander, Options, Object> executor = (CommandExecuter<JCommander, Options, Object>) command.getExecuter();
+				executor.execute(commander, options, command.getArgs());
 			}else {
 				commander.usage();
 			}

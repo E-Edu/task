@@ -11,9 +11,9 @@ public class Command<T> {
 	private String description;
 	private String[] alias;
 	private T args;
-	private CommandExecuter<JCommander, T> executer;
+	private CommandExecuter<JCommander, Options, T> executer;
 	
-	public Command(String name, String description, CommandExecuter<JCommander, T> executer,  Class<T> args, String... alias) throws InstantiationException, IllegalAccessException {
+	public Command(String name, String description, CommandExecuter<JCommander, Options,T> executer,  Class<T> args, String... alias) throws InstantiationException, IllegalAccessException {
 		this.name = name;
 		this.description = description;
 		this.alias = alias;
