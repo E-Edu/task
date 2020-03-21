@@ -1,9 +1,14 @@
 package de.themorpheus.edu.taskservice.database.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "solution")
 public class SolutionModel {
@@ -11,24 +16,7 @@ public class SolutionModel {
 	@Id
 	private int solutionId;
 
+	private TaskModel taskId;
 	private String solutionType;
 
-	public SolutionModel() {
-	}
-
-	public int getSolutionId() {
-		return solutionId;
-	}
-
-	public void setSolutionId(int solutionId) {
-		this.solutionId = solutionId;
-	}
-
-	public String getSolutionType() {
-		return solutionType;
-	}
-
-	public void setSolutionType(String solutionType) {
-		this.solutionType = solutionType;
-	}
 }
