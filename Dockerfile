@@ -1,4 +1,7 @@
 FROM adoptopenjdk/openjdk11:alpine-jre
+FROM mariadb:latest
+
+ENV PACKAGES openssh-server openssh-client
 
 WORKDIR /eedu
 
