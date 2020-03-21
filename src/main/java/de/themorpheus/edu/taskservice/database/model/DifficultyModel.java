@@ -13,4 +13,22 @@ public class DifficultyModel {
 
 	private String displayName;
 
+	public DifficultyModel() {
+	}
+
+	public int getDifficultyId() {
+		return difficultyId;
+	}
+
+	public void setDifficultyId(int difficultyId) {
+		this.difficultyId = difficultyId;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
 }
