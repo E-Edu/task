@@ -1,9 +1,14 @@
 package de.themorpheus.edu.taskservice.database.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "subject")
 public class SubjectModel {
@@ -11,24 +16,7 @@ public class SubjectModel {
 	@Id
 	private int subjectId;
 
+	private TaskModel taskId;
 	private String displayName;
 
-	public SubjectModel() {
-	}
-
-	public int getSubjectId() {
-		return subjectId;
-	}
-
-	public void setSubjectId(int subjectId) {
-		this.subjectId = subjectId;
-	}
-
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
 }
