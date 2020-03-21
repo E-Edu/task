@@ -7,7 +7,6 @@ import java.util.Scanner;
 
 import com.beust.jcommander.JCommander;
 
-import de.themorpheus.edu.cli.commands.HelpCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import de.themorpheus.edu.taskservice.cli.commands.HelpCommand;
