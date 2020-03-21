@@ -1,6 +1,6 @@
 # Please fill out with content
 
-version: '3'
+version: '3.7'
 
 services:
   task_microservice_mariadb:
