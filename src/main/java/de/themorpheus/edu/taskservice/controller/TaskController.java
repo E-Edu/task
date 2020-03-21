@@ -1,9 +1,10 @@
 package de.themorpheus.edu.taskservice.controller;
 
-import java.util.List;
 import de.themorpheus.edu.taskservice.database.model.TaskModel;
 import de.themorpheus.edu.taskservice.database.repository.LectureRepository;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +25,9 @@ public class TaskController {
 	}
 
 	public String verifyTask(int taskId) {
-		if (this.taskRepository.findById(taskId).isPresent()) {
-			TaskModel taskModel = this.taskRepository.findById(taskId).get();
+		Optional<TaskModel> query = this.taskRepository.findById(taskId);
+		if (query.isPresent()) {
+			TaskModel taskModel = query.get();
 			taskModel.setVerified(true);
 			this.taskRepository.save(taskModel);
 			return null;
