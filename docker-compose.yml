@@ -1,18 +1,32 @@
 version: '3.7'
 
 services:
-  task_microservice_mariadb:
-    image: mariadb
-    container_name: task_microservice_mariadb
+  task_database:
+    image: mariadb:latest
+    container_name: task_database
+    restart: always
     environment:
-      DATABASE_USER: ${DATABASE_USERNAME}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      DATABASE_DATABASE: ${DATABASE_DATABASE}
+      MYSQL_USER: e-edu
+      MYSQL_PASSWORD: e-edu
+      MYSQL_DATABASE: e-edu
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes' 
     ports:
       - 3306:3306
     volumes:
-      - task_microservice_mariadb_data:/var/lib/
+      - ./task-microservice-mariadb-data:/var/lib/mysql
 
-volumes:
-  task_microservice_mariadb_data:
-    
+  task:
+    image: eedu/taskms
+    container_name: task
+    restart: always
+    ports:
+      - 5000:5000
+    environment:
+      DATABASE_HOSTNAME: task_database
+      DATABASE_PORT: 3306
+      DATABASE_USERNAME: e-edu
+      DATABASE_PASSWORD: e-edu
+      DATABASE_DATABASE: e-edu
+      JWT_SECRET: SECRET
+      SERVICE_SECRET: SECRET
+
