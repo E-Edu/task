@@ -8,10 +8,13 @@ import java.util.Scanner;
 import com.beust.jcommander.JCommander;
 
 import de.themorpheus.edu.cli.commands.HelpCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CLIManager {
 
 	private static final List<Command<?>> commands = new ArrayList<>();
+	private static final Logger LOGGER = LoggerFactory.getLogger(CLIManager.class.getSimpleName());
 	
 	@SuppressWarnings(value = {"unchecked", "resource"})
 	public static void initCli(String... args) {
@@ -22,7 +25,7 @@ public class CLIManager {
 			Command<HelpCommand> command = new Command<HelpCommand>("help", "show important Commands", HelpCommand::execute, HelpCommand.class, "h");
 			commands.add(command);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			LOGGER.error("Error occured while creating commands.", ex);
 		}
 		
 		for (Command<?> c : commands) builder.addCommand(c.getName(), c, c.getAlias());
