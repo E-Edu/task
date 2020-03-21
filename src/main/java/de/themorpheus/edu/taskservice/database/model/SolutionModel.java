@@ -10,13 +10,13 @@ import javax.persistence.Table;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "task_lecture")
-public class LectureModel {
+@Table(name = "task_solution")
+public class SolutionModel {
 
 	@Id
-	private int lectureId;
+	private int solutionId;
 
-	private ModuleModel moduleId;
-	private String displayName;
+	private TaskModel taskId;
+	private String solutionType;
 
 }
