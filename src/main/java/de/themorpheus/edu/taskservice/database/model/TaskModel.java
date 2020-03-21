@@ -1,13 +1,12 @@
 package de.themorpheus.edu.taskservice.database.model;
 
-import lombok.Data;
-
+import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.UUID;
+import lombok.Data;
 
 @Data
 @Entity
@@ -15,7 +14,7 @@ import java.util.UUID;
 public class TaskModel {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int taskId;
 
 	private UUID authorId;
