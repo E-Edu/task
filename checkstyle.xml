@@ -12,7 +12,6 @@
 
 	<!-- Allow ignoring things with @SuppressWarnings or comment -->
 	<module name="SuppressWarningsFilter"/>
-	<module name="SuppressionCommentFilter"/>
 
 	<!--Check for trailing spaces -->
 	<module name="RegexpSingleline">
@@ -24,9 +23,10 @@
 
 	<module name="TreeWalker">
 
+		<module name="SuppressionCommentFilter" />
+
 		<!-- Ignore if SuppressWarnings or comment -->
 		<module name="SuppressWarningsHolder"/>
-		<module name="FileContentsHolder"/>
 
 		<!-- Check if Methods, Classes, Interfaces and Enums have a Javadoc Comments -->
 		<module name="JavadocMethod"/>
