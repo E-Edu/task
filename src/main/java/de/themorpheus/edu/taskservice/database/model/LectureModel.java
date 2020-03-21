@@ -1,7 +1,6 @@
 package de.themorpheus.edu.taskservice.database.model;
 
 import com.sun.istack.NotNull;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
