@@ -1,9 +1,9 @@
 package de.themorpheus.edu.taskservice.endpoint;
 
-import java.util.List;
 import de.themorpheus.edu.taskservice.controller.TaskController;
 import de.themorpheus.edu.taskservice.database.model.TaskModel;
 import de.themorpheus.edu.taskservice.util.Validation;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
