@@ -13,4 +13,22 @@ public class SolutionModel {
 
 	private String solutionType;
 
+	public SolutionModel() {
+	}
+
+	public int getSolutionId() {
+		return solutionId;
+	}
+
+	public void setSolutionId(int solutionId) {
+		this.solutionId = solutionId;
+	}
+
+	public String getSolutionType() {
+		return solutionType;
+	}
+
+	public void setSolutionType(String solutionType) {
+		this.solutionType = solutionType;
+	}
 }
