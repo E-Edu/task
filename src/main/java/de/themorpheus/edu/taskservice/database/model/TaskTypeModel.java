@@ -18,7 +18,6 @@ public class TaskTypeModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int taskTypeId;
 
-	private TaskModel taskId;
 	private String displayName;
 
 }

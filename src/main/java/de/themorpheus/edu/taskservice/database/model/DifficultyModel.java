@@ -18,7 +18,6 @@ public class DifficultyModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int difficultyId;
 
-	private TaskModel taskId;
 	private String displayName;
 
 }
