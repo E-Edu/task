@@ -10,4 +10,8 @@ public class Validation {
 		return value != null;
 	}
 
+	public static boolean greaterZero(long value) {
+		return value > 0;
+	}
+
 }
