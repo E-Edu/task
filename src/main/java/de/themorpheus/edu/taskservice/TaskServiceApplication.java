@@ -9,11 +9,10 @@ import de.themorpheus.edu.cli.CLIManager;
 public class TaskServiceApplication {
 
 	public static void main(String[] args) {
-		
+
 		SpringApplication.run(TaskServiceApplication.class, args);
-		
+
 		CLIManager.initCli(args);
-		
 	}
 
 }
