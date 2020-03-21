@@ -7,6 +7,7 @@ import de.themorpheus.edu.cli.Options;
 
 @Parameters(commandDescription = "Shows the help/usage page")
 public class HelpCommand {
+	
 	public static void execute(JCommander commander, Options options, HelpCommand cmd) {
 		commander.usage();
 	}

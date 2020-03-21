@@ -21,7 +21,7 @@ public class CLIManager {
 		try {
 			Command<HelpCommand> cmd = new Command<HelpCommand>("help", "show important Commands", HelpCommand::execute, HelpCommand.class, "h");
 			commands.add(cmd);
-		}catch(Exception e) {
+		}catch (Exception ex) {
 			System.out.println("Es konnten keine Commands hinzugefuegt werden.");
 		}
 		

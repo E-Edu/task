@@ -3,22 +3,19 @@ package de.themorpheus.edu.cli;
 import com.beust.jcommander.JCommander;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
-@Data
+@Data @RequiredArgsConstructor
 public class Command<T> {
 	
-	private String name;
-	private String description;
-	private String[] alias;
+	private final String name;
+	private final String description;
+	private final String[] alias;
 	private T args;
-	private CommandExecuter<JCommander, Options, T> executer;
+	private final CommandExecuter<JCommander, Options, T> executer;
 	
 	public Command(String name, String description, CommandExecuter<JCommander, Options,T> executer,  Class<T> args, String... alias) throws InstantiationException, IllegalAccessException {
-		this.name = name;
-		this.description = description;
-		this.alias = alias;
+		this(description, description, alias, executer);
 		this.args = args.newInstance();
-		this.executer = executer;
 	}
 }
-
