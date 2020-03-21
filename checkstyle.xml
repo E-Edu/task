@@ -11,8 +11,8 @@
 	</module>
 
 	<!-- Allow ignoring things with @SuppressWarnings or comment -->
-	<module name="SuppressWarningsFilter" />
-	<module name="SuppressionCommentFilter" />
+	<module name="SuppressWarningsFilter"/>
+	<module name="SuppressionCommentFilter"/>
 
 	<!--Check for trailing spaces -->
 	<module name="RegexpSingleline">
@@ -26,7 +26,7 @@
 
 		<!-- Ignore if SuppressWarnings or comment -->
 		<module name="SuppressWarningsHolder"/>
-		<module name="FileContentsHolder" />
+		<module name="FileContentsHolder"/>
 
 		<!-- Check if Methods, Classes, Interfaces and Enums have a Javadoc Comments -->
 		<module name="JavadocMethod"/>
@@ -41,7 +41,8 @@
 		</module>
 		<module name="JavadocParagraph"/>
 		<module name="AtclauseOrder">
-			<property name="tagOrder" value="@version, @param, @return, @throws, @exception, @see, @since, @serial, @serialField, @serialData, @deprecated"/>
+			<property name="tagOrder"
+					  value="@version, @param, @return, @throws, @exception, @see, @since, @serial, @serialField, @serialData, @deprecated"/>
 			<property name="target" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
 		</module>
 		<module name="NonEmptyAtclauseDescription"/>
@@ -72,7 +73,8 @@
 
 		<!-- Check empty line separators -->
 		<module name="EmptyLineSeparator">
-			<property name="tokens" value="IMPORT, CLASS_DEF, INTERFACE_DEF, ENUM_DEF, STATIC_INIT, INSTANCE_INIT, METHOD_DEF, CTOR_DEF"/>
+			<property name="tokens"
+					  value="IMPORT, CLASS_DEF, INTERFACE_DEF, ENUM_DEF, STATIC_INIT, INSTANCE_INIT, METHOD_DEF, CTOR_DEF"/>
 		</module>
 
 		<!-- Check default is at end of switch if there is one -->

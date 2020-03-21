@@ -14,22 +14,21 @@ public class TaskEndpoint {
 	@Autowired
 	private TaskController taskController;
 
-    @GetMapping(value = "/task")
-    public String getTasks(Model model) {
-        return null;
-    }
+	@GetMapping(value = "/task")
+	public String getTasks(Model model) {
+		return null;
+	}
 
-    @GetMapping(value = "/task/{taskId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/task/{taskId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getTask(int taskId) {
 		return null;
 	}
 
 	@PostMapping(value = "/task", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String createTask() {
-    	this.taskController.createTask("TestTask");
+		this.taskController.createTask("TestTask");
 		return null;
 	}
-
 
 	public String getAllTask(Model model) {
 		return null;

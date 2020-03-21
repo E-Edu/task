@@ -9,7 +9,7 @@ services:
       MYSQL_USER: e-edu
       MYSQL_PASSWORD: e-edu
       MYSQL_DATABASE: e-edu
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes' 
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     ports:
       - 3306:3306
     volumes:
