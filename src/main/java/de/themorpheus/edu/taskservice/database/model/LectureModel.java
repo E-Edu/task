@@ -18,7 +18,6 @@ public class LectureModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int lectureId;
 
-	private ModuleModel moduleId;
 	private String displayName;
 
 }
