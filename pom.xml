@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>de.the-morpheus.e-du</groupId>
-	<artifactId>task-service</artifactId>
-	<version>0.1-SNAPSHOT</version>
-	<name>task-service</name>
+	<artifactId>task-service</artifactId> <!-- D NOT CHANGE this! -->
+	<version>0.1-SNAPSHOT</version> <!-- D NOT CHANGE this! -->
+	<name>task-service</name> <!-- D NOT CHANGE this! -->
 	<description>Task-Microservice</description>
 
 	<properties>
