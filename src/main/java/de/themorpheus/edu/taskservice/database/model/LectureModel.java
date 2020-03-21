@@ -1,44 +1,24 @@
 package de.themorpheus.edu.taskservice.database.model;
 
-import com.sun.istack.NotNull;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 @Entity
-@Table(name = "module")
+@Table(name = "task_lecture")
 public class LectureModel {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private int moduleId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int lectureId;
 
-	@NotNull
+	private ModuleModel moduleId;
 	private String displayName;
-
-	public LectureModel() {
-	}
-
-	public LectureModel(String displayName) {
-		this.displayName = displayName;
-	}
-
-	public int getModuleId() {
-		return moduleId;
-	}
-
-	public void setModuleId(int moduleId) {
-		this.moduleId = moduleId;
-	}
-
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
 
 }

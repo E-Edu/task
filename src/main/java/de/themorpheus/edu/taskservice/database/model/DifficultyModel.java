@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "task_subject")
-public class SubjectModel {
+@Table(name = "task_difficulty")
+public class DifficultyModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int subjectId;
+	private int difficultyId;
 
 	private TaskModel taskId;
 	private String displayName;
