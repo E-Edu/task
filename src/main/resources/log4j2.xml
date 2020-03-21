@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout>
+				<pattern>%style{[}{dim,white}%d{HH:mm:ss}%style{][}{dim,white}%highlight{%-5.5level{INFO=INFO,
+					WARN=WARN, ERROR=ERROR, DEBUG=DEBUG}}{ERROR=red, DEBUG=blue,
+					INFO=green}%style{][}{dim,white}%style{%logger}{dark,cyan}%style{]}{dim,white}:
+					%highlight{%msg%n%throwable}{ERROR=red, DEBUG=blue, INFO=default}
+				</pattern>
+			</PatternLayout>
+		</Console>
+		<RollingRandomAccessFile name="Logfile" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout pattern="[%d{dd MMM HH:mm:ss}][%level][%logger]: %msg%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy/>
+				<OnStartupTriggeringPolicy/>
+			</Policies>
+		</RollingRandomAccessFile>
+	</Appenders>
+
+	<Loggers>
+		<Root level="debug">
+			<AppenderRef ref="Logfile"/>
+			<AppenderRef ref="Console" level="debug"/>
+		</Root>
+		<Logger name="org.reflections" level="off"/>
+	</Loggers>
+</Configuration>
