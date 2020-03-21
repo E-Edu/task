@@ -1,4 +1,4 @@
-package de.themorpheus.edu.cli;
+package de.themorpheus.edu.taskservice.cli;
 
 @FunctionalInterface
 public interface CommandExecuter<F, S, T> {

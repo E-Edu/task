@@ -1,4 +1,4 @@
-package de.themorpheus.edu.cli;
+package de.themorpheus.edu.taskservice.cli;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ import com.beust.jcommander.JCommander;
 import de.themorpheus.edu.cli.commands.HelpCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import de.themorpheus.edu.taskservice.cli.commands.HelpCommand;
 
 public class CLIManager {
 
