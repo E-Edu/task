@@ -36,7 +36,7 @@ public class CLIManager {
 		String line = null;
 		Scanner scanner = new Scanner(System.in);
 		
-		while (!Thread.currentThread().isInterrupted()) {
+		while (!Thread.currentThread().isInterrupted() && scanner.hasNextLine()) {
 			line = scanner.nextLine();
 			commander.parse(line.split(" "));
 			
