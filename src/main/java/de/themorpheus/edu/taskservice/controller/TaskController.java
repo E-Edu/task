@@ -12,7 +12,7 @@ public class TaskController {
 	private TaskRepository taskRepository;
 
 	public void createTask(String task) {
-		this.taskRepository.saveTask(new TaskModel(task));
+		this.taskRepository.save(new TaskModel(task));
 	}
 
 }

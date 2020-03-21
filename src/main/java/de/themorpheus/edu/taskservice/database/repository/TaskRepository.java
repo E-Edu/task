@@ -9,6 +9,4 @@ public interface TaskRepository extends JpaRepository<TaskModel, Integer> {
 
 	TaskModel getTaskByTaskId(int taskId);
 
-	void saveTask(TaskModel taskModel);
-
 }
