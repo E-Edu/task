@@ -1,3 +1,19 @@
 # Please fill out with content
 
-version: '3.7'
+version: '3'
+
+services:
+  task_microservice_mariadb:
+    image: mariadb
+    container_name: task_microservice_mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: task_microservice_db
+    ports:
+      - 3306:3306
+    volumes:
+      - task_microservice_mariadb_data:/var/lib/
+
+volumes:
+  task_microservice_mariadb_data:
+    
