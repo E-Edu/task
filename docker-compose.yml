@@ -5,9 +5,9 @@ services:
     image: mariadb
     container_name: task_microservice_mariadb
     environment:
-      MYSQL_USER: ${DATABASE_USERNAME}
-      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
-      MYSQL_DATABASE: ${DATABASE_DATABASE}
+      DATABASE_USER: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_DATABASE: ${DATABASE_DATABASE}
     ports:
       - 3306:3306
     volumes:
