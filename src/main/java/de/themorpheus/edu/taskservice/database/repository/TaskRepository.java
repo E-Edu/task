@@ -9,6 +9,6 @@ public interface TaskRepository extends CrudRepository<TaskModel, Integer> {
 
 	TaskModel getTaskByTaskId(int taskId);
 
-	int createTask(TaskModel taskModel);
+	void saveTask(TaskModel taskModel);
 
 }
