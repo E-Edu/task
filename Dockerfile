@@ -1,5 +1,4 @@
 FROM adoptopenjdk/openjdk11:alpine-jre
-FROM mariadb:latest
 
 WORKDIR /eedu
 
