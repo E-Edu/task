@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class LectureModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int moduleId;
 
     @NotNull
