@@ -40,13 +40,14 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.12</version>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
 		    <groupId>com.beust</groupId>
-		    <artifactId>jcommander</artifactId>
-		    <version>1.78</version>
+			<artifactId>jcommander</artifactId>
+			<version>1.78</version>
+			<scope>compile</scope>
 		</dependency>
 		
 		

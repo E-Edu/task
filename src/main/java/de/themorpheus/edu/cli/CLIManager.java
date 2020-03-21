@@ -13,25 +13,24 @@ public class CLIManager {
 
 	private static final List<Command<?>> commands = new ArrayList<>();
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(value = {"unchecked", "resource"})
 	public static void initCli(String... args) {
 		
 		JCommander.Builder builder = JCommander.newBuilder().acceptUnknownOptions(true).programName("E-Edu");
 		
 		try {
-			Command<HelpCommand> cmd = new Command<HelpCommand>("help", "show important Commands", HelpCommand::execute, HelpCommand.class, "h");
-			commands.add(cmd);
-		}catch (Exception ex) {
-			System.out.println("Es konnten keine Commands hinzugefuegt werden.");
+			Command<HelpCommand> command = new Command<HelpCommand>("help", "show important Commands", HelpCommand::execute, HelpCommand.class, "h");
+			commands.add(command);
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 		
-		for(Command<?> c : commands) builder.addCommand(c.getName(), c, c.getAlias());
+		for (Command<?> c : commands) builder.addCommand(c.getName(), c, c.getAlias());
 			
 		Options options = new Options();
 		JCommander commander = builder.addObject(options).build();
 		
 		String line = null;
-		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		
 		while (!Thread.currentThread().isInterrupted()) {
@@ -41,11 +40,11 @@ public class CLIManager {
 			String cmdName = commander.getParsedCommand();
 			Optional<Command<?>> optCommand = commands.stream().filter(c -> c.getName().equalsIgnoreCase(cmdName)).findAny();
 			
-			if(optCommand.isPresent()) {
+			if (optCommand.isPresent()) {
 				Command<?> command = optCommand.get();
 				CommandExecuter<JCommander, Options, Object> executor = (CommandExecuter<JCommander, Options, Object>) command.getExecuter();
 				executor.execute(commander, options, command.getArgs());
-			}else {
+			} else {
 				commander.usage();
 			}
 		}
