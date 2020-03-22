@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LectureRepository extends JpaRepository<LectureModel, Integer> {
 
+	void deleteLectureByDisplayNameIgnoreCase(String displayName);
+
 	LectureModel getLectureByLectureId(int lectureId);
 
 	LectureModel getLectureByDisplayNameIgnoreCase(String displayName);

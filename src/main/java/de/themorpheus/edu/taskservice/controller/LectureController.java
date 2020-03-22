@@ -28,6 +28,11 @@ public class LectureController {
 
 	public ControllerResult<List<LectureModel>> getAllLectures() {
 		return ControllerResult.of(this.lectureRepository.findAll());
+
+	}
+
+	public void deleteLecture(String displayName) {
+		this.lectureRepository.deleteLectureByDisplayNameIgnoreCase(displayName);
 	}
 
 	public ControllerResult<List<LectureModel>> getAllLecturesFromModule(String moduleDisplayName) {
