@@ -2,6 +2,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.DifficultyController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateDifficultyDTO;
+import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +20,19 @@ public class DifficultyEndpoint {
 
 	@PostMapping(value = "/difficulty", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createDifficulty(@RequestBody @Valid CreateDifficultyDTO dto) {
-		return this.difficultyController.createDifficulty(dto.getDisplayName());
+		return this.difficultyController.createDifficulty(dto.getDisplayName()).getHttpResponse();
 	}
 
 	@GetMapping("/difficulty/{displayName}")
 	public Object getDifficulty(@PathVariable String displayName) {
 		if (Validation.nullOrEmpty(displayName)) return Error.INVALID_PARAM;
 
-		return this.difficultyController.getDifficultyByDisplayName(displayName);
+		return this.difficultyController.getDifficultyByDisplayName(displayName).getHttpResponse();
 	}
 
 	@GetMapping("/difficulty")
 	public Object getDifficulties() {
-		return this.difficultyController.getAllDifficulties();
+		return this.difficultyController.getAllDifficulties().getHttpResponse();
 	}
 
 }
