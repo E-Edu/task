@@ -16,7 +16,6 @@ public class SubjectController {
 
 	@Autowired private SubjectRepository subjectRepository;
 
-
 	public ControllerResult<SubjectModel> createSubject(String displayName) {
 		if (doesSubjectExist(displayName)) return ControllerResult.of(Error.INVALID_PARAM); // TODO: change this
 
@@ -42,7 +41,7 @@ public class SubjectController {
 		this.subjectRepository.deleteById(subjectModel.getSubjectId());
 	}
 
-	private boolean doesSubjectExist(String displayName) {
+	public boolean doesSubjectExist(String displayName) {
 		SubjectModel subjectModel = this.subjectRepository.getSubjectByDisplayNameIgnoreCase(displayName);
 
 		return subjectModel != null;
