@@ -14,6 +14,9 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.el.EvaluationListener;
+import javax.validation.Valid;
+
 @Component
 public class TaskController {
 
@@ -81,24 +84,31 @@ public class TaskController {
 							 String lectureDisplayName, String difficultyDisplayName) {
 		TaskModel taskModel = this.taskRepository.getTaskByTaskId(taskId);
 
-		LectureModel lectureModel = this.lectureRepository
-											.getLectureByDisplayNameIgnoreCase(lectureDisplayName);
-		TaskTypeModel taskTypeModel = this.taskTypeRepository
-											.getTaskTypeByDisplayNameIgnoreCase(taskTypeDisplayName);
-		DifficultyModel difficultyModel = this.difficultyRepository
-											.getDifficultyByDisplayNameIgnoreCase(difficultyDisplayName);
+		if (Validation.validateNull(taskModel)) return null;
 
-		if (Validation.validateNull(
-					taskModel,
-					lectureModel,
-					taskTypeModel,
-					difficultyModel)) return null;
+		if (Validation.validateNotNullOrEmpty(lectureDisplayName)) {
+			LectureModel lectureModel = this.lectureRepository
+				.getLectureByDisplayNameIgnoreCase(lectureDisplayName);
+			taskModel.setLectureId(lectureModel);
+		}
 
-		taskModel.setTask(task);
-		taskModel.setNecessaryPoints(necessaryPoints);
-		taskModel.setLectureId(lectureModel);
-		taskModel.setTaskTypeId(taskTypeModel);
-		taskModel.setDifficultyId(difficultyModel);
+		if (Validation.validateNotNullOrEmpty(taskTypeDisplayName)) {
+			TaskTypeModel taskTypeModel = this.taskTypeRepository
+				.getTaskTypeByDisplayNameIgnoreCase(taskTypeDisplayName);
+			taskModel.setTaskTypeId(taskTypeModel);
+		}
+
+		if (Validation.validateNotNullOrEmpty(difficultyDisplayName)) {
+			DifficultyModel difficultyModel = this.difficultyRepository
+				.getDifficultyByDisplayNameIgnoreCase(difficultyDisplayName);
+			taskModel.setDifficultyId(difficultyModel);
+		}
+
+		if (Validation.validateNotNullOrEmpty(task))
+			taskModel.setTask(task);
+
+		if (Validation.validateNotNull(necessaryPoints) && Validation.greaterZero(necessaryPoints))
+			taskModel.setNecessaryPoints(necessaryPoints);
 
 		return this.taskRepository.save(taskModel);
 	}
