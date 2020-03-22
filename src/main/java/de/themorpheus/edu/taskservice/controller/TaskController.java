@@ -7,12 +7,15 @@ import de.themorpheus.edu.taskservice.database.model.TaskTypeModel;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
 import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TaskController {
+
+	private static final Random RANDOM = new Random();
 
 	@Autowired private TaskRepository taskRepository;
 
@@ -45,6 +48,20 @@ public class TaskController {
 		);
 
 		return this.taskRepository.save(taskModel);
+	}
+
+	public TaskModel getNextTask(List<Integer> finishedTaskIds) {
+		TaskModel taskModel = this.taskRepository.getTaskByTaskId(finishedTaskIds.get(0));
+		if (taskModel == null) return null;
+
+		LectureModel lectureModel = taskModel.getLectureId();
+		if (lectureModel == null) return null;
+
+		List<TaskModel> taskModels = this.taskRepository.getAllTasksByLectureId(lectureModel);
+		taskModels.removeIf(tm -> finishedTaskIds.contains(tm.getTaskId())); //TODO: Use SQL query
+		if (taskModels.isEmpty()) return null; //TODO: return all tasks done (9xx)
+
+		return taskModels.get(RANDOM.nextInt(taskModels.size()));
 	}
 
 	public List<TaskModel> getAllTasks() {
