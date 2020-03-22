@@ -11,6 +11,9 @@ Run:
 Run:
 ```sudo docker-compose up```
 
+or in detached mode:
+```sudo docker-compose up -d```
+
 ## Contribute
 
 You want to contribute to this project? Great!
