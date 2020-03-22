@@ -9,7 +9,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TaskEndpoint {
@@ -44,7 +50,7 @@ public class TaskEndpoint {
 		return this.taskController.verifyTask(taskId);
 	}
 
-	@PutMapping(path = "/task/{taskId}"	)
+	@PutMapping(path = "/task/{taskId}")
 	public Object updateTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid UpdateTaskDTO updateTaskDTO) {
 		return this.taskController.updateTask(
 			taskId,
