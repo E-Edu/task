@@ -2,6 +2,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.TaskController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.GetNextTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
 import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.UUID;
@@ -61,6 +62,12 @@ public class TaskEndpoint {
 			updateTaskDTO.getLectureDisplayName(),
 			updateTaskDTO.getDifficultyDisplayName()
 		);
+	}
+
+	@PostMapping("/task/next")
+	public Object nextTask(@RequestBody @Valid GetNextTaskDTO dto) {
+		return this.taskController.getNextTask(dto.getLastTaskIds());
+	}
 
 	@DeleteMapping("/task/{taskId}")
 	public Object deleteTask(@PathVariable @Min(0) int taskId) {
