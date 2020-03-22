@@ -4,10 +4,7 @@ import de.themorpheus.edu.taskservice.database.model.DifficultyModel;
 import de.themorpheus.edu.taskservice.database.model.LectureModel;
 import de.themorpheus.edu.taskservice.database.model.TaskModel;
 import de.themorpheus.edu.taskservice.database.model.TaskTypeModel;
-import de.themorpheus.edu.taskservice.database.repository.DifficultyRepository;
-import de.themorpheus.edu.taskservice.database.repository.LectureRepository;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
-import de.themorpheus.edu.taskservice.database.repository.TaskTypeRepository;
 import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.List;
 import java.util.UUID;
@@ -18,9 +15,6 @@ import org.springframework.stereotype.Component;
 public class TaskController {
 
 	@Autowired private TaskRepository taskRepository;
-	@Autowired private LectureRepository lectureRepository;
-	@Autowired private TaskTypeRepository taskTypeRepository;
-	@Autowired private DifficultyRepository difficultyRepository;
 
 	@Autowired private LectureController lectureController;
 	@Autowired private TaskTypeController taskTypeController;
@@ -89,12 +83,12 @@ public class TaskController {
 
 		if (Validation.validateNull(taskModel)) return null;
 
-		LectureModel lectureModel = this.lectureRepository
-			.getLectureByDisplayNameIgnoreCase(lectureDisplayName);
-		TaskTypeModel taskTypeModel = this.taskTypeRepository
-			.getTaskTypeByDisplayNameIgnoreCase(taskTypeDisplayName);
-		DifficultyModel difficultyModel = this.difficultyRepository
-			.getDifficultyByDisplayNameIgnoreCase(difficultyDisplayName);
+		LectureModel lectureModel = this.lectureController
+			.getLectureByDisplayName(lectureDisplayName);
+		TaskTypeModel taskTypeModel = this.taskTypeController
+			.getTaskTypeByDisplayName(taskTypeDisplayName);
+		DifficultyModel difficultyModel = this.difficultyController
+			.getDifficultyByDisplayName(difficultyDisplayName);
 
 		if (Validation.validateNotNull(lectureModel))
 			taskModel.setLectureId(lectureModel);
