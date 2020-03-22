@@ -1,6 +1,5 @@
 package de.themorpheus.edu.taskservice.controller;
 
-
 import de.themorpheus.edu.taskservice.database.model.SubjectModel;
 import de.themorpheus.edu.taskservice.database.repository.SubjectRepository;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
