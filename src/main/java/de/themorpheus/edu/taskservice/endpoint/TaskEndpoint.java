@@ -63,7 +63,7 @@ public class TaskEndpoint {
 		return this.taskController.getNextTask(dto.getLastTaskIds());
 	}
 
-  @DeleteMapping("/task/{taskId}")
+	@DeleteMapping("/task/{taskId}")
 	public Object deleteTask(@PathVariable @Min(0) int taskId) {
 		this.taskController.deleteTask(taskId);
 		return null;

@@ -64,7 +64,7 @@ public class TaskController {
 		return taskModels.get(RANDOM.nextInt(taskModels.size()));
 	}
 
-  public void deleteTask(int taskId) {
+	public void deleteTask(int taskId) {
 		this.taskRepository.deleteById(taskId);
 		//TODO delete solution
 	}
