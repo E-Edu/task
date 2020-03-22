@@ -5,6 +5,10 @@ import de.themorpheus.edu.taskservice.endpoint.dto.CreateSubjectDTO;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,17 +25,11 @@ public class SubjectEndpoint {
 
 	@PostMapping(value = "/subject", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createSubject(@RequestBody @Valid CreateSubjectDTO dto) {
-		String displayName = dto.getDisplayName();
-
-		if (Validation.validateNull(displayName)) return Error.INVALID_PARAM;
-
-		if (this.subjectController.doesSubjectExist(displayName)) return Error.ALREADY_EXISTS;
-
-		return this.subjectController.createSubject(displayName);
+		return this.subjectController.createSubject(dto.getDisplayName());
 	}
 
 	@GetMapping("/subject/{displayName}")
-	public Object getSubject(@PathVariable @Valid String displayName) {
+	public Object getSubject(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
 		return this.subjectController.getSubjectByDisplayName(displayName).getHttpResponse();
 	}
 
@@ -41,7 +39,7 @@ public class SubjectEndpoint {
 	}
 
 	@DeleteMapping(path = "/subject/{displayName}")
-	public void deleteSubject(@PathVariable @Valid String displayName) {
+	public void deleteSubject(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
 		this.subjectController.deleteSubject(displayName);
 	}
 
