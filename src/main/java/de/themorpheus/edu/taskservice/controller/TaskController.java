@@ -83,23 +83,21 @@ public class TaskController {
 
 		if (Validation.validateNull(taskModel)) return null;
 
-		if (Validation.validateNotNullOrEmpty(lectureDisplayName)) {
-			LectureModel lectureModel = this.lectureRepository
-				.getLectureByDisplayNameIgnoreCase(lectureDisplayName);
+		LectureModel lectureModel = this.lectureRepository
+			.getLectureByDisplayNameIgnoreCase(lectureDisplayName);
+		TaskTypeModel taskTypeModel = this.taskTypeRepository
+			.getTaskTypeByDisplayNameIgnoreCase(taskTypeDisplayName);
+		DifficultyModel difficultyModel = this.difficultyRepository
+			.getDifficultyByDisplayNameIgnoreCase(difficultyDisplayName);
+
+		if (Validation.validateNotNull(lectureModel))
 			taskModel.setLectureId(lectureModel);
-		}
 
-		if (Validation.validateNotNullOrEmpty(taskTypeDisplayName)) {
-			TaskTypeModel taskTypeModel = this.taskTypeRepository
-				.getTaskTypeByDisplayNameIgnoreCase(taskTypeDisplayName);
+		if (Validation.validateNotNull(taskTypeModel))
 			taskModel.setTaskTypeId(taskTypeModel);
-		}
 
-		if (Validation.validateNotNullOrEmpty(difficultyDisplayName)) {
-			DifficultyModel difficultyModel = this.difficultyRepository
-				.getDifficultyByDisplayNameIgnoreCase(difficultyDisplayName);
+		if (Validation.validateNotNull(difficultyModel))
 			taskModel.setDifficultyId(difficultyModel);
-		}
 
 		if (Validation.validateNotNullOrEmpty(task))
 			taskModel.setTask(task);
