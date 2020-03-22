@@ -20,7 +20,9 @@ public class SubjectEndpoint {
 
 	@PostMapping(value = "/subject", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createSubject(@RequestBody @Valid CreateSubjectDTO dto) {
-		return this.subjectController.createSubject(dto.getDisplayName()).getHttpResponse();
+		if (!Validation.validateNotNullOrEmpty(dto.getDisplayName())) return Error.INVALID_PARAM;
+		
+		return this.subjectController.createSubject(dto.getDisplayName());
 	}
 
 	@GetMapping("/subject/{displayName}")
