@@ -5,8 +5,8 @@ import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
 import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.UUID;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,10 +56,7 @@ public class TaskEndpoint {
 		path = "/task/{taskId}",
 		consumes = MediaType.APPLICATION_JSON_VALUE
 	)
-	@Transactional
-	public Object updateTask(@PathVariable int taskId, @RequestBody UpdateTaskDTO updateTaskDTO) {
-		if (!Validation.greaterOrEqualZero(taskId)) return null;
-
+	public Object updateTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid UpdateTaskDTO updateTaskDTO) {
 		return this.taskController.updateTask(
 			taskId,
 			updateTaskDTO.getTask(),
