@@ -4,7 +4,10 @@ import de.themorpheus.edu.taskservice.database.model.DifficultyModel;
 import de.themorpheus.edu.taskservice.database.model.LectureModel;
 import de.themorpheus.edu.taskservice.database.model.TaskModel;
 import de.themorpheus.edu.taskservice.database.model.TaskTypeModel;
+import de.themorpheus.edu.taskservice.database.repository.DifficultyRepository;
+import de.themorpheus.edu.taskservice.database.repository.LectureRepository;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
+import de.themorpheus.edu.taskservice.database.repository.TaskTypeRepository;
 import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +18,9 @@ import org.springframework.stereotype.Component;
 public class TaskController {
 
 	@Autowired private TaskRepository taskRepository;
+	@Autowired private LectureRepository lectureRepository;
+	@Autowired private TaskTypeRepository taskTypeRepository;
+	@Autowired private DifficultyRepository difficultyRepository;
 
 	@Autowired private LectureController lectureController;
 	@Autowired private TaskTypeController taskTypeController;
@@ -71,4 +77,29 @@ public class TaskController {
 		return this.taskRepository.save(task);
 	}
 
+	public Object updateTask(int taskId, String task, int necessaryPoints, String taskTypeDisplayName,
+							 String lectureDisplayName, String difficultyDisplayName) {
+		TaskModel taskModel = this.taskRepository.getTaskByTaskId(taskId);
+
+		LectureModel lectureModel = this.lectureRepository
+											.getLectureByDisplayNameIgnoreCase(lectureDisplayName);
+		TaskTypeModel taskTypeModel = this.taskTypeRepository
+											.getTaskTypeByDisplayNameIgnoreCase(taskTypeDisplayName);
+		DifficultyModel difficultyModel = this.difficultyRepository
+											.getDifficultyByDisplayNameIgnoreCase(difficultyDisplayName);
+
+		if (Validation.validateNull(
+					taskModel,
+					lectureModel,
+					taskTypeModel,
+					difficultyModel)) return null;
+
+		taskModel.setTask(task);
+		taskModel.setNecessaryPoints(necessaryPoints);
+		taskModel.setLectureId(lectureModel);
+		taskModel.setTaskTypeId(taskTypeModel);
+		taskModel.setDifficultyId(difficultyModel);
+
+		return this.taskRepository.save(taskModel);
+	}
 }
