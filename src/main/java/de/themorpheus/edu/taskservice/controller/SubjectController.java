@@ -16,7 +16,7 @@ public class SubjectController {
 	@Autowired private SubjectRepository subjectRepository;
 
 	public ControllerResult<SubjectModel> createSubject(String displayName) {
-		if (doesSubjectExist(displayName)) return ControllerResult.of(Error.INVALID_PARAM); // TODO: change this
+		if (doesSubjectExist(displayName)) return ControllerResult.of(Error.ALREADY_EXISTS);
 
 		SubjectModel newModel = this.subjectRepository.save(new SubjectModel(-1, displayName));
 		ControllerResult<SubjectModel> returnValue = ControllerResult.of(newModel);
