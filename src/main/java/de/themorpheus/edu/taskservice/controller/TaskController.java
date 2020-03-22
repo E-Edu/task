@@ -1,10 +1,12 @@
 package de.themorpheus.edu.taskservice.controller;
 
+import de.themorpheus.edu.taskservice.database.model.DifficultyModel;
+import de.themorpheus.edu.taskservice.database.model.LectureModel;
 import de.themorpheus.edu.taskservice.database.model.TaskModel;
-import de.themorpheus.edu.taskservice.database.repository.LectureRepository;
+import de.themorpheus.edu.taskservice.database.model.TaskTypeModel;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,25 +14,52 @@ import org.springframework.stereotype.Component;
 public class TaskController {
 
 	@Autowired private TaskRepository taskRepository;
-	@Autowired private LectureRepository lectureRepository;
 
-	public void createTask(String task) {
-		this.taskRepository.save(new TaskModel(task));
+	@Autowired private LectureController lectureController;
+	@Autowired private TaskTypeController taskTypeController;
+	@Autowired private DifficultyController difficultyController;
+
+	public TaskModel createTask(String task, UUID authorId, int necessaryPoints, String lectureDisplayName, String taskTypeDisplayName, String difficultyDisplayName) {
+		LectureModel lectureModel = this.lectureController.getLectureByDisplayName(lectureDisplayName);
+		DifficultyModel difficultyModel = this.difficultyController.getDifficultyByDisplayName(difficultyDisplayName);
+		TaskTypeModel taskTypeModel = this.taskTypeController.getTaskTypeByDisplayName(taskTypeDisplayName);
+
+		TaskModel taskModel = new TaskModel(
+			-1,
+			authorId,
+			task,
+			necessaryPoints,
+			false,
+			lectureModel,
+			taskTypeModel,
+			difficultyModel
+		);
+
+		return this.taskRepository.save(taskModel);
 	}
 
-	public List<TaskModel> getAllTasks(String subject, String module, String lecture) {
-		return this.taskRepository.getAllTasksByLectureId(this.lectureRepository.getLectureByLectureId(0));
+	public List<TaskModel> getAllTasks() {
+		return this.taskRepository.findAll();
 	}
 
-	public String verifyTask(int taskId) {
-		Optional<TaskModel> query = this.taskRepository.findById(taskId);
-		if (query.isPresent()) {
-			TaskModel taskModel = query.get();
-			taskModel.setVerified(true);
-			this.taskRepository.save(taskModel);
-			return null;
-		} else {
-			return "{\"error\": \"TaskID not present\"}";
-		}
+	public List<TaskModel> getTasksFromLecture(String lectureDisplayName) {
+		LectureModel lectureModel = this.lectureController.getLectureByDisplayName(lectureDisplayName);
+		return this.taskRepository.getAllTasksByLectureId(lectureModel);
 	}
+
+	public TaskModel verifyTask(String task) {
+		return this.verifyTask(this.taskRepository.getTaskByTaskIgnoreCase(task));
+	}
+
+	public TaskModel verifyTask(int taskId) {
+		return this.verifyTask(this.taskRepository.getTaskByTaskId(taskId));
+	}
+
+	public TaskModel verifyTask(TaskModel task) {
+		if (task == null) return null;
+
+		task.setVerified(true); //TODO: Single property update
+		return this.taskRepository.save(task);
+	}
+
 }

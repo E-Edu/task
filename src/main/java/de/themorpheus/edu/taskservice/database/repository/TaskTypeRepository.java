@@ -9,4 +9,6 @@ public interface TaskTypeRepository extends JpaRepository<TaskTypeModel, Integer
 
 	TaskTypeModel getTaskTypeByTaskTypeId(int taskTypeId);
 
+	TaskTypeModel getTaskTypeByDisplayNameIgnoreCase(String displayName);
+
 }

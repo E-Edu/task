@@ -2,9 +2,9 @@ package de.themorpheus.edu.taskservice.controller;
 
 import de.themorpheus.edu.taskservice.database.model.SubjectModel;
 import de.themorpheus.edu.taskservice.database.repository.SubjectRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.List;
 
 @Component
 public class SubjectController {

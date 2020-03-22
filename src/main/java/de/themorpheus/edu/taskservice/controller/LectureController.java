@@ -3,9 +3,9 @@ package de.themorpheus.edu.taskservice.controller;
 import de.themorpheus.edu.taskservice.database.model.LectureModel;
 import de.themorpheus.edu.taskservice.database.model.ModuleModel;
 import de.themorpheus.edu.taskservice.database.repository.LectureRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.List;
 
 @Component
 public class LectureController {

@@ -17,8 +17,8 @@ public class SubjectEndpoint {
 	@Autowired private SubjectController subjectController;
 
 	@PostMapping(value = "/subject", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createSubject(@RequestBody CreateSubjectDTO displayName) {
-		return this.subjectController.createSubject(displayName.getDisplayName());
+	public Object createSubject(@RequestBody CreateSubjectDTO dto) {
+		return this.subjectController.createSubject(dto.getDisplayName());
 	}
 
 	@GetMapping("/subject/{displayName}")
