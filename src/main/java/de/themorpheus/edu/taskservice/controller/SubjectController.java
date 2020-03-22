@@ -17,10 +17,7 @@ public class SubjectController {
 	public ControllerResult<SubjectModel> createSubject(String displayName) {
 		if (doesSubjectExist(displayName)) return ControllerResult.of(Error.ALREADY_EXISTS);
 
-		SubjectModel newModel = this.subjectRepository.save(new SubjectModel(-1, displayName));
-		ControllerResult<SubjectModel> returnValue = ControllerResult.of(newModel);
-
-		return returnValue;
+		return ControllerResult.of(this.subjectRepository.save(new SubjectModel(-1, displayName)));
 	}
 
 	public ControllerResult<SubjectModel> getSubjectByDisplayName(String displayName) {
