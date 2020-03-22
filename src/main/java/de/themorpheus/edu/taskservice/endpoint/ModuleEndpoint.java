@@ -3,6 +3,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 import de.themorpheus.edu.taskservice.controller.ModuleController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateModuleDTO;
 import de.themorpheus.edu.taskservice.util.Validation;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ public class ModuleEndpoint {
 	@Autowired private ModuleController moduleController;
 
 	@PostMapping(value = "/module", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createModule(@RequestBody CreateModuleDTO dto) {
+	public Object createModule(@RequestBody @Valid CreateModuleDTO dto) {
 		if (Validation.nullOrEmpty(dto.getDisplayName(), dto.getSubjectDisplayName())) return Error.INVALID_PARAM;
 
 		return this.moduleController.createModule(dto.getDisplayName(), dto.getSubjectDisplayName());

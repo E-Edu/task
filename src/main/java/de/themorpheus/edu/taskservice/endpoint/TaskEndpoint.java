@@ -4,6 +4,7 @@ import de.themorpheus.edu.taskservice.controller.TaskController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
 import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.UUID;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,17 @@ public class TaskEndpoint {
 	@Autowired private TaskController taskController;
 
 	@PostMapping(value = "/task", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createTask(@RequestBody CreateTaskDTO dto) {
+
+	public Object createTask(@RequestBody @Valid CreateTaskDTO dto) {
+		if (Validation.validateNull(
+			dto.getTask(),
+			dto.getLectureDisplayName(),
+			dto.getTaskTypeDisplayName(),
+			dto.getDifficultyDisplayName()
+		)
+			|| Validation.lowerZero(dto.getNecessaryPoints())
+		) return Error.INVALID_PARAM;
+
 		return this.taskController.createTask(
 			dto.getTask(),
 			UUID.randomUUID(), //TODO

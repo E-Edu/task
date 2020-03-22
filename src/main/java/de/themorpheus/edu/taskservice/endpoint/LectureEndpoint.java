@@ -3,6 +3,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 import de.themorpheus.edu.taskservice.controller.LectureController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateLectureDTO;
 import de.themorpheus.edu.taskservice.util.Validation;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ public class LectureEndpoint {
 	@Autowired private LectureController lectureController;
 
 	@PostMapping(value = "/lecture", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createLecture(@RequestBody CreateLectureDTO dto) {
+	public Object createLecture(@RequestBody @Valid CreateLectureDTO dto) {
 		if (Validation.nullOrEmpty(dto.getDisplayName(), dto.getModuleDisplayName())) return Error.INVALID_PARAM;
 
 		return this.lectureController.createLecture(dto.getDisplayName(), dto.getModuleDisplayName());
