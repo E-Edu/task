@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateTaskDTO {
 
-    private String task;
-    private int necessaryPoints;
+	private String task;
+	private int necessaryPoints;
 
-    private String taskTypeDisplayName;
-    private String subjectDisplayName;
-    private String moduleDisplayName;
-    private String lectureDisplayName;
-    private String difficultyDisplayName;
+	private String taskTypeDisplayName;
+	private String subjectDisplayName;
+	private String moduleDisplayName;
+	private String lectureDisplayName;
+	private String difficultyDisplayName;
 
 }
