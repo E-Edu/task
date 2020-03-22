@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(scanBasePackages = "de.themorpheus.edu.taskservice")
 public class TaskServiceApplication {
 
+	public static final boolean PRODUCTIVE = Boolean.getBoolean(System.getenv("PRODUCTIVE"));
+
 	public static void main(String[] args) {
 
 		SpringApplication.run(TaskServiceApplication.class, args);
