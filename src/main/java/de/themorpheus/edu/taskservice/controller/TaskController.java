@@ -94,11 +94,9 @@ public class TaskController {
 
 		if (Validation.validateNotNull(difficultyModel)) taskModel.setDifficultyId(difficultyModel);
 
-		if (Validation.validateNotNullOrEmpty(task))
-			taskModel.setTask(task);
+		if (Validation.validateNotNullOrEmpty(task)) taskModel.setTask(task);
 
-		if (Validation.validateNotNull(necessaryPoints) && Validation.greaterZero(necessaryPoints))
-			taskModel.setNecessaryPoints(necessaryPoints);
+		if (Validation.greaterZero(necessaryPoints)) taskModel.setNecessaryPoints(necessaryPoints);
 
 		return this.taskRepository.save(taskModel);
 	}
