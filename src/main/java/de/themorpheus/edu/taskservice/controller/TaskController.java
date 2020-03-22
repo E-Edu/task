@@ -77,8 +77,14 @@ public class TaskController {
 		return this.taskRepository.save(task);
 	}
 
-	public Object updateTask(int taskId, String task, int necessaryPoints, String taskTypeDisplayName,
-							 String lectureDisplayName, String difficultyDisplayName) {
+	public Object updateTask(
+		int taskId,
+		String task,
+		int necessaryPoints,
+		String taskTypeDisplayName,
+		String lectureDisplayName,
+		String difficultyDisplayName
+	) {
 		TaskModel taskModel = this.taskRepository.getTaskByTaskId(taskId);
 
 		if (Validation.validateNull(taskModel)) return null;
