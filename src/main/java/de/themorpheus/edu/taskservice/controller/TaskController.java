@@ -83,21 +83,16 @@ public class TaskController {
 
 		if (Validation.validateNull(taskModel)) return null;
 
-		LectureModel lectureModel = this.lectureController
-			.getLectureByDisplayName(lectureDisplayName);
-		TaskTypeModel taskTypeModel = this.taskTypeController
-			.getTaskTypeByDisplayName(taskTypeDisplayName);
+		LectureModel lectureModel = this.lectureController.getLectureByDisplayName(lectureDisplayName);
+		TaskTypeModel taskTypeModel = this.taskTypeController.getTaskTypeByDisplayName(taskTypeDisplayName);
 		DifficultyModel difficultyModel = this.difficultyController
 			.getDifficultyByDisplayName(difficultyDisplayName);
 
-		if (Validation.validateNotNull(lectureModel))
-			taskModel.setLectureId(lectureModel);
+		if (Validation.validateNotNull(lectureModel)) taskModel.setLectureId(lectureModel);
 
-		if (Validation.validateNotNull(taskTypeModel))
-			taskModel.setTaskTypeId(taskTypeModel);
+		if (Validation.validateNotNull(taskTypeModel)) taskModel.setTaskTypeId(taskTypeModel);
 
-		if (Validation.validateNotNull(difficultyModel))
-			taskModel.setDifficultyId(difficultyModel);
+		if (Validation.validateNotNull(difficultyModel)) taskModel.setDifficultyId(difficultyModel);
 
 		if (Validation.validateNotNullOrEmpty(task))
 			taskModel.setTask(task);
