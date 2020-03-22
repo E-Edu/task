@@ -2,6 +2,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.ModuleController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateModuleDTO;
+import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

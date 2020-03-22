@@ -2,6 +2,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.DifficultyController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateDifficultyDTO;
+import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

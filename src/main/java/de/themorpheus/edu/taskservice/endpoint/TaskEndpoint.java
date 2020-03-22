@@ -4,6 +4,7 @@ import de.themorpheus.edu.taskservice.controller.TaskController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.GetNextTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
+import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.UUID;
 import javax.validation.Valid;

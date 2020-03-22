@@ -1,6 +1,5 @@
-package de.themorpheus.edu.taskservice.endpoint;
+package de.themorpheus.edu.taskservice.util;
 
-import de.themorpheus.edu.taskservice.util.i18n;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
