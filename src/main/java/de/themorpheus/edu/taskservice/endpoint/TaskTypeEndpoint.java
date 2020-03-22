@@ -2,11 +2,13 @@ package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.TaskTypeController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskTypeDTO;
+import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +35,12 @@ public class TaskTypeEndpoint {
 	@GetMapping("/task_types")
 	public Object getTaskTypes() {
 		return this.taskTypeController.getAllTaskTypes().getHttpResponse();
+	}
+
+	@DeleteMapping("/task_type/{displayName}")
+	public Object deleteTaskType(@PathVariable String displayName) {
+		this.taskTypeController.deleteTaskType(displayName);
+		return ControllerResult.empty();
 	}
 
 }

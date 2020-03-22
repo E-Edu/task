@@ -20,6 +20,10 @@ public class TaskTypeController {
 		return ControllerResult.of(this.taskTypeRepository.getTaskTypeByDisplayNameIgnoreCase(displayName));
 	}
 
+	public void deleteTaskType(String displayName) {
+		this.taskTypeRepository.deleteTaskTypeByDisplayNameIgnoreCase(displayName);
+	}
+
 	public ControllerResult<List<TaskTypeModel>> getAllTaskTypes() {
 		return ControllerResult.of(this.taskTypeRepository.findAll());
 	}
