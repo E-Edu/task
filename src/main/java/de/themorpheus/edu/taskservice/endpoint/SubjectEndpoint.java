@@ -4,7 +4,6 @@ import de.themorpheus.edu.taskservice.controller.SubjectController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateSubjectDTO;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +20,9 @@ public class SubjectEndpoint {
 	@Autowired private SubjectController subjectController;
 
 	@PostMapping(value = "/subject", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createSubject(@RequestBody @Valid CreateSubjectDTO dto) {
-		if (!Validation.validateNotNullOrEmpty(dto.getDisplayName())) return Error.INVALID_PARAM;
-		
+	public Object createSubject(@RequestBody CreateSubjectDTO dto) {
+		if (!Validation.validateNull(dto.getDisplayName())) return Error.INVALID_PARAM;
+
 		return this.subjectController.createSubject(dto.getDisplayName());
 	}
 
