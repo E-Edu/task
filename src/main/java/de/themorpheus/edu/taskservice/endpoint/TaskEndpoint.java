@@ -46,9 +46,7 @@ public class TaskEndpoint {
 	}
 
 	@PatchMapping(value = "/task/verify/{taskId}")
-	public Object verifyTask(@PathVariable("taskId") int taskId) {
-		if (Validation.lowerZero(taskId)) return Error.INVALID_PARAM;
-
+	public Object verifyTask(@PathVariable @Min(0) int taskId) {
 		return this.taskController.verifyTask(taskId);
 	}
 
