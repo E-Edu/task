@@ -20,7 +20,17 @@ public class TaskEndpoint {
 	@Autowired private TaskController taskController;
 
 	@PostMapping(value = "/task", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createTask(@RequestBody @Valid CreateTaskDTO dto) {
+
+  public Object createTask(@RequestBody @Valid CreateTaskDTO dto) {
+		if (Validation.validateNull(
+			dto.getTask(),
+			dto.getLectureDisplayName(),
+			dto.getTaskTypeDisplayName(),
+			dto.getDifficultyDisplayName()
+		)
+			|| Validation.lowerZero(dto.getNecessaryPoints())
+		) return Error.INVALID_PARAM;
+
 		return this.taskController.createTask(
 			dto.getTask(),
 			UUID.randomUUID(), //TODO
