@@ -11,10 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskController {
 
-	@Autowired
-	private TaskRepository taskRepository;
-	@Autowired
-	private LectureRepository lectureRepository;
+	@Autowired private TaskRepository taskRepository;
+	@Autowired private LectureRepository lectureRepository;
 
 	public void createTask(String task) {
 		this.taskRepository.save(new TaskModel(task));
