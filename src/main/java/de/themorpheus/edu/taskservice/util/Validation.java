@@ -27,8 +27,4 @@ public class Validation {
 	public static boolean lowerZero(long value) {
 		return value < 0;
 	}
-
-	public static boolean greaterOrEqualZero(long value) {
-		return value >= 0;
-	}
 }
