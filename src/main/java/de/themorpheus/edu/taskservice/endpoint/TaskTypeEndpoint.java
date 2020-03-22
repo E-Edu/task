@@ -2,10 +2,16 @@ package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.TaskTypeController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskTypeDTO;
+import de.themorpheus.edu.taskservice.util.ControllerResult;
+import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,21 +23,27 @@ public class TaskTypeEndpoint {
 
 	@Autowired private TaskTypeController taskTypeController;
 
-	@PostMapping(value = "/taskType", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/task_type", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createTaskType(@RequestBody @Valid CreateTaskTypeDTO dto) {
-		return this.taskTypeController.createTaskType(dto.getDisplayName());
+		return this.taskTypeController.createTaskType(dto.getDisplayName()).getHttpResponse();
 	}
 
-	@GetMapping("/taskType/{displayName}")
-	public Object getTaskType(@PathVariable String displayName) {
+	@GetMapping("/task_type/{displayName}")
+	public Object getTaskType(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
 		if (Validation.nullOrEmpty(displayName)) return Error.INVALID_PARAM;
 
-		return this.taskTypeController.getTaskTypeByDisplayName(displayName);
+		return this.taskTypeController.getTaskTypeByDisplayName(displayName).getHttpResponse();
 	}
 
-	@GetMapping("/taskTypes")
+	@GetMapping("/task_types")
 	public Object getTaskTypes() {
-		return this.taskTypeController.getAllTaskTypes();
+		return this.taskTypeController.getAllTaskTypes().getHttpResponse();
+	}
+
+	@DeleteMapping("/task_type/{displayName}")
+	public Object deleteTaskType(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
+		this.taskTypeController.deleteTaskType(displayName);
+		return ControllerResult.empty();
 	}
 
 }
