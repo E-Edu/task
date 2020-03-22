@@ -3,6 +3,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 import de.themorpheus.edu.taskservice.controller.SubjectController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateSubjectDTO;
 import de.themorpheus.edu.taskservice.util.Validation;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ public class SubjectEndpoint {
 	@Autowired private SubjectController subjectController;
 
 	@PostMapping(value = "/subject", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createSubject(@RequestBody CreateSubjectDTO dto) {
+	public Object createSubject(@RequestBody @Valid CreateSubjectDTO dto) {
 		return this.subjectController.createSubject(dto.getDisplayName());
 	}
 
