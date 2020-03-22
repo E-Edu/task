@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "task_module")
+@Table
 public class ModuleModel {
 
 	@Id
@@ -20,7 +20,7 @@ public class ModuleModel {
 	private int moduleId;
 
 	@ManyToOne
-	private LectureModel lectureId;
+	private SubjectModel subjectId;
 	private String displayName;
 
 }
