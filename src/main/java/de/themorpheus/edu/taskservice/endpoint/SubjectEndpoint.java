@@ -21,9 +21,13 @@ public class SubjectEndpoint {
 
 	@PostMapping(value = "/subject", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createSubject(@RequestBody CreateSubjectDTO dto) {
-		if (!Validation.validateNull(dto.getDisplayName())) return Error.INVALID_PARAM;
+		String displayName = dto.getDisplayName();
 
-		return this.subjectController.createSubject(dto.getDisplayName());
+		if (Validation.validateNull(displayName)) return Error.INVALID_PARAM;
+
+		if (this.subjectController.doesSubjectExist(displayName)) return Error.ALREADY_EXISTS;
+
+		return this.subjectController.createSubject(displayName);
 	}
 
 	@GetMapping("/subject/{displayName}")
