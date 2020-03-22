@@ -17,19 +17,19 @@ public class TaskTypeEndpoint {
 
 	@Autowired private TaskTypeController taskTypeController;
 
-	@PostMapping(value = "/taskType", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/task_type", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createTaskType(@RequestBody @Valid CreateTaskTypeDTO dto) {
 		return this.taskTypeController.createTaskType(dto.getDisplayName());
 	}
 
-	@GetMapping("/taskType/{displayName}")
+	@GetMapping("/task_type/{displayName}")
 	public Object getTaskType(@PathVariable String displayName) {
 		if (Validation.nullOrEmpty(displayName)) return Error.INVALID_PARAM;
 
 		return this.taskTypeController.getTaskTypeByDisplayName(displayName);
 	}
 
-	@GetMapping("/taskTypes")
+	@GetMapping("/task_types")
 	public Object getTaskTypes() {
 		return this.taskTypeController.getAllTaskTypes();
 	}
