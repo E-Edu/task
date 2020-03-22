@@ -20,19 +20,19 @@ public class DifficultyEndpoint {
 
 	@PostMapping(value = "/difficulty", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createDifficulty(@RequestBody @Valid CreateDifficultyDTO dto) {
-		return this.difficultyController.createDifficulty(dto.getDisplayName());
+		return this.difficultyController.createDifficulty(dto.getDisplayName()).getHttpResponse();
 	}
 
 	@GetMapping("/difficulty/{displayName}")
 	public Object getDifficulty(@PathVariable String displayName) {
 		if (Validation.nullOrEmpty(displayName)) return Error.INVALID_PARAM;
 
-		return this.difficultyController.getDifficultyByDisplayName(displayName);
+		return this.difficultyController.getDifficultyByDisplayName(displayName).getHttpResponse();
 	}
 
 	@GetMapping("/difficulty")
 	public Object getDifficulties() {
-		return this.difficultyController.getAllDifficulties();
+		return this.difficultyController.getAllDifficulties().getHttpResponse();
 	}
 
 }

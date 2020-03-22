@@ -22,26 +22,26 @@ public class LectureEndpoint {
 	public Object createLecture(@RequestBody @Valid CreateLectureDTO dto) {
 		if (Validation.nullOrEmpty(dto.getDisplayName(), dto.getModuleDisplayName())) return Error.INVALID_PARAM;
 
-		return this.lectureController.createLecture(dto.getDisplayName(), dto.getModuleDisplayName());
+		return this.lectureController.createLecture(dto.getDisplayName(), dto.getModuleDisplayName()).getHttpResponse();
 	}
 
 	@GetMapping("/lecture/{displayName}")
 	public Object getLecture(@PathVariable String displayName) {
 		if (Validation.nullOrEmpty(displayName)) return Error.INVALID_PARAM;
 
-		return this.lectureController.getLectureByDisplayName(displayName);
+		return this.lectureController.getLectureByDisplayName(displayName).getHttpResponse();
 	}
 
 	@GetMapping("/lecture")
 	public Object getLectures() {
-		return this.lectureController.getAllLectures();
+		return this.lectureController.getAllLectures().getHttpResponse();
 	}
 
 	@GetMapping("/module/{moduleDisplayName}/lecture")
 	public Object getLecturesFromModule(@PathVariable String moduleDisplayName) {
 		if (Validation.nullOrEmpty(moduleDisplayName)) return Error.INVALID_PARAM;
 
-		return this.lectureController.getAllLecturesFromModule(moduleDisplayName);
+		return this.lectureController.getAllLecturesFromModule(moduleDisplayName).getHttpResponse();
 	}
 
 }

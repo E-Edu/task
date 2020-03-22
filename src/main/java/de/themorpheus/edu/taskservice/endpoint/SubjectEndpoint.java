@@ -20,19 +20,19 @@ public class SubjectEndpoint {
 
 	@PostMapping(value = "/subject", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createSubject(@RequestBody @Valid CreateSubjectDTO dto) {
-		return this.subjectController.createSubject(dto.getDisplayName());
+		return this.subjectController.createSubject(dto.getDisplayName()).getHttpResponse();
 	}
 
 	@GetMapping("/subject/{displayName}")
 	public Object getSubject(@PathVariable String displayName) {
 		if (Validation.nullOrEmpty(displayName)) return Error.INVALID_PARAM;
 
-		return this.subjectController.getSubjectByDisplayName(displayName);
+		return this.subjectController.getSubjectByDisplayName(displayName).getHttpResponse();
 	}
 
 	@GetMapping("/subject")
 	public Object getSubjects() {
-		return this.subjectController.getAllSubjects();
+		return this.subjectController.getAllSubjects().getHttpResponse();
 	}
 
 }

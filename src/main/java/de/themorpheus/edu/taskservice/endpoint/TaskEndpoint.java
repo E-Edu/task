@@ -4,6 +4,7 @@ import de.themorpheus.edu.taskservice.controller.TaskController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.GetNextTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
+import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.UUID;
@@ -36,19 +37,19 @@ public class TaskEndpoint {
 			dto.getLectureDisplayName(),
 			dto.getTaskTypeDisplayName(),
 			dto.getDifficultyDisplayName()
-		);
+		).getHttpResponse();
 	}
 
 	@GetMapping("/lecture/{lectureDisplayName}/task")
 	public Object getAllTasksFromLecture(@PathVariable String lectureDisplayName) {
 		if (Validation.nullOrEmpty(lectureDisplayName)) return Error.INVALID_PARAM;
 
-		return this.taskController.getTasksFromLecture(lectureDisplayName);
+		return this.taskController.getTasksFromLecture(lectureDisplayName).getHttpResponse();
 	}
 
 	@PatchMapping(value = "/task/verify/{taskId}")
 	public Object verifyTask(@PathVariable @Min(0) int taskId) {
-		return this.taskController.verifyTask(taskId);
+		return this.taskController.verifyTask(taskId).getHttpResponse();
 	}
 
 	@PutMapping(path = "/task/{taskId}")
@@ -60,18 +61,18 @@ public class TaskEndpoint {
 			updateTaskDTO.getTaskTypeDisplayName(),
 			updateTaskDTO.getLectureDisplayName(),
 			updateTaskDTO.getDifficultyDisplayName()
-		);
+		).getHttpResponse();
 	}
 
 	@PostMapping("/task/next")
 	public Object nextTask(@RequestBody @Valid GetNextTaskDTO dto) {
-		return this.taskController.getNextTask(dto.getLastTaskIds());
+		return this.taskController.getNextTask(dto.getLastTaskIds()).getHttpResponse();
 	}
 
 	@DeleteMapping("/task/{taskId}")
 	public Object deleteTask(@PathVariable @Min(0) int taskId) {
 		this.taskController.deleteTask(taskId);
-		return null;
+		return ControllerResult.empty().getHttpResponse();
 	}
 
 }
