@@ -21,7 +21,7 @@ public class TaskEndpoint {
 
 	@PostMapping(value = "/task", produces = MediaType.APPLICATION_JSON_VALUE)
 
-  public Object createTask(@RequestBody @Valid CreateTaskDTO dto) {
+	public Object createTask(@RequestBody @Valid CreateTaskDTO dto) {
 		if (Validation.validateNull(
 			dto.getTask(),
 			dto.getLectureDisplayName(),
