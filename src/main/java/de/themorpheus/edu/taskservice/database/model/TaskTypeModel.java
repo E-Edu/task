@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "task_taskType")
+@Table
 public class TaskTypeModel {
 
 	@Id
