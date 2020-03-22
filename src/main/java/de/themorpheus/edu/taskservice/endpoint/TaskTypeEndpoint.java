@@ -6,6 +6,9 @@ import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +29,7 @@ public class TaskTypeEndpoint {
 	}
 
 	@GetMapping("/task_type/{displayName}")
-	public Object getTaskType(@PathVariable String displayName) {
+	public Object getTaskType(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
 		if (Validation.nullOrEmpty(displayName)) return Error.INVALID_PARAM;
 
 		return this.taskTypeController.getTaskTypeByDisplayName(displayName).getHttpResponse();
@@ -38,7 +41,7 @@ public class TaskTypeEndpoint {
 	}
 
 	@DeleteMapping("/task_type/{displayName}")
-	public Object deleteTaskType(@PathVariable String displayName) {
+	public Object deleteTaskType(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
 		this.taskTypeController.deleteTaskType(displayName);
 		return ControllerResult.empty();
 	}

@@ -29,7 +29,7 @@ public class DifficultyEndpoint {
 	}
 
 	@GetMapping("/difficulty/{displayName}")
-	public Object getDifficulty(@PathVariable String displayName) {
+	public Object getDifficulty(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
 		if (Validation.nullOrEmpty(displayName)) return Error.INVALID_PARAM;
 
 		return this.difficultyController.getDifficultyByDisplayName(displayName).getHttpResponse();

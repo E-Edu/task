@@ -5,6 +5,9 @@ import de.themorpheus.edu.taskservice.endpoint.dto.CreateSubjectDTO;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +27,7 @@ public class SubjectEndpoint {
 	}
 
 	@GetMapping("/subject/{displayName}")
-	public Object getSubject(@PathVariable String displayName) {
+	public Object getSubject(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
 		if (Validation.nullOrEmpty(displayName)) return Error.INVALID_PARAM;
 
 		return this.subjectController.getSubjectByDisplayName(displayName).getHttpResponse();
