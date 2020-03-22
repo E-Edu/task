@@ -4,8 +4,12 @@ import de.themorpheus.edu.taskservice.controller.ModuleController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateModuleDTO;
 import de.themorpheus.edu.taskservice.util.Validation;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +45,12 @@ public class ModuleEndpoint {
 		if (Validation.nullOrEmpty(subjectDisplayName)) return Error.INVALID_PARAM;
 
 		return this.moduleController.getAllModulesFromSubject(subjectDisplayName);
+	}
+
+	@DeleteMapping("/module/{displayName}")
+	public Object deleteModule(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
+		this.moduleController.deleteModule(displayName);
+		return null;
 	}
 
 }

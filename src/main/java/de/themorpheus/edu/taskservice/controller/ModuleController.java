@@ -23,6 +23,10 @@ public class ModuleController {
 		return this.moduleRepository.getModuleByDisplayNameIgnoreCase(displayName);
 	}
 
+	public void deleteModule(String displayName) {
+		this.moduleRepository.deleteModuleByDisplayNameIgnoreCase(displayName);
+	}
+
 	public List<ModuleModel> getAllModules() {
 		return this.moduleRepository.findAll();
 	}
