@@ -11,6 +11,8 @@ public interface TaskRepository extends JpaRepository<TaskModel, Integer> {
 
 	TaskModel getTaskByTaskId(int taskId);
 
+	TaskModel getTaskByTaskIgnoreCase(String task);
+
 	List<TaskModel> getAllTasksByLectureId(LectureModel lectureId);
 
 }

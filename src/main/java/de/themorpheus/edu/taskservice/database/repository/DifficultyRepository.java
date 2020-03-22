@@ -9,4 +9,6 @@ public interface DifficultyRepository extends JpaRepository<DifficultyModel, Int
 
 	DifficultyModel getDifficultyByDifficultyId(int difficultyId);
 
+	DifficultyModel getDifficultyByDisplayNameIgnoreCase(String displayName);
+
 }

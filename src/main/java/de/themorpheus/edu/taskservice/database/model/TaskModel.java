@@ -34,8 +34,4 @@ public class TaskModel {
 	@ManyToOne
 	private DifficultyModel difficultyId;
 
-	public TaskModel(String task) {
-		this.task = task;
-	}
-
 }
