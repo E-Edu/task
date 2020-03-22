@@ -15,10 +15,10 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-        List<String> origins = new ArrayList<>(Arrays.asList(
-            "e-edu.the-morpheus.de",
-            "task.e-edu.the-morpheus.de"
-        ));
+		List<String> origins = new ArrayList<>(Arrays.asList(
+			"e-edu.the-morpheus.de",
+			"task.e-edu.the-morpheus.de"
+		));
 
 		if (!TaskServiceApplication.PRODUCTIVE) {
 			origins.add("localhost");
@@ -27,7 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 		registry.addMapping("/**")
 			.allowedOrigins(
-                origins.toArray(new String[0])
+				origins.toArray(new String[0])
 			)
 			.allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE")
 			.allowCredentials(false).maxAge(3600);
