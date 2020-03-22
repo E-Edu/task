@@ -1,11 +1,13 @@
 package de.themorpheus.edu.taskservice.util;
 
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-@Data
-public class Error {
+@Getter
+public class Error extends ResponseEntity<Object> {
 
 	public static final Error FORBIDDEN = new Error(HttpStatus.FORBIDDEN, i18n.FORBIDDEN);
 	public static final Error INVALID_PARAM = new Error(BAD_REQUEST, i18n.INVALID_PARAM);
@@ -22,18 +24,28 @@ public class Error {
 		this(status, messageKey, null);
 	}
 
-	public Error(HttpStatus status, String messageKey, String extra) {
-		this(status.value(), messageKey, extra);
-	}
-
-	private Error(int status, String messageKey, String extra) {
-		this.status = status;
+	private Error(HttpStatus status, String messageKey, String extra) {
+		super(status);
+		this.status = status.value();
 		this.messageKey = messageKey;
 		this.extra = extra;
 	}
 
+	@Override
+	public Object getBody() {
+		// We want to control the http status code for errors, so we extend the ResponseEntity and set a custom body
+		return new HttpResponse(this.getStatus(), this.getMessageKey(), this.getExtra());
+	}
+
 	public Error copyWithExtra(String extra) {
-		return new Error(this.getStatus(), this.getMessageKey(), extra);
+		return new Error(HttpStatus.resolve(this.getStatus()), this.getMessageKey(), extra);
+	}
+
+	@Data
+	private static class HttpResponse {
+		private final int status;
+		private final String messageKey;
+		private final String extra;
 	}
 
 }
