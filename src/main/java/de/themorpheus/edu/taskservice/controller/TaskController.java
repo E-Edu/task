@@ -93,4 +93,33 @@ public class TaskController {
 		return this.taskRepository.save(task);
 	}
 
+	public Object updateTask(
+		int taskId,
+		String task,
+		int necessaryPoints,
+		String taskTypeDisplayName,
+		String lectureDisplayName,
+		String difficultyDisplayName
+	) {
+		TaskModel taskModel = this.taskRepository.getTaskByTaskId(taskId);
+
+		if (Validation.validateNull(taskModel)) return null;
+
+		LectureModel lectureModel = this.lectureController.getLectureByDisplayName(lectureDisplayName);
+		TaskTypeModel taskTypeModel = this.taskTypeController.getTaskTypeByDisplayName(taskTypeDisplayName);
+		DifficultyModel difficultyModel = this.difficultyController
+			.getDifficultyByDisplayName(difficultyDisplayName);
+
+		if (Validation.validateNotNull(lectureModel)) taskModel.setLectureId(lectureModel);
+
+		if (Validation.validateNotNull(taskTypeModel)) taskModel.setTaskTypeId(taskTypeModel);
+
+		if (Validation.validateNotNull(difficultyModel)) taskModel.setDifficultyId(difficultyModel);
+
+		if (Validation.validateNotNullOrEmpty(task)) taskModel.setTask(task);
+
+		if (Validation.greaterZero(necessaryPoints)) taskModel.setNecessaryPoints(necessaryPoints);
+
+		return this.taskRepository.save(taskModel);
+	}
 }
