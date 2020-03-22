@@ -48,8 +48,8 @@ public class TaskController {
 	}
 
 	public Object deleteTask(int taskId) {
-		taskRepository.deleteById(taskId);
-		//TODO delete solution
+		this.taskRepository.deleteById(taskId);
+		//TODO: delete solution
 		return null;
 	}
 

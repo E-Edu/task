@@ -5,6 +5,7 @@ import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
 import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.UUID;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,9 +58,7 @@ public class TaskEndpoint {
 	}
 
 	@DeleteMapping("/task/{taskId}")
-	public Object deleteTask(@PathVariable("taskId") int taskId) {
-		if (Validation.lowerZero(taskId)) return Error.INVALID_PARAM;
-
+	public Object deleteTask(@PathVariable @Min(0) int taskId) {
 		return this.taskController.deleteTask(taskId);
 	}
 
