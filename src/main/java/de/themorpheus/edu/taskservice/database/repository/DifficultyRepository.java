@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DifficultyRepository extends JpaRepository<DifficultyModel, Integer> {
 
+	void deleteDifficultyByDisplayNameIgnoreCase(String displayName);
+
 	DifficultyModel getDifficultyByDifficultyId(int difficultyId);
 
 	DifficultyModel getDifficultyByDisplayNameIgnoreCase(String displayName);

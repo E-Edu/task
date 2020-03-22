@@ -20,6 +20,10 @@ public class DifficultyController {
 		return ControllerResult.of(this.difficultyRepository.getDifficultyByDisplayNameIgnoreCase(displayName));
 	}
 
+	public void deleteDifficulty(String displayName) {
+		this.difficultyRepository.deleteDifficultyByDisplayNameIgnoreCase(displayName);
+	}
+
 	public ControllerResult<List<DifficultyModel>> getAllDifficulties() {
 		return ControllerResult.of(this.difficultyRepository.findAll());
 	}
