@@ -7,7 +7,7 @@ is responsible for everything related to tasks in the E-Edu system.
 Run:
 ```sudo docker build --tag eedu/taskms:latest .```
 
-## How to start
+## How to start the docker stack
 Run:
 ```sudo docker-compose up```
 
