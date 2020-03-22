@@ -1,6 +1,5 @@
 package de.themorpheus.edu.taskservice.database.model;
 
-import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,22 +15,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table
-public class TaskModel {
+public class ModuleModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int taskId;
-
-	private UUID authorId;
-	private String task;
-	private int necessaryPoints;
-	private boolean verified;
+	private int moduleId;
 
 	@ManyToOne
-	private LectureModel lectureId;
-	@ManyToOne
-	private TaskTypeModel taskTypeId;
-	@ManyToOne
-	private DifficultyModel difficultyId;
+	private SubjectModel subjectId;
+	private String displayName;
 
 }

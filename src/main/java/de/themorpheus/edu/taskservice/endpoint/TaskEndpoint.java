@@ -1,37 +1,47 @@
 package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.TaskController;
+import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
+import de.themorpheus.edu.taskservice.util.Validation;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TaskEndpoint {
 
-	@Autowired
-	private TaskController taskController;
-
-	@GetMapping(value = "/task")
-	public String getTasks(Model model) {
-		return null;
-	}
-
-	@GetMapping(value = "/task/{taskId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public String getTask(int taskId) {
-		return null;
-	}
+	@Autowired private TaskController taskController;
 
 	@PostMapping(value = "/task", produces = MediaType.APPLICATION_JSON_VALUE)
-	public String createTask() {
-		this.taskController.createTask("TestTask");
-		return null;
+	public Object createTask(@RequestBody CreateTaskDTO dto) {
+		return this.taskController.createTask(
+			dto.getTask(),
+			UUID.randomUUID(), //TODO
+			dto.getNecessaryPoints(),
+			dto.getLectureDisplayName(),
+			dto.getTaskTypeDisplayName(),
+			dto.getDifficultyDisplayName()
+		);
 	}
 
-	public String getAllTask(Model model) {
-		return null;
+	@GetMapping("/lecture/{lectureDisplayName}/task")
+	public Object getAllTasksFromLecture(@PathVariable String lectureDisplayName) {
+		if (Validation.nullOrEmpty(lectureDisplayName)) return Error.INVALID_PARAM;
+
+		return this.taskController.getTasksFromLecture(lectureDisplayName);
+	}
+
+	@PatchMapping(value = "/task/verify/{taskId}")
+	public Object verifyTask(@PathVariable("taskId") int taskId) {
+		if (Validation.lowerZero(taskId)) return Error.INVALID_PARAM;
+
+		return this.taskController.verifyTask(taskId);
 	}
 
 }

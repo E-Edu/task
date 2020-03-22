@@ -2,17 +2,16 @@ package de.themorpheus.edu.taskservice.cli;
 
 import com.beust.jcommander.JCommander;
 import de.themorpheus.edu.taskservice.cli.commands.HelpCommand;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CLIManager {
 
-	private static final List<Command<?>> commands = new ArrayList<>();
+	private static final List<Command<?>> COMMANDS = new ArrayList<>();
 	private static final Logger LOGGER = LoggerFactory.getLogger(CLIManager.class.getSimpleName());
 
 	@SuppressWarnings(value = {"unchecked", "resource"})
@@ -21,12 +20,12 @@ public class CLIManager {
 
 		try {
 			Command<HelpCommand> command = new Command<HelpCommand>("help", "show important Commands", HelpCommand::execute, HelpCommand.class, "h");
-			commands.add(command);
-		} catch (Exception ex) {
-			LOGGER.error("Error occured while creating commands.", ex);
+			COMMANDS.add(command);
+		} catch (InstantiationException | IllegalAccessException ex) {
+			LOGGER.error("Error occurred while creating commands.", ex);
 		}
 
-		for (Command<?> c : commands) builder.addCommand(c.getName(), c, c.getAlias());
+		for (Command<?> c : COMMANDS) builder.addCommand(c.getName(), c, c.getAlias());
 
 		Options options = new Options();
 		JCommander commander = builder.addObject(options).build();
@@ -39,7 +38,7 @@ public class CLIManager {
 			commander.parse(line.split(" "));
 
 			String cmdName = commander.getParsedCommand();
-			Optional<Command<?>> optCommand = commands.stream().filter(c -> c.getName().equalsIgnoreCase(cmdName)).findAny();
+			Optional<Command<?>> optCommand = COMMANDS.stream().filter(c -> c.getName().equalsIgnoreCase(cmdName)).findAny();
 
 			if (optCommand.isPresent()) {
 				Command<?> command = optCommand.get();
