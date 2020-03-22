@@ -31,7 +31,7 @@ public class LectureEndpoint {
 	}
 
 	@GetMapping("/lecture/{displayName}")
-	public Object getLecture(@PathVariable String displayName) {
+	public Object getLecture(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
 		if (Validation.nullOrEmpty(displayName)) return Error.INVALID_PARAM;
 
 		return this.lectureController.getLectureByDisplayName(displayName).getHttpResponse();
@@ -43,7 +43,7 @@ public class LectureEndpoint {
 	}
 
 	@GetMapping("/module/{moduleDisplayName}/lecture")
-	public Object getLecturesFromModule(@PathVariable String moduleDisplayName) {
+	public Object getLecturesFromModule(@PathVariable @NotNull @NotEmpty @NotBlank String moduleDisplayName) {
 		if (Validation.nullOrEmpty(moduleDisplayName)) return Error.INVALID_PARAM;
 
 		return this.lectureController.getAllLecturesFromModule(moduleDisplayName).getHttpResponse();
