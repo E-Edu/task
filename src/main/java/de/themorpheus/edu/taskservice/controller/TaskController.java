@@ -5,10 +5,9 @@ import de.themorpheus.edu.taskservice.database.model.LectureModel;
 import de.themorpheus.edu.taskservice.database.model.TaskModel;
 import de.themorpheus.edu.taskservice.database.model.TaskTypeModel;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
+import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.List;
 import java.util.UUID;
-
-import de.themorpheus.edu.taskservice.util.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
