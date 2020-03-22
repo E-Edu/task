@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ModuleRepository extends JpaRepository<ModuleModel, Integer> {
 
+	void deleteModuleByDisplayNameIgnoreCase(String displayName);
+
 	ModuleModel getModuleByModuleId(int moduleId);
 
 	ModuleModel getModuleByDisplayNameIgnoreCase(String displayName);
