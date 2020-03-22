@@ -13,9 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateTaskDTO {
 
-	@NotNull
-	@NotEmpty
-	@NotBlank
 	private String task;
 	private int necessaryPoints;
 
