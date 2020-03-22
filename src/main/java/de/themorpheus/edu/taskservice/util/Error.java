@@ -15,6 +15,7 @@ public class Error extends ResponseEntity<Object> {
 	public static final Error NOT_FOUND = new Error(HttpStatus.NOT_FOUND, i18n.NOT_FOUND);
 	public static final Error SERVER_ERROR = new Error(HttpStatus.FORBIDDEN, i18n.SERVER_ERROR);
 	public static final Error UNAUTHORIZED = new Error(HttpStatus.UNAUTHORIZED, i18n.UNAUTHORIZED);
+	public static final Error ALREADY_EXISTS = new Error(HttpStatus.CONFLICT, i18n.ALREADY_EXISTS);
 
 	private final int status;
 	private final String messageKey;

@@ -10,6 +10,9 @@ import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +44,7 @@ public class TaskEndpoint {
 	}
 
 	@GetMapping("/lecture/{lectureDisplayName}/task")
-	public Object getAllTasksFromLecture(@PathVariable String lectureDisplayName) {
+	public Object getAllTasksFromLecture(@PathVariable @NotNull @NotEmpty @NotBlank String lectureDisplayName) {
 		if (Validation.nullOrEmpty(lectureDisplayName)) return Error.INVALID_PARAM;
 
 		return this.taskController.getTasksFromLecture(lectureDisplayName).getHttpResponse();

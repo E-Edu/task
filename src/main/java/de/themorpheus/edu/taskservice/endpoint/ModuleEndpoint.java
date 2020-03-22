@@ -31,7 +31,7 @@ public class ModuleEndpoint {
 	}
 
 	@GetMapping("/module/{displayName}")
-	public Object getModule(@PathVariable String displayName) {
+	public Object getModule(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
 		if (Validation.nullOrEmpty(displayName)) return Error.INVALID_PARAM;
 
 		return this.moduleController.getModuleByDisplayName(displayName).getHttpResponse();
@@ -43,7 +43,7 @@ public class ModuleEndpoint {
 	}
 
 	@GetMapping("/subject/{subjectDisplayName}/module")
-	public Object getModulesFromSubject(@PathVariable String subjectDisplayName) {
+	public Object getModulesFromSubject(@PathVariable @NotNull @NotEmpty @NotBlank String subjectDisplayName) {
 		if (Validation.nullOrEmpty(subjectDisplayName)) return Error.INVALID_PARAM;
 
 		return this.moduleController.getAllModulesFromSubject(subjectDisplayName).getHttpResponse();
