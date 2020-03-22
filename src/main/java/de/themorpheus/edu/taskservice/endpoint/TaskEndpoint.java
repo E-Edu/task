@@ -2,6 +2,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.TaskController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.GetNextTaskDTO;
 import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.UUID;
 import javax.validation.Valid;
@@ -55,6 +56,11 @@ public class TaskEndpoint {
 		if (Validation.lowerZero(taskId)) return Error.INVALID_PARAM;
 
 		return this.taskController.verifyTask(taskId);
+	}
+
+	@PostMapping("/task/next")
+	public Object nextTask(@RequestBody @Valid GetNextTaskDTO dto) {
+		return this.taskController.getNextTask(dto.getLastTaskIds());
 	}
 
 	@DeleteMapping("/task/{taskId}")
