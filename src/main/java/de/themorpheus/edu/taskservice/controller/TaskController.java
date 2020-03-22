@@ -47,6 +47,12 @@ public class TaskController {
 		return this.taskRepository.save(taskModel);
 	}
 
+	public Object deleteTask(int taskId) {
+		taskRepository.deleteById(taskId);
+		//TODO delete solution
+		return null;
+	}
+
 	public List<TaskModel> getAllTasks() {
 		return this.taskRepository.findAll();
 	}
