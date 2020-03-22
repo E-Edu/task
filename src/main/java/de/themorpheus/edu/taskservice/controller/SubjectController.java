@@ -30,7 +30,6 @@ public class SubjectController {
 
 	public void deleteSubject(String displayName) {
 		SubjectModel subjectModel = this.subjectRepository.getSubjectByDisplayNameIgnoreCase(displayName);
-
 		if (Validation.validateNull(subjectModel)) return;
 
 		this.subjectRepository.deleteById(subjectModel.getSubjectId());
@@ -38,7 +37,6 @@ public class SubjectController {
 
 	public boolean doesSubjectExist(String displayName) {
 		SubjectModel subjectModel = this.subjectRepository.getSubjectByDisplayNameIgnoreCase(displayName);
-
 		return subjectModel != null;
 	}
 }
