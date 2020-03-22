@@ -6,6 +6,7 @@ import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +43,13 @@ public class TaskEndpoint {
 		if (Validation.lowerZero(taskId)) return Error.INVALID_PARAM;
 
 		return this.taskController.verifyTask(taskId);
+	}
+
+	@DeleteMapping("/task/{taskId}")
+	public Object deleteTask(@PathVariable("taskId") int taskId) {
+		if (Validation.lowerZero(taskId)) return Error.INVALID_PARAM;
+
+		return this.taskController.deleteTask(taskId);
 	}
 
 }
