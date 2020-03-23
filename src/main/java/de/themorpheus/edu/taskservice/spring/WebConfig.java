@@ -22,6 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 		if (!TaskServiceApplication.PRODUCTIVE) {
 			origins.add("localhost");
+			origins.add("localhost:3000");
 			origins.add("editor.swagger.io/");
 		}
 
