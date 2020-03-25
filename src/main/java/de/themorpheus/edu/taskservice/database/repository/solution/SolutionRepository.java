@@ -7,10 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SolutionRepository extends JpaRepository<SolutionModel, Integer> {
 
-	void deleteSolutionByDisplayNameIgnoreCase(String displayName);
 
-	SolutionModel getSolutionBySolutionId(int solutionId);
-
-	SolutionModel getSolutionByDisplayNameIgnoreCase(String displayName);
 
 }

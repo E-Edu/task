@@ -20,10 +20,12 @@ public class SolutionWordsaladController {
 	@Autowired private SolutionWordsaladRepository solutionWordsaladRepository;
 
 	public ControllerResult<SolutionWordsaladModel> create(CreateSolutionWordsaladDTO createSolutionWordsaladDTO) {
+		if (this.solutionWordsaladRepository.findById(createSolutionWordsaladDTO.getTaskId()).isPresent()) return ControllerResult.of(Error.ALREADY_EXISTS);
+
 		SolutionWordsaladModel solutionWordsaladModel = new SolutionWordsaladModel();
 		solutionWordsaladModel.setSolution(createSolutionWordsaladDTO.getSolution());
 		solutionWordsaladModel.setTaskId(createSolutionWordsaladDTO.getTaskId());
-		return ControllerResult.empty();
+		return ControllerResult.of(this.solutionWordsaladRepository.save(solutionWordsaladModel));
 	}
 
 	public ControllerResult<SolutionWordsaladModel> check(CheckSolutionWordsaladDTO checkSolutionWordsaladDTO) {
@@ -42,10 +44,12 @@ public class SolutionWordsaladController {
 		SolutionWordsaladModel solutionWordsaladModel = new SolutionWordsaladModel();
 		solutionWordsaladModel.setSolution(updateSolutionWordsaladDTO.getSolution());
 		solutionWordsaladModel.setTaskId(updateSolutionWordsaladDTO.getTaskId());
-		return ControllerResult.empty();
+		return ControllerResult.of(solutionWordsaladModel);
 	}
 
 	public ControllerResult<SolutionWordsaladModel> delete(int taskId) {
+		if (!this.solutionWordsaladRepository.findById(taskId).isPresent()) return ControllerResult.of(Error.NOT_FOUND);
+
 		this.solutionWordsaladRepository.deleteById(taskId);
 		return ControllerResult.empty();
 	}
