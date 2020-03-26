@@ -1,9 +1,9 @@
 package de.themorpheus.edu.taskservice.endpoint.solution;
 
 import de.themorpheus.edu.taskservice.controller.solution.GenericSolutionController;
-import de.themorpheus.edu.taskservice.endpoint.dto.solution.Generic.CheckGenericSolutionDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.solution.Generic.CreateGenericSolutionDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.solution.Generic.UpdateGenericSolutionDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.solution.generic.CheckGenericSolutionDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.solution.generic.CreateGenericSolutionDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.solution.generic.UpdateGenericSolutionDTO;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;

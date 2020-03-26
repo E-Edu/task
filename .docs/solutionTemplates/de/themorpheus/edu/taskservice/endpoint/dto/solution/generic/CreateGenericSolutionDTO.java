@@ -1,4 +1,4 @@
-package de.themorpheus.edu.taskservice.endpoint.dto.solution.Generic;
+package de.themorpheus.edu.taskservice.endpoint.dto.solution.generic;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SolutionRepository extends JpaRepository<SolutionModel, Integer> {
 
-
+	SolutionModel findSolutionModelByTaskId(int taskId);
 
 }

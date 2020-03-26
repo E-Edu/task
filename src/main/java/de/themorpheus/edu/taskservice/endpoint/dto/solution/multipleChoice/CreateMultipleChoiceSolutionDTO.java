@@ -1,4 +1,4 @@
-package de.themorpheus.edu.taskservice.endpoint.dto.solution.Generic;
+package de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -11,12 +11,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckGenericSolutionDTO {
+public class CreateMultipleChoiceSolutionDTO {
 
 	@Min(0)
 	private int taskId;
 
+
 	@NotNull @NotEmpty @NotBlank
 	private String solution;
+
+	private boolean isCorrect;
 
 }

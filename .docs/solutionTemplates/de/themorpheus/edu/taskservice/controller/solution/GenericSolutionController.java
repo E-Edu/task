@@ -2,9 +2,9 @@ package de.themorpheus.edu.taskservice.controller.solution;
 
 import de.themorpheus.edu.taskservice.database.model.solution.GenericSolutionModel;
 import de.themorpheus.edu.taskservice.database.repository.solution.GenericSolutionRepository;
-import de.themorpheus.edu.taskservice.endpoint.dto.solution.Generic.CheckGenericSolutionDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.solution.Generic.CreateGenericSolutionDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.solution.Generic.UpdateGenericSolutionDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.solution.generic.CheckGenericSolutionDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.solution.generic.CreateGenericSolutionDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.solution.generic.UpdateGenericSolutionDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
