@@ -16,7 +16,7 @@ public class ControllerResult<T> {
 	private String extra;
 
 	public Object getHttpResponse() {
-		return isErrorPresent() ? getError().copyWithExtra(this.getExtra()) : getResult();
+		return this.isErrorPresent() ? this.getError().copyWithExtra(this.getExtra()) : this.getResult();
 	}
 
 	public boolean isResultPresent() {
@@ -82,7 +82,7 @@ public class ControllerResult<T> {
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static <T> ControllerResult<T> ret(ControllerResult instance) {
-		if (instance.isErrorPresent()) throw new IllegalArgumentException("No error present in controller result");
+		if (instance.isErrorPresent()) throw new IllegalArgumentException("No error present in de.themorpheus.edu.taskservice.controller result");
 		return instance;
 	}
 

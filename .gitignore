@@ -203,3 +203,4 @@ mvnw.cmd
 /task-microservice-mariadb-data/
 
 .sentryEnabled
+test.java

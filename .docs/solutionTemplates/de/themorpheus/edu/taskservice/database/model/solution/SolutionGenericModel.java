@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table
-public class SolutionNAMEModel {
+public class SolutionGenericModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
