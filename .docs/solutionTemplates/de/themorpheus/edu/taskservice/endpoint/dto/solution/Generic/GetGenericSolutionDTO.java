@@ -1,4 +1,4 @@
-package de.themorpheus.edu.taskservice.endpoint.dto.solution.wordsalad;
+package de.themorpheus.edu.taskservice.endpoint.dto.solution.Generic;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateSolutionWordsaladDTO {
+public class GetGenericSolutionDTO {
 
 	@Min(0)
 	private int taskId;
@@ -20,3 +20,4 @@ public class CreateSolutionWordsaladDTO {
 	private String solution;
 
 }
+

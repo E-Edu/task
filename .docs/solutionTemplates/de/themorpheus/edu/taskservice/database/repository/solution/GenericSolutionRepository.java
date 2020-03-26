@@ -1,11 +1,11 @@
 package de.themorpheus.edu.taskservice.database.repository.solution;
 
-import de.themorpheus.edu.taskservice.database.model.solution.SolutionGenericModel;
+import de.themorpheus.edu.taskservice.database.model.solution.GenericSolutionModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SolutionGenericRepository extends JpaRepository<SolutionGenericModel, Integer> {
+public interface GenericSolutionRepository extends JpaRepository<GenericSolutionModel, Integer> {
 
 
 

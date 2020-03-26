@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckSolutionWordsaladDTO {
+public class UpdateWordsaladSolutionDTO {
 
 	@Min(0)
 	private int taskId;
