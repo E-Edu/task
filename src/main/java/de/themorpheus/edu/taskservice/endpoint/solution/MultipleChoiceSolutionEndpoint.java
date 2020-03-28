@@ -43,7 +43,7 @@ public class MultipleChoiceSolutionEndpoint {
 
 	@DeleteMapping("/solution/multiple_choice/{taskId}")
 	public Object delete(@PathVariable @Min(0) int taskId) {
-		return this.multipleChoiceSolutionController.delete(taskId);
+		return this.multipleChoiceSolutionController.delete(null); //TODO
 	}
 
 }

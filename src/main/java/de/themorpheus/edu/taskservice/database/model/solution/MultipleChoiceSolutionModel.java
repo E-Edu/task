@@ -18,7 +18,7 @@ public class MultipleChoiceSolutionModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int taskId;
+	private int solutionId;
 
 	private String solution;
 	private boolean isCorrect;

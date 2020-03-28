@@ -7,12 +7,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MultipleChoiceSolutionRepository extends JpaRepository<MultipleChoiceSolutionModel, Integer> {
 
-	MultipleChoiceSolutionModel findMultipleChoiceSolutionByTaskIdAndSolutionId(int taskId, int solutionId);
+	MultipleChoiceSolutionModel getMultipleChoiceSolutionBySolutionAndSolutionId(String solution, int solutionId);
 
-	MultipleChoiceSolutionModel getMultipleChoiceSolutionBySolutionAndTaskId(String solution, int taskId);
+	//void deleteMultipleChoiceSolutionByTaskIdAndSolutionId(int taskId, int solutionId);
 
-	void deleteMultipleChoiceSolutionByTaskIdAndSolutionId(int taskId, int solutionId);
-
-	void deleteAllMultipleChoiceSolutionsByTaskId(int taskId);
+	void deleteAllMultipleChoiceSolutionsBySolutionId(int solutionId);
 
 }
