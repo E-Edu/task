@@ -20,6 +20,7 @@ public class SubjectModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int subjectId;
 
-	private String displayName;
+	private String nameKey;
+	private String descriptionKey;
 
 }

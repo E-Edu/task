@@ -23,7 +23,7 @@ public class VotingModel {
 	private int votingModelId;
 
 	@OneToOne
-	private TaskModel taskdId;
+	private TaskModel taskId;
 
 	private UUID userId;
 

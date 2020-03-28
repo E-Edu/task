@@ -17,12 +17,13 @@ public class CreateTaskDTO {
 	private String task;
 	@Min(0)
 	private int necessaryPoints;
+	private String description;
 
 	@NotNull @NotBlank @NotEmpty
-	private String lectureDisplayName;
+	private String lectureNameKey;
 	@NotNull @NotBlank @NotEmpty
-	private String taskTypeDisplayName;
+	private String taskTypeNameKey;
 	@NotNull @NotBlank @NotEmpty
-	private String difficultyDisplayName;
+	private String difficultyNameKey;
 
 }

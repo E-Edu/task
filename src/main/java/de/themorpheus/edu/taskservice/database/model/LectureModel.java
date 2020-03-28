@@ -23,6 +23,6 @@ public class LectureModel {
 
 	@ManyToOne
 	private ModuleModel moduleId;
-	private String displayName;
+	private String nameKey;
 
 }

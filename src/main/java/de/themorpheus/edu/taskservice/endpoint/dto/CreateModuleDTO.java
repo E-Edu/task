@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 public class CreateModuleDTO {
 
 	@NotNull @NotBlank @NotEmpty
-	private String displayName;
+	private String nameKey;
 	@NotNull @NotBlank @NotEmpty
-	private String subjectDisplayName;
+	private String subjectNameKey;
 
 }
