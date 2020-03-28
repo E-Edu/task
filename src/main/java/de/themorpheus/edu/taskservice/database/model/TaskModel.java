@@ -22,6 +22,7 @@ public class TaskModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int taskId;
 
+	private String description;
 	private UUID authorId;
 	private String task;
 	private int necessaryPoints;

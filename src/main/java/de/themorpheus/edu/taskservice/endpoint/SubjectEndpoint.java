@@ -22,12 +22,12 @@ public class SubjectEndpoint {
 
 	@PostMapping(value = "/subject", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createSubject(@RequestBody @Valid CreateSubjectDTO dto) {
-		return this.subjectController.createSubject(dto.getDisplayName()).getHttpResponse();
+		return this.subjectController.createSubject(dto.getNameKey(), dto.getDescriptionKey()).getHttpResponse();
 	}
 
-	@GetMapping("/subject/{displayName}")
-	public Object getSubject(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
-		return this.subjectController.getSubjectByDisplayName(displayName).getHttpResponse();
+	@GetMapping("/subject/{nameKey}")
+	public Object getSubject(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
+		return this.subjectController.getSubjectByNameKey(nameKey).getHttpResponse();
 	}
 
 	@GetMapping("/subject")
@@ -35,9 +35,9 @@ public class SubjectEndpoint {
 		return this.subjectController.getAllSubjects().getHttpResponse();
 	}
 
-	@DeleteMapping(path = "/subject/{displayName}")
-	public void deleteSubject(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
-		this.subjectController.deleteSubject(displayName);
+	@DeleteMapping(path = "/subject/{nameKey}")
+	public void deleteSubject(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
+		this.subjectController.deleteSubject(nameKey);
 	}
 
 }

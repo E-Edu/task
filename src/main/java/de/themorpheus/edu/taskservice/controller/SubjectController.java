@@ -14,29 +14,29 @@ public class SubjectController {
 
 	@Autowired private SubjectRepository subjectRepository;
 
-	public ControllerResult<SubjectModel> createSubject(String displayName) {
-		if (doesSubjectExist(displayName)) return ControllerResult.of(Error.ALREADY_EXISTS);
+	public ControllerResult<SubjectModel> createSubject(String nameKey, String description) {
+		if (this.doesSubjectExist(nameKey)) return ControllerResult.of(Error.ALREADY_EXISTS);
 
-		return ControllerResult.of(this.subjectRepository.save(new SubjectModel(-1, displayName)));
+		return ControllerResult.of(this.subjectRepository.save(new SubjectModel(-1, nameKey, description)));
 	}
 
-	public ControllerResult<SubjectModel> getSubjectByDisplayName(String displayName) {
-		return ControllerResult.of(this.subjectRepository.getSubjectByDisplayNameIgnoreCase(displayName));
+	public ControllerResult<SubjectModel> getSubjectByNameKey(String nameKey) {
+		return ControllerResult.of(this.subjectRepository.getSubjectByNameKeyIgnoreCase(nameKey));
 	}
 
 	public ControllerResult<List<SubjectModel>> getAllSubjects() {
 		return ControllerResult.of(this.subjectRepository.findAll());
 	}
 
-	public void deleteSubject(String displayName) {
-		SubjectModel subjectModel = this.subjectRepository.getSubjectByDisplayNameIgnoreCase(displayName);
+	public void deleteSubject(String nameKey) {
+		SubjectModel subjectModel = this.subjectRepository.getSubjectByNameKeyIgnoreCase(nameKey);
 		if (Validation.validateNull(subjectModel)) return;
 
 		this.subjectRepository.deleteById(subjectModel.getSubjectId());
 	}
 
-	public boolean doesSubjectExist(String displayName) {
-		SubjectModel subjectModel = this.subjectRepository.getSubjectByDisplayNameIgnoreCase(displayName);
+	public boolean doesSubjectExist(String nameKey) {
+		SubjectModel subjectModel = this.subjectRepository.getSubjectByNameKeyIgnoreCase(nameKey);
 		return subjectModel != null;
 	}
 }

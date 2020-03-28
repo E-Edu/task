@@ -12,16 +12,16 @@ public class TaskTypeController {
 
 	@Autowired private TaskTypeRepository taskTypeRepository;
 
-	public ControllerResult<TaskTypeModel> createTaskType(String displayName) {
-		return ControllerResult.of(this.taskTypeRepository.save(new TaskTypeModel(-1, displayName)));
+	public ControllerResult<TaskTypeModel> createTaskType(String nameKey) {
+		return ControllerResult.of(this.taskTypeRepository.save(new TaskTypeModel(-1, nameKey)));
 	}
 
-	public ControllerResult<TaskTypeModel> getTaskTypeByDisplayName(String displayName) {
-		return ControllerResult.of(this.taskTypeRepository.getTaskTypeByDisplayNameIgnoreCase(displayName));
+	public ControllerResult<TaskTypeModel> getTaskTypeByNameKey(String nameKey) {
+		return ControllerResult.of(this.taskTypeRepository.getTaskTypeByNameKeyIgnoreCase(nameKey));
 	}
 
-	public void deleteTaskType(String displayName) {
-		this.taskTypeRepository.deleteTaskTypeByDisplayNameIgnoreCase(displayName);
+	public void deleteTaskType(String nameKey) {
+		this.taskTypeRepository.deleteTaskTypeByNameKeyIgnoreCase(nameKey);
 	}
 
 	public ControllerResult<List<TaskTypeModel>> getAllTaskTypes() {
