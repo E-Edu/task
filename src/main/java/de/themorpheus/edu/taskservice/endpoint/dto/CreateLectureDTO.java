@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 public class CreateLectureDTO {
 
 	@NotNull @NotBlank @NotEmpty
-	private String displayName;
+	private String nameKey;
 	@NotNull @NotBlank @NotEmpty
-	private String moduleDisplayName;
+	private String moduleNameKey;
 
 }

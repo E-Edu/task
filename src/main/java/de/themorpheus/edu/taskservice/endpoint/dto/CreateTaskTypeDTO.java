@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class CreateTaskTypeDTO {
 
 	@NotNull @NotBlank @NotEmpty
-	private String displayName;
+	private String nameKey;
 
 }

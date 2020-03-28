@@ -20,6 +20,6 @@ public class TaskTypeModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int taskTypeId;
 
-	private String displayName;
+	private String nameKey;
 
 }

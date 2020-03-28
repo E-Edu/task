@@ -16,29 +16,29 @@ public class ModuleController {
 
 	@Autowired private SubjectController subjectController;
 
-	public ControllerResult<ModuleModel> createModule(String displayName, String subjectDisplayName) {
-		ControllerResult<SubjectModel> subjectModelResult = this.subjectController.getSubjectByDisplayName(subjectDisplayName);
+	public ControllerResult<ModuleModel> createModule(String nameKey, String subjectNameKey) {
+		ControllerResult<SubjectModel> subjectModelResult = this.subjectController.getSubjectByNameKey(subjectNameKey);
 		if (subjectModelResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "subject");
 		return ControllerResult.of(this.moduleRepository.save(
-				new ModuleModel(-1, subjectModelResult.getResult(), displayName)
+				new ModuleModel(-1, subjectModelResult.getResult(), nameKey)
 			)
 		);
 	}
 
-	public ControllerResult<ModuleModel> getModuleByDisplayName(String displayName) {
-		return ControllerResult.of(this.moduleRepository.getModuleByDisplayNameIgnoreCase(displayName));
+	public ControllerResult<ModuleModel> getModuleByNameKey(String nameKey) {
+		return ControllerResult.of(this.moduleRepository.getModuleByNameKeyIgnoreCase(nameKey));
 	}
 
-	public void deleteModule(String displayName) {
-		this.moduleRepository.deleteModuleByDisplayNameIgnoreCase(displayName);
+	public void deleteModule(String nameKey) {
+		this.moduleRepository.deleteModuleByNameKeyIgnoreCase(nameKey);
 	}
 
 	public ControllerResult<List<ModuleModel>> getAllModules() {
 		return ControllerResult.of(this.moduleRepository.findAll());
 	}
 
-	public ControllerResult<List<ModuleModel>> getAllModulesFromSubject(String subjectDisplayName) {
-		ControllerResult<SubjectModel> subjectModelResult = this.subjectController.getSubjectByDisplayName(subjectDisplayName);
+	public ControllerResult<List<ModuleModel>> getAllModulesFromSubject(String subjectNameKey) {
+		ControllerResult<SubjectModel> subjectModelResult = this.subjectController.getSubjectByNameKey(subjectNameKey);
 		if (subjectModelResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "subject");
 		return ControllerResult.of(this.moduleRepository.getModulesBySubjectId(subjectModelResult.getResult()));
 	}

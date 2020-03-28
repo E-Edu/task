@@ -25,14 +25,14 @@ public class DifficultyEndpoint {
 
 	@PostMapping(value = "/difficulty", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createDifficulty(@RequestBody @Valid CreateDifficultyDTO dto) {
-		return this.difficultyController.createDifficulty(dto.getDisplayName()).getHttpResponse();
+		return this.difficultyController.createDifficulty(dto.getNameKey()).getHttpResponse();
 	}
 
-	@GetMapping("/difficulty/{displayName}")
-	public Object getDifficulty(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
-		if (Validation.nullOrEmpty(displayName)) return Error.INVALID_PARAM;
+	@GetMapping("/difficulty/{nameKey}")
+	public Object getDifficulty(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
+		if (Validation.nullOrEmpty(nameKey)) return Error.INVALID_PARAM;
 
-		return this.difficultyController.getDifficultyByDisplayName(displayName).getHttpResponse();
+		return this.difficultyController.getDifficultyByNameKey(nameKey).getHttpResponse();
 	}
 
 	@GetMapping("/difficulty")
@@ -40,9 +40,9 @@ public class DifficultyEndpoint {
 		return this.difficultyController.getAllDifficulties().getHttpResponse();
 	}
 
-	@DeleteMapping("/difficulty/{displayName}")
-	public Object deleteDifficulty(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
-		this.difficultyController.deleteDifficulty(displayName);
+	@DeleteMapping("/difficulty/{nameKey}")
+	public Object deleteDifficulty(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
+		this.difficultyController.deleteDifficulty(nameKey);
 		return ControllerResult.empty();
 	}
 

@@ -12,16 +12,16 @@ public class DifficultyController {
 
 	@Autowired private DifficultyRepository difficultyRepository;
 
-	public ControllerResult<DifficultyModel> createDifficulty(String displayName) {
-		return ControllerResult.of(this.difficultyRepository.save(new DifficultyModel(-1, displayName)));
+	public ControllerResult<DifficultyModel> createDifficulty(String nameKey) {
+		return ControllerResult.of(this.difficultyRepository.save(new DifficultyModel(-1, nameKey)));
 	}
 
-	public ControllerResult<DifficultyModel> getDifficultyByDisplayName(String displayName) {
-		return ControllerResult.of(this.difficultyRepository.getDifficultyByDisplayNameIgnoreCase(displayName));
+	public ControllerResult<DifficultyModel> getDifficultyByNameKey(String nameKey) {
+		return ControllerResult.of(this.difficultyRepository.getDifficultyByNameKeyIgnoreCase(nameKey));
 	}
 
-	public void deleteDifficulty(String displayName) {
-		this.difficultyRepository.deleteDifficultyByDisplayNameIgnoreCase(displayName);
+	public void deleteDifficulty(String nameKey) {
+		this.difficultyRepository.deleteDifficultyByNameKeyIgnoreCase(nameKey);
 	}
 
 	public ControllerResult<List<DifficultyModel>> getAllDifficulties() {

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class CreateSubjectDTO {
 
 	@NotNull @NotBlank @NotEmpty
-	private String displayName;
+	private String nameKey;
+	private String descriptionKey;
 
 }
