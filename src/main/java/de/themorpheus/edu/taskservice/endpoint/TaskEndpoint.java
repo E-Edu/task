@@ -51,6 +51,11 @@ public class TaskEndpoint {
 		return this.taskController.updateTask(taskId, dto).getHttpResponse();
 	}
 
+	@PutMapping("/task/vote/{taskId}")
+	public Object voteTask(@PathVariable int taskId, @RequestBody int vote) {
+		return this.taskController.voteTask(taskId, vote).getHttpResponse();
+	}
+
 	@PostMapping("/task/next")
 	public Object nextTask(@RequestBody @Valid GetNextTaskDTO dto) {
 		return this.taskController.getNextTask(dto.getLastTaskIds()).getHttpResponse();
