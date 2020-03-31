@@ -29,4 +29,6 @@ services:
       DATABASE_DATABASE: e-edu
       JWT_SECRET: SECRET
       SERVICE_SECRET: SECRET
+      PRODUCTIVE: "false"
+      SENTRY_ENABLED: "${SENTRY_ENABLED}"
 
