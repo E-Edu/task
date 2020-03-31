@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="warn">
+<Configuration status="warn" packages="org.apache.logging.log4j.core,io.sentry.log4j2">
 	<Appenders>
+
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout>
 				<pattern>%style{[}{dim,white}%d{HH:mm:ss}%style{][}{dim,white}%highlight{%-5.5level{INFO=INFO,
@@ -10,6 +11,7 @@
 				</pattern>
 			</PatternLayout>
 		</Console>
+
 		<RollingRandomAccessFile name="Logfile" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log">
 			<PatternLayout pattern="[%d{dd MMM HH:mm:ss}][%level][%logger]: %msg%n"/>
 			<Policies>
@@ -17,13 +19,19 @@
 				<OnStartupTriggeringPolicy/>
 			</Policies>
 		</RollingRandomAccessFile>
+
+		<Sentry name="Sentry" />
 	</Appenders>
 
 	<Loggers>
 		<Root level="debug">
 			<AppenderRef ref="Logfile"/>
 			<AppenderRef ref="Console" level="debug"/>
+			<AppenderRef ref="Sentry" level="WARN" />
 		</Root>
 		<Logger name="org.reflections" level="off"/>
+		<Logger name="org.hibernate" level="warn"/>
+		<Logger name="org.springframework" level="warn"/>
+		<Logger name="com.zaxxer.hikari" level="warn"/>
 	</Loggers>
 </Configuration>
