@@ -15,6 +15,15 @@ services:
     volumes:
       - ./task-microservice-mariadb-data:/var/lib/mysql
 
+  redis:
+    image: redis
+    command: redis-server
+    restart: always
+    expose:
+      - "6379"
+    volumes:
+      - "./redis:/data"
+
   task:
     image: eedu/taskms
     container_name: task
@@ -31,4 +40,7 @@ services:
       SERVICE_SECRET: SECRET
       PRODUCTIVE: "false"
       SENTRY_ENABLED: "${SENTRY_ENABLED}"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
 
