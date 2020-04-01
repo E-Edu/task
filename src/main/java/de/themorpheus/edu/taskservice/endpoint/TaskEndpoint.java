@@ -4,6 +4,7 @@ import de.themorpheus.edu.taskservice.controller.TaskController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.GetNextTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.VoteTaskDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
@@ -52,8 +53,8 @@ public class TaskEndpoint {
 	}
 
 	@PutMapping("/task/vote/{taskId}")
-	public Object voteTask(@PathVariable int taskId, @RequestBody int vote) {
-		return this.taskController.voteTask(taskId, vote).getHttpResponse();
+	public Object voteTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid VoteTaskDTO dto) {
+		return this.taskController.voteTask(taskId, dto.getVote()).getHttpResponse();
 	}
 
 	@PostMapping("/task/next")
