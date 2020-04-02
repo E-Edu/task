@@ -4,9 +4,7 @@ import de.themorpheus.edu.taskservice.database.model.DifficultyModel;
 import de.themorpheus.edu.taskservice.database.model.LectureModel;
 import de.themorpheus.edu.taskservice.database.model.TaskModel;
 import de.themorpheus.edu.taskservice.database.model.TaskTypeModel;
-import de.themorpheus.edu.taskservice.database.model.VotingModel;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
-import de.themorpheus.edu.taskservice.database.repository.VotingRepository;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
@@ -24,7 +22,6 @@ public class TaskController {
 	private static final Random RANDOM = new Random();
 
 	@Autowired private TaskRepository taskRepository;
-	@Autowired private VotingRepository votingRepository;
 
 	@Autowired private LectureController lectureController;
 	@Autowired private TaskTypeController taskTypeController;
@@ -119,19 +116,7 @@ public class TaskController {
 		return ControllerResult.of(this.taskRepository.save(taskModel));
 	}
 
-	public ControllerResult<Object> voteTask(int taskId, int vote) {
-		TaskModel taskModel = this.taskRepository.getTaskByTaskId(taskId);
-
-		// Check if task exists
-		if (Validation.validateNull(taskModel)) return ControllerResult.of(Error.NOT_FOUND);
-
-		VotingModel votingModel = new VotingModel(
-			-1,
-			taskModel,
-			UUID.randomUUID(), // TODO: Use real user ID instead
-			vote
-		);
-		return ControllerResult.of(this.votingRepository.save(votingModel));
+	public TaskModel getTaskByTaskId(int taskId) {
+		return this.taskRepository.getTaskByTaskId(taskId);
 	}
-
 }
