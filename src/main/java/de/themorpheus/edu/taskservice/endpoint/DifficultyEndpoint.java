@@ -40,4 +40,5 @@ public class DifficultyEndpoint {
 	public Object deleteDifficulty(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
 		return this.difficultyController.deleteDifficulty(nameKey).getHttpResponse();
 	}
+
 }

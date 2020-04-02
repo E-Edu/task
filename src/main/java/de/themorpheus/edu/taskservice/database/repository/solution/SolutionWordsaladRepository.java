@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SolutionWordsaladRepository extends JpaRepository<WordsaladSolutionModel, Integer> {
 
-
-
 }

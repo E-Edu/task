@@ -47,4 +47,5 @@ public class LectureEndpoint {
 		this.lectureController.deleteLecture(nameKey);
 		return ControllerResult.empty();
 	}
+
 }

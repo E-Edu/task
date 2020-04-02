@@ -1,6 +1,8 @@
 package de.themorpheus.edu.taskservice.pubsub;
 
 import de.themorpheus.edu.taskservice.pubsub.dto.PubSubDTO;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,11 +17,12 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.Topic;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class PubSubService {
+
+	@Value("${spring.redis.enabled}")
+	public static boolean ENABLED;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PubSubService.class.getSimpleName());
 
@@ -59,7 +62,7 @@ public class PubSubService {
 	public RedisMessageListenerContainer redisContainer() {
 		RedisMessageListenerContainer container = new RedisMessageListenerContainer();
 
-		container.setConnectionFactory(jedisConnectionFactory());
+		container.setConnectionFactory(this.jedisConnectionFactory());
 		container.setErrorHandler(t -> LOGGER.error("Redis exceptions", t));
 
 		return container;
@@ -70,7 +73,7 @@ public class PubSubService {
 		LoggingRedisTemplate<String, Object> template = new LoggingRedisTemplate<>();
 		GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer();
 
-		template.setConnectionFactory(jedisConnectionFactory());
+		template.setConnectionFactory(this.jedisConnectionFactory());
 		template.setKeySerializer(serializer);
 		template.setHashValueSerializer(serializer);
 		template.setValueSerializer(serializer);

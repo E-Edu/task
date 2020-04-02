@@ -40,4 +40,5 @@ public class LectureController {
 		if (moduleModel.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "module");
 		return ControllerResult.of(this.lectureRepository.getLecturesByModuleId(moduleModel.getResult()));
 	}
+
 }

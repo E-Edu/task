@@ -23,7 +23,7 @@ public class MultipleChoiceSolutionController {
 
 	@Autowired private SolutionController solutionController;
 
-	public ControllerResult<MultipleChoiceSolutionModel> create(CreateMultipleChoiceSolutionDTO dto) {
+	public ControllerResult<MultipleChoiceSolutionModel> createMultipleChoiceSolution(CreateMultipleChoiceSolutionDTO dto) {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolutionAndCreateIfNotExists(dto.getTaskId(), NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
@@ -31,7 +31,7 @@ public class MultipleChoiceSolutionController {
 				optionalSolution.getResult().getSolutionId(), dto.getSolution(), dto.isCorrect())));
 	}
 
-	public ControllerResult<CheckedMultipleChoiceSolutionsDTO> check(CheckMultipleChoiceSolutionDTO dto) {
+	public ControllerResult<CheckedMultipleChoiceSolutionsDTO> checkMultipleChoiceSolution(CheckMultipleChoiceSolutionDTO dto) {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(dto.getTaskId(), NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
@@ -41,13 +41,13 @@ public class MultipleChoiceSolutionController {
 
 		boolean[] checkedSolutions = new boolean[dto.getSolutions().length];
 		for (int i = 0; i < checkedSolutions.length; i++) {
-			checkedSolutions[i] = multipleChoiceSolutionModels.get(i).getSolution().equals(dto.getSolutions()[i]);
+			checkedSolutions[i] = multipleChoiceSolutionModels.get(i).getSolution().equalsIgnoreCase(dto.getSolutions()[i]);
 		}
 
 		return ControllerResult.of(new CheckedMultipleChoiceSolutionsDTO(checkedSolutions));
 	}
 
-	public ControllerResult<MultipleChoiceSolutionModel> delete(int taskId, String solution) {
+	public ControllerResult<MultipleChoiceSolutionModel> deleteMultipleChoiceSolution(int taskId, String solution) {
 		this.multipleChoiceSolutionRepository.deleteMultipleChoiceSolutionBySolutionIdAndSolution(taskId, solution);
 		return ControllerResult.empty();
 	}
@@ -63,7 +63,7 @@ public class MultipleChoiceSolutionController {
 		this.multipleChoiceSolutionRepository.deleteAllMultipleChoiceSolutionsBySolutionId(optionalSolution.getResult().getSolutionId());
 	}
 
-	public ControllerResult<GetMultipleChoiceSolutionDTO> get(int taskId) {
+	public ControllerResult<GetMultipleChoiceSolutionDTO> getMultipleChoiceSolution(int taskId) {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 

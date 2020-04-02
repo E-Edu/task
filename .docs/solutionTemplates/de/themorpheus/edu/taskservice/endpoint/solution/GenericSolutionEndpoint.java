@@ -18,31 +18,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GenericSolutionEndpoint {
 
-	@Autowired
-	GenericSolutionController genericSolutionController;
+	@Autowired private GenericSolutionController genericSolutionController;
 
-	@PostMapping("/solution/Generic")
-	public Object create(@RequestBody @Valid CreateGenericSolutionDTO createGenericSolutionDTO) {
+	@PostMapping("/solution/generic")
+	public Object createGenericSolution(@RequestBody @Valid CreateGenericSolutionDTO createGenericSolutionDTO) {
 		return this.genericSolutionController.create(createGenericSolutionDTO);
 	}
 
-	@PostMapping("/solution/Generic/check")
-	public Object check(@RequestBody @Valid CheckGenericSolutionDTO checkGenericSolutionDTO) {
+	@PostMapping("/solution/generic/check")
+	public Object checkGenericSolution(@RequestBody @Valid CheckGenericSolutionDTO checkGenericSolutionDTO) {
 		return this.genericSolutionController.check(checkGenericSolutionDTO);
 	}
 
-	@GetMapping("/solution/Generic/{taskId}")
-	public Object get(@PathVariable @Min(0) int taskId) {
+	@GetMapping("/solution/generic/{taskId}")
+	public Object getGenericSolution(@PathVariable @Min(0) int taskId) {
 		return this.genericSolutionController.get(taskId);
 	}
 
-	@PutMapping("/solution/Generic")
-	public Object update(@RequestBody @Valid UpdateGenericSolutionDTO updateGenericSolutionDTO) {
+	@PutMapping("/solution/generic")
+	public Object updateGenericSolution(@RequestBody @Valid UpdateGenericSolutionDTO updateGenericSolutionDTO) {
 		return this.genericSolutionController.update(updateGenericSolutionDTO);
 	}
 
-	@DeleteMapping("/solution/Generic/{taskId}")
-	public Object delete(@PathVariable @Min(0) int taskId) {
+	@DeleteMapping("/solution/generic/{taskId}")
+	public Object deleteGenericSolution(@PathVariable @Min(0) int taskId) {
 		return this.genericSolutionController.delete(taskId);
 	}
 

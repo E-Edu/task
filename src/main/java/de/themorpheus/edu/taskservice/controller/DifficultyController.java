@@ -28,4 +28,5 @@ public class DifficultyController {
 	public ControllerResult<List<DifficultyModel>> getAllDifficulties() {
 		return ControllerResult.of(this.difficultyRepository.findAll());
 	}
+
 }

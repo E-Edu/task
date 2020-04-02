@@ -21,27 +21,28 @@ public class WordsaladSolutionEndpoint {
 	@Autowired private WordsaladSolutionController wordsaladSolutionController;
 
 	@PostMapping("/solution/wordsalad")
-	public Object create(@RequestBody @Valid CreateWordsaladSolutionDTO createWordsaladSolutionDTO) {
-		return this.wordsaladSolutionController.create(createWordsaladSolutionDTO).getHttpResponse();
+	public Object createWordsaladSolution(@RequestBody @Valid CreateWordsaladSolutionDTO createWordsaladSolutionDTO) {
+		return this.wordsaladSolutionController.createSolutionWordsalad(createWordsaladSolutionDTO).getHttpResponse();
 	}
 
 	@PostMapping("/solution/wordsalad/check")
-	public Object check(@RequestBody @Valid CheckWordsaladSolutionDTO checkWordsaladSolutionDTO) {
-		return this.wordsaladSolutionController.check(checkWordsaladSolutionDTO).getHttpResponse();
+	public Object checkWordsaladSolution(@RequestBody @Valid CheckWordsaladSolutionDTO checkWordsaladSolutionDTO) {
+		return this.wordsaladSolutionController.checkSolutionWordsalad(checkWordsaladSolutionDTO).getHttpResponse();
 	}
 
 	@GetMapping("/solution/wordsalad/{taskId}")
-	public Object get(@PathVariable @Min(0) int taskId) {
-		return this.wordsaladSolutionController.get(taskId).getHttpResponse();
+	public Object getWordsaladSolution(@PathVariable @Min(0) int taskId) {
+		return this.wordsaladSolutionController.getSolutionWordsalad(taskId).getHttpResponse();
 	}
 
 	@PutMapping("/solution/wordsalad")
-	public Object update(@RequestBody @Valid UpdateWordsaladSolutionDTO updateWordsaladSolutionDTO) {
-		return this.wordsaladSolutionController.update(updateWordsaladSolutionDTO).getHttpResponse();
+	public Object updateWordsaladSolution(@RequestBody @Valid UpdateWordsaladSolutionDTO updateWordsaladSolutionDTO) {
+		return this.wordsaladSolutionController.updateSolutionWordsalad(updateWordsaladSolutionDTO).getHttpResponse();
 	}
 
 	@DeleteMapping("/solution/wordsalad/{taskId}")
-	public Object delete(@PathVariable @Min(0) int taskId) {
-		return this.wordsaladSolutionController.delete(taskId).getHttpResponse();
+	public Object deleteWordsaladSolution(@PathVariable @Min(0) int taskId) {
+		return this.wordsaladSolutionController.deleteSolutionWordsalad(taskId).getHttpResponse();
 	}
+
 }

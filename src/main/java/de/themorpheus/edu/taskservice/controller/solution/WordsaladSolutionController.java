@@ -24,7 +24,7 @@ public class WordsaladSolutionController {
 
 	@Autowired private SolutionController solutionController;
 
-	public ControllerResult<WordsaladSolutionModel> create(CreateWordsaladSolutionDTO dto) {
+	public ControllerResult<WordsaladSolutionModel> createSolutionWordsalad(CreateWordsaladSolutionDTO dto) {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolutionAndCreateIfNotExists(dto.getTaskId(), NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
@@ -33,7 +33,7 @@ public class WordsaladSolutionController {
 		return ControllerResult.of(this.solutionWordsaladRepository.save(new WordsaladSolutionModel(-1, dto.getSolution())));
 	}
 
-	public ControllerResult<WordsaladSolutionModel> check(CheckWordsaladSolutionDTO dto) {
+	public ControllerResult<WordsaladSolutionModel> checkSolutionWordsalad(CheckWordsaladSolutionDTO dto) {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(dto.getTaskId(), NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
@@ -41,11 +41,11 @@ public class WordsaladSolutionController {
 				optionalSolution.getResult().getSolutionId());
 		if (!wordsaladSolutionModel.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		if (wordsaladSolutionModel.get().getSolution().equals(dto.getSolution())) return ControllerResult.empty();
+		if (wordsaladSolutionModel.get().getSolution().equalsIgnoreCase(dto.getSolution())) return ControllerResult.empty();
 		else return ControllerResult.of(Error.WRONG_ANSWER, NAME_KEY);
 	}
 
-	public ControllerResult<WordsaladSolutionModel> update(UpdateWordsaladSolutionDTO dto) {
+	public ControllerResult<WordsaladSolutionModel> updateSolutionWordsalad(UpdateWordsaladSolutionDTO dto) {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(dto.getTaskId(), NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
@@ -59,7 +59,7 @@ public class WordsaladSolutionController {
 		return ControllerResult.of(this.solutionWordsaladRepository.save(wordsaladSolutionModel));
 	}
 
-	public ControllerResult<WordsaladSolutionModel> delete(int taskId) {
+	public ControllerResult<WordsaladSolutionModel> deleteSolutionWordsalad(int taskId) {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
@@ -67,7 +67,7 @@ public class WordsaladSolutionController {
 		return ControllerResult.empty();
 	}
 
-	public ControllerResult<GetWordsaladSolutionDTO> get(int taskId) {
+	public ControllerResult<GetWordsaladSolutionDTO> getSolutionWordsalad(int taskId) {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
@@ -75,10 +75,9 @@ public class WordsaladSolutionController {
 				optionalSolution.getResult().getSolutionId());
 		if (!wordsaladSolutionModel.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		List<Character> characters = new ArrayList<>();
-		for (char c : wordsaladSolutionModel.get().getSolution().toCharArray()) {
-			characters.add(c);
-		}
+		List<Character> characters = new ArrayList<>(wordsaladSolutionModel.get().getSolution().length());
+		for (char c : wordsaladSolutionModel.get().getSolution().toCharArray()) characters.add(c);
+
 		StringBuilder output = new StringBuilder(wordsaladSolutionModel.get().getSolution().length());
 		while (characters.size() != 0) {
 			int randPicker = (int) (Math.random() * characters.size());
@@ -87,4 +86,5 @@ public class WordsaladSolutionController {
 
 		return ControllerResult.of(new GetWordsaladSolutionDTO(output.toString()));
 	}
+
 }

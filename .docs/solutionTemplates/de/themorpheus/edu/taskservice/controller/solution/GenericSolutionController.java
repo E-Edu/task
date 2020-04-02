@@ -14,25 +14,25 @@ public class GenericSolutionController {
 
 	@Autowired private GenericSolutionRepository genericSolutionRepository;
 
-	public ControllerResult<GenericSolutionModel> create(CreateGenericSolutionDTO createGenericSolutionDTO) {
+	public ControllerResult<GenericSolutionModel> createGenericSolution(CreateGenericSolutionDTO dto) {
 		return null;	//TODO: Create solutions for task
 	}
 
-	public ControllerResult<GenericSolutionModel> check(CheckGenericSolutionDTO checkGenericSolutionDTO) {
+	public ControllerResult<GenericSolutionModel> checkGenericSolution(CheckGenericSolutionDTO dto) {
 		return null;	//TODO: Check if answer is correct
 						//WrongAnswer: ControllerResult.of(Error.WRONG_ANSWER);
 						//CorrectAnswer: ControllerResult.empty();
 	}
 
-	public ControllerResult<GenericSolutionModel> update(UpdateGenericSolutionDTO updateGenericSolutionDTO) {
+	public ControllerResult<GenericSolutionModel> updateGenericSolution(UpdateGenericSolutionDTO dto) {
 		return null;	//TODO: Update all solutions
 	}
 
-	public ControllerResult<GenericSolutionModel> delete(int taskId) {
-		return ControllerResult.empty();	//TODO: Delete all solutions
+	public ControllerResult<GenericSolutionModel> deleteGenericSolution(int taskId) {
+		return null;	//TODO: Delete all solutions
 	}
 
-	public ControllerResult<GenericSolutionModel> get(int taskId) {
+	public ControllerResult<GenericSolutionModel> getGenericSolution(int taskId) {
 		return null;	//TODO: Get possible solutions
 	}
 }
