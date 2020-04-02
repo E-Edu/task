@@ -1,4 +1,4 @@
-package de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice;
+package de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice.get;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;

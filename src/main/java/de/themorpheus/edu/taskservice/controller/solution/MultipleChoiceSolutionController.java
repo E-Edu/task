@@ -1,64 +1,82 @@
 package de.themorpheus.edu.taskservice.controller.solution;
 
 import de.themorpheus.edu.taskservice.database.model.solution.MultipleChoiceSolutionModel;
+import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.repository.solution.MultipleChoiceSolutionRepository;
-import de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice.CheckMultipleChoiceSolutionDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice.CreateMultipleChoiceSolutionDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice.DeleteMultipleChoiceSolutionDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice.UpdateMultipleChoiceSolutionDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice.get.CheckMultipleChoiceSolutionDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice.get.CreateMultipleChoiceSolutionDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice.ret.CheckedMultipleChoiceSolutionsDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice.ret.GetMultipleChoiceSolutionDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
+import java.util.Collections;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MultipleChoiceSolutionController {
 
-	private static final String NAME_KEY = "multipleChoice";
+	private static final String NAME_KEY = "multiple_choice_solution";
 
 	@Autowired private MultipleChoiceSolutionRepository multipleChoiceSolutionRepository;
 
 	@Autowired private SolutionController solutionController;
 
 	public ControllerResult<MultipleChoiceSolutionModel> create(CreateMultipleChoiceSolutionDTO dto) {
-		ControllerResult<Integer> controllerResult = this.solutionController.getSolutionIdByTaskIdAndNameKey(dto.getTaskId(), NAME_KEY);
-		if (controllerResult.isErrorPresent()) return ControllerResult.of(controllerResult.getError(), controllerResult.getExtra());
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolutionAndCreateIfNotExists(dto.getTaskId(), NAME_KEY);
+		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
 		return ControllerResult.of(this.multipleChoiceSolutionRepository.save(new MultipleChoiceSolutionModel(
-				controllerResult.getResult(),
-				dto.getSolution(),
-				dto.isCorrect())));
+				optionalSolution.getResult().getSolutionId(), dto.getSolution(), dto.isCorrect())));
 	}
 
-	public ControllerResult<MultipleChoiceSolutionModel> check(CheckMultipleChoiceSolutionDTO dto) {
-		MultipleChoiceSolutionModel multipleChoiceSolutionModel = this.multipleChoiceSolutionRepository.getMultipleChoiceSolutionBySolutionAndSolutionId(
-				dto.getSolution(),
-				dto.getTaskId());
-		if (multipleChoiceSolutionModel == null) return ControllerResult.of(Error.NOT_FOUND, "multipleChoiceSolution");
-		if (multipleChoiceSolutionModel.isCorrect()) {
-			return ControllerResult.empty();
-		} else {
-			return ControllerResult.of(Error.WRONG_ANSWER, "multipleChoiceSolution");
+	public ControllerResult<CheckedMultipleChoiceSolutionsDTO> check(CheckMultipleChoiceSolutionDTO dto) {
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(dto.getTaskId(), NAME_KEY);
+		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
+
+		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository.findAllById(
+				Collections.singleton(optionalSolution.getResult().getSolutionId()));
+		if (multipleChoiceSolutionModels.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		boolean[] checkedSolutions = new boolean[dto.getSolutions().length];
+		for (int i = 0; i < checkedSolutions.length; i++) {
+			checkedSolutions[i] = multipleChoiceSolutionModels.get(i).getSolution().equals(dto.getSolutions()[i]);
 		}
+
+		return ControllerResult.of(new CheckedMultipleChoiceSolutionsDTO(checkedSolutions));
 	}
 
-	public ControllerResult<MultipleChoiceSolutionModel> update(UpdateMultipleChoiceSolutionDTO dto) {
-		return null;
-	}
-
-	public ControllerResult<MultipleChoiceSolutionModel> delete(DeleteMultipleChoiceSolutionDTO dto) {
-		//this.multipleChoiceSolutionRepository.deleteMultipleChoiceSolutionByTaskIdAndSolutionId(
-		//		dto.getTaskId(),
-		//		dto.getSolutionId());
+	public ControllerResult<MultipleChoiceSolutionModel> delete(int taskId, String solution) {
+		this.multipleChoiceSolutionRepository.deleteMultipleChoiceSolutionBySolutionIdAndSolution(taskId, solution);
 		return ControllerResult.empty();
 	}
 
-	public ControllerResult<MultipleChoiceSolutionController> deleteAll(int taskId) {
-		this.multipleChoiceSolutionRepository.deleteAllMultipleChoiceSolutionsBySolutionId(taskId);
-		return ControllerResult.empty();
+	public void deleteAll(int taskId) {
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolutionAndCreateIfNotExists(taskId, NAME_KEY);
+		if (optionalSolution.isResultNotPresent()) return;
+
+		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository.findAllById(
+				Collections.singleton(optionalSolution.getResult().getSolutionId()));
+		if (multipleChoiceSolutionModels.isEmpty()) return;
+
+		this.multipleChoiceSolutionRepository.deleteAllMultipleChoiceSolutionsBySolutionId(optionalSolution.getResult().getSolutionId());
 	}
 
-	public ControllerResult<MultipleChoiceSolutionModel> get(int taskId) {
-		return null;	//TODO: Get possible solutions
+	public ControllerResult<GetMultipleChoiceSolutionDTO> get(int taskId) {
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
+		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
+
+		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository.findAllById(
+				Collections.singleton(optionalSolution.getResult().getSolutionId()));
+		if (multipleChoiceSolutionModels.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		GetMultipleChoiceSolutionDTO dto = new GetMultipleChoiceSolutionDTO(
+				taskId,
+				multipleChoiceSolutionModels.stream().map(MultipleChoiceSolutionModel::getSolution).toArray(String[]::new)
+		);
+
+		return ControllerResult.of(dto);
 	}
+
 }

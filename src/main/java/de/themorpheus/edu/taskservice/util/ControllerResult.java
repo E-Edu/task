@@ -47,6 +47,10 @@ public class ControllerResult<T> {
 		return this.getResult() == null && this.getError() == null && this.getExtra() == null;
 	}
 
+	public boolean isNotEmpty() {
+		return !this.isEmpty();
+	}
+
 	public static <T> ControllerResult<T> empty() {
 		return new ControllerResult<>();
 	}

@@ -1,4 +1,4 @@
-package de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice;
+package de.themorpheus.edu.taskservice.endpoint.dto.solution.wordsalad.get;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -11,12 +11,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeleteMultipleChoiceSolutionDTO {
+public class CheckWordsaladSolutionDTO {
 
 	@Min(0)
 	private int taskId;
-	@Min(0)
-	private int solutionId;
 
 	@NotNull @NotEmpty @NotBlank
 	private String solution;

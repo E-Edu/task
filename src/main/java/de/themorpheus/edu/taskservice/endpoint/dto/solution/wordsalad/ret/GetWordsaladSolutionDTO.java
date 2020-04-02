@@ -1,4 +1,4 @@
-package de.themorpheus.edu.taskservice.endpoint.dto.solution.wordsalad;
+package de.themorpheus.edu.taskservice.endpoint.dto.solution.wordsalad.ret;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;

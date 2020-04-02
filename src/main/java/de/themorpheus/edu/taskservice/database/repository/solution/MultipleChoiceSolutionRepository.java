@@ -9,8 +9,10 @@ public interface MultipleChoiceSolutionRepository extends JpaRepository<Multiple
 
 	MultipleChoiceSolutionModel getMultipleChoiceSolutionBySolutionAndSolutionId(String solution, int solutionId);
 
-	//void deleteMultipleChoiceSolutionByTaskIdAndSolutionId(int taskId, int solutionId);
+	void deleteMultipleChoiceSolutionBySolutionIdAndSolution(int taskId, String solution);
 
 	void deleteAllMultipleChoiceSolutionsBySolutionId(int solutionId);
+
+	boolean existsBySolution(String solution);
 
 }
