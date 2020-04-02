@@ -1,6 +1,7 @@
 package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.TaskController;
+import de.themorpheus.edu.taskservice.controller.VotingController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.GetNextTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
@@ -24,10 +25,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 public class TaskEndpoint {
 
 	@Autowired private TaskController taskController;
+	@Autowired private VotingController votingController;
 
 	@PostMapping(value = "/task", produces = MediaType.APPLICATION_JSON_VALUE)
 
@@ -54,7 +58,8 @@ public class TaskEndpoint {
 
 	@PutMapping("/task/vote/{taskId}")
 	public Object voteTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid VoteTaskDTO dto) {
-		return this.taskController.voteTask(taskId, dto.getVote()).getHttpResponse();
+		// TODO: Pass real userId instead of random UUID
+		return this.votingController.voteTask(taskId, dto.getVote(), UUID.randomUUID()).getHttpResponse();
 	}
 
 	@PostMapping("/task/next")
