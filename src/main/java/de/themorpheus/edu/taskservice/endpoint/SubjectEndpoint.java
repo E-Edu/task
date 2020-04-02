@@ -2,6 +2,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.SubjectController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateSubjectDTO;
+import io.micrometer.core.annotation.Timed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Timed
 @RestController
 public class SubjectEndpoint {
 

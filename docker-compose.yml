@@ -24,6 +24,23 @@ services:
     volumes:
       - "./redis:/data"
 
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    user: "0"
+    links:
+      - influxdb
+    volumes:
+      - /srv/docker/grafana/data:/var/lib/grafana
+
   task:
     image: eedu/taskms
     container_name: task
@@ -42,5 +59,9 @@ services:
       SENTRY_ENABLED: "${SENTRY_ENABLED}"
       REDIS_HOST: redis
       REDIS_PORT: 6379
-
-
+      INFLUX_HOST: influxdb
+      INFLUX_PORT: 8086
+      INFLUX_USERNAME: 0
+      INFLUX_PASSWORD: ""
+      INFLUX_DB: "task"
+      INFLUX_STEP: "1m"

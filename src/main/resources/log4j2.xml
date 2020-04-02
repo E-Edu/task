@@ -34,5 +34,6 @@
 		<Logger name="org.springframework" level="warn"/>
 		<Logger name="com.zaxxer.hikari" level="warn"/>
 		<Logger name="io.sentry" level="warn"/>
+		<Logger name="io.micrometer" level="warn"/>
 	</Loggers>
 </Configuration>

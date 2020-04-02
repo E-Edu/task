@@ -7,6 +7,7 @@ import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
+import io.micrometer.core.annotation.Timed;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -23,13 +24,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Timed
 @RestController
 public class TaskEndpoint {
 
 	@Autowired private TaskController taskController;
 
 	@PostMapping(value = "/task", produces = MediaType.APPLICATION_JSON_VALUE)
-
 	public Object createTask(@RequestBody @Valid CreateTaskDTO dto) {
 		return this.taskController.createTask(dto).getHttpResponse();
 	}
