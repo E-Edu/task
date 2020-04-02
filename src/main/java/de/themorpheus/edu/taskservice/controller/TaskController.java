@@ -115,4 +115,9 @@ public class TaskController {
 
 		return ControllerResult.of(this.taskRepository.save(taskModel));
 	}
+
+	public TaskModel getTaskByTaskId(int taskId) {
+		return this.taskRepository.getTaskByTaskId(taskId);
+	}
+
 }
