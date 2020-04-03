@@ -36,7 +36,7 @@ public class MultipleChoiceSolutionController {
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
 		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository
-			.findAllMultipleChoiceSolutionsBySolutionIdOrderedBySolution(
+			.findAllMultipleChoiceSolutionsBySolutionIdOrderBySolutionDesc(
 				optionalSolution.getResult().getSolutionId()
 			);
 		if (multipleChoiceSolutionModels.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
@@ -70,7 +70,7 @@ public class MultipleChoiceSolutionController {
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
 		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository
-			.findAllMultipleChoiceSolutionsBySolutionIdOrderedBySolution(
+			.findAllMultipleChoiceSolutionsBySolutionIdOrderBySolutionDesc(
 				optionalSolution.getResult().getSolutionId()
 			);
 		if (multipleChoiceSolutionModels.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
