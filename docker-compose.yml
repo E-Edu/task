@@ -59,8 +59,10 @@ services:
       SENTRY_ENABLED: "${SENTRY_ENABLED}"
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      REDIS_ENABLED: "true"
       INFLUX_URI: "http://${influxdb}:8086"
       INFLUX_USERNAME: 0
       INFLUX_PASSWORD: ""
       INFLUX_DB: "task"
       INFLUX_STEP: "1m"
+      INFLUX_ENABLED: "true"

@@ -1,10 +1,14 @@
 package de.themorpheus.edu.taskservice.spring;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.themorpheus.edu.taskservice.TaskServiceApplication;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -12,6 +16,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
+
+	@Autowired private ObjectMapper mapper;
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
@@ -32,6 +38,13 @@ public class WebConfig implements WebMvcConfigurer {
 			)
 			.allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE")
 			.allowCredentials(false).maxAge(3600);
+	}
+
+	@Override
+	public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+		converters.stream()
+				.filter(x -> x instanceof MappingJackson2HttpMessageConverter)
+				.forEach(x -> ((MappingJackson2HttpMessageConverter) x).setObjectMapper(this.mapper));
 	}
 
 }

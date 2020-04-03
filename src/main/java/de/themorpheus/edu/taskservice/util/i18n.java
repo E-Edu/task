@@ -9,5 +9,7 @@ public class i18n {
 	public static final String FORBIDDEN = "FORBIDDEN";
 	public static final String SERVER_ERROR = "SERVER_ERROR";
 	public static final String ALREADY_EXISTS = "ALREADY_EXISTS";
+	public static final String WRONG_ANSWER = "WRONG_ANSWER";
+	public static final String WRONG_TYPE = "WRONG_TYPE";
 
 }

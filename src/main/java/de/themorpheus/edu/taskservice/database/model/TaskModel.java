@@ -35,4 +35,19 @@ public class TaskModel {
 	@ManyToOne
 	private DifficultyModel difficultyId;
 
+	/**
+	 * Creates a new {@link TaskModel} with given <i>taskId</i>.
+	 * Only call this method if you <b>really</b> want to save performance by not getting a task via
+	 * {@link de.themorpheus.edu.taskservice.controller.TaskController}.
+	 *
+	 * @param taskId the taskId
+	 * @return a new {@link TaskModel} instance
+	 */
+	public static TaskModel create(int taskId) {
+		//TODO: ObjectPool
+		TaskModel taskModel = new TaskModel();
+		taskModel.setTaskId(taskId);
+		return taskModel;
+	}
+
 }

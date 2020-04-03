@@ -1,11 +1,12 @@
 package de.themorpheus.edu.taskservice.pubsub.sub.api;
 
+import de.themorpheus.edu.taskservice.pubsub.PubSubService;
+import java.util.Map;
+import javax.annotation.PostConstruct;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.Topic;
-import javax.annotation.PostConstruct;
-import java.util.Map;
 
 /**
  * This class transforms the given {@link Message} to the requested object of type T.
@@ -24,12 +25,13 @@ public interface ObjectSubscriber<T> extends Subscriber<Message> {
 
 	@PostConstruct
 	default void registerSubscription() {
+		if (!PubSubService.ENABLED) return;
 		this.getMessageListenerContainer().addMessageListener(this, this.getTopics().get(this.getMessageClass()));
 	}
 
 	@Override
 	default void receive(Message message) {
-		Object obj = getRedisTemplate().getValueSerializer().deserialize(message.getBody()); //TODO: Can we check the type before deserialization?
+		Object obj = this.getRedisTemplate().getValueSerializer().deserialize(message.getBody()); //TODO: Can we check the type before deserialization?
 		if (!this.getMessageClass().isInstance(obj)) return;
 		T dto = (T) obj;
 		this.receive(dto);

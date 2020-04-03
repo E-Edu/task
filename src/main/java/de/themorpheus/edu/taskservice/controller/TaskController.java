@@ -70,6 +70,13 @@ public class TaskController {
 		//TODO delete solution
 	}
 
+	public ControllerResult<TaskModel> getTaskById(int taskId) {
+		TaskModel taskModel = this.taskRepository.getTaskByTaskId(taskId);
+		if (taskModel == null) return ControllerResult.of(Error.NOT_FOUND, "task");
+
+		return ControllerResult.of(taskModel);
+	}
+
 	public ControllerResult<List<TaskModel>> getAllTasks() {
 		return ControllerResult.of(this.taskRepository.findAll());
 	}

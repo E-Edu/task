@@ -16,7 +16,7 @@ public class ControllerResult<T> {
 	private String extra;
 
 	public Object getHttpResponse() {
-		return isErrorPresent() ? getError().copyWithExtra(this.getExtra()) : getResult();
+		return this.isErrorPresent() ? this.getError().copyWithExtra(this.getExtra()) : this.getResult();
 	}
 
 	public boolean isResultPresent() {
@@ -45,6 +45,10 @@ public class ControllerResult<T> {
 
 	public boolean isEmpty() {
 		return this.getResult() == null && this.getError() == null && this.getExtra() == null;
+	}
+
+	public boolean isNotEmpty() {
+		return !this.isEmpty();
 	}
 
 	public static <T> ControllerResult<T> empty() {
