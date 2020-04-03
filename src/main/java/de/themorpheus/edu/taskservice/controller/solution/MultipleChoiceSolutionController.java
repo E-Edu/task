@@ -15,17 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MultipleChoiceSolutionController implements SolutionInterface{
+public class MultipleChoiceSolutionController implements SolutionInterface {
 
 	private static final String NAME_KEY = "multiple_choice_solution";
 
 	@Autowired private MultipleChoiceSolutionRepository multipleChoiceSolutionRepository;
 
 	@Autowired private SolutionController solutionController;
-
-	public MultipleChoiceSolutionController() {
-		this.solutionController.registerSolutionInterface(this);
-	}
 
 	public ControllerResult<MultipleChoiceSolutionModel> createMultipleChoiceSolution(CreateMultipleChoiceSolutionDTO dto) {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getOrCreateSolution(dto.getTaskId(), NAME_KEY);
