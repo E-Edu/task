@@ -24,7 +24,7 @@ public class MultipleChoiceSolutionController {
 	@Autowired private SolutionController solutionController;
 
 	public ControllerResult<MultipleChoiceSolutionModel> createMultipleChoiceSolution(CreateMultipleChoiceSolutionDTO dto) {
-		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolutionAndCreateIfNotExists(dto.getTaskId(), NAME_KEY);
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getOrCreateSolution(dto.getTaskId(), NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
 		return ControllerResult.of(this.multipleChoiceSolutionRepository.save(new MultipleChoiceSolutionModel(
@@ -35,8 +35,10 @@ public class MultipleChoiceSolutionController {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(dto.getTaskId(), NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
-		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository.findAllById(
-				Collections.singleton(optionalSolution.getResult().getSolutionId()));
+		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository
+			.findAllMultipleChoiceSolutionsBySolutionIdOrderedBySolution(
+				optionalSolution.getResult().getSolutionId()
+			);
 		if (multipleChoiceSolutionModels.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		boolean[] checkedSolutions = new boolean[dto.getSolutions().length];
@@ -53,7 +55,7 @@ public class MultipleChoiceSolutionController {
 	}
 
 	public void deleteAll(int taskId) {
-		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolutionAndCreateIfNotExists(taskId, NAME_KEY);
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getOrCreateSolution(taskId, NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return;
 
 		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository.findAllById(
@@ -67,8 +69,10 @@ public class MultipleChoiceSolutionController {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
-		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository.findAllById(
-				Collections.singleton(optionalSolution.getResult().getSolutionId()));
+		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository
+			.findAllMultipleChoiceSolutionsBySolutionIdOrderedBySolution(
+				optionalSolution.getResult().getSolutionId()
+			);
 		if (multipleChoiceSolutionModels.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		GetMultipleChoiceSolutionDTO dto = new GetMultipleChoiceSolutionDTO(

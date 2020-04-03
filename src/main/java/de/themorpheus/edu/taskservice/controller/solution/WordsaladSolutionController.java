@@ -25,7 +25,7 @@ public class WordsaladSolutionController {
 	@Autowired private SolutionController solutionController;
 
 	public ControllerResult<WordsaladSolutionModel> createSolutionWordsalad(CreateWordsaladSolutionDTO dto) {
-		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolutionAndCreateIfNotExists(dto.getTaskId(), NAME_KEY);
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getOrCreateSolution(dto.getTaskId(), NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
 		if (this.solutionWordsaladRepository.existsById(dto.getTaskId())) return ControllerResult.of(Error.ALREADY_EXISTS, NAME_KEY);
