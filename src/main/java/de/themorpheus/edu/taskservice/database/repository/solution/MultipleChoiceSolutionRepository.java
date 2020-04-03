@@ -16,5 +16,6 @@ public interface MultipleChoiceSolutionRepository extends JpaRepository<Multiple
 
 	boolean existsBySolution(String solution);
 
-	List<MultipleChoiceSolutionModel> findAllMultipleChoiceSolutionsBySolutionIdOrderedBySolution(int solutionId);
+	List<MultipleChoiceSolutionModel> findAllMultipleChoiceSolutionsBySolutionIdOrderBySolutionDesc(int solutionId);
+
 }
