@@ -2,6 +2,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.SubjectController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateSubjectDTO;
+import io.micrometer.core.annotation.Timed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Timed
 @RestController
 public class SubjectEndpoint {
 
@@ -22,12 +24,12 @@ public class SubjectEndpoint {
 
 	@PostMapping(value = "/subject", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createSubject(@RequestBody @Valid CreateSubjectDTO dto) {
-		return this.subjectController.createSubject(dto.getDisplayName()).getHttpResponse();
+		return this.subjectController.createSubject(dto.getNameKey(), dto.getDescriptionKey()).getHttpResponse();
 	}
 
-	@GetMapping("/subject/{displayName}")
-	public Object getSubject(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
-		return this.subjectController.getSubjectByDisplayName(displayName).getHttpResponse();
+	@GetMapping("/subject/{nameKey}")
+	public Object getSubject(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
+		return this.subjectController.getSubjectByNameKey(nameKey).getHttpResponse();
 	}
 
 	@GetMapping("/subject")
@@ -35,9 +37,9 @@ public class SubjectEndpoint {
 		return this.subjectController.getAllSubjects().getHttpResponse();
 	}
 
-	@DeleteMapping(path = "/subject/{displayName}")
-	public void deleteSubject(@PathVariable @NotNull @NotEmpty @NotBlank String displayName) {
-		this.subjectController.deleteSubject(displayName);
+	@DeleteMapping(path = "/subject/{nameKey}")
+	public void deleteSubject(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
+		this.subjectController.deleteSubject(nameKey);
 	}
 
 }

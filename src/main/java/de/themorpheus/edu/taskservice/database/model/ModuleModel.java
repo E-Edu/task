@@ -23,6 +23,6 @@ public class ModuleModel {
 
 	@ManyToOne
 	private SubjectModel subjectId;
-	private String displayName;
+	private String nameKey;
 
 }

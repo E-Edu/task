@@ -7,10 +7,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TaskTypeRepository extends JpaRepository<TaskTypeModel, Integer> {
 
-	void deleteTaskTypeByDisplayNameIgnoreCase(String displayName);
+	void deleteTaskTypeByNameKeyIgnoreCase(String nameKey);
 
 	TaskTypeModel getTaskTypeByTaskTypeId(int taskTypeId);
 
-	TaskTypeModel getTaskTypeByDisplayNameIgnoreCase(String displayName);
+	TaskTypeModel getTaskTypeByNameKeyIgnoreCase(String nameKey);
 
 }

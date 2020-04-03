@@ -1,13 +1,15 @@
 package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.TaskController;
+import de.themorpheus.edu.taskservice.controller.VotingController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.GetNextTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.VoteTaskDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
-import java.util.UUID;
+import io.micrometer.core.annotation.Timed;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -23,31 +25,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.UUID;
 
+@Timed
 @RestController
 public class TaskEndpoint {
 
 	@Autowired private TaskController taskController;
+	@Autowired private VotingController votingController;
 
 	@PostMapping(value = "/task", produces = MediaType.APPLICATION_JSON_VALUE)
-
 	public Object createTask(@RequestBody @Valid CreateTaskDTO dto) {
-
-		return this.taskController.createTask(
-			dto.getTask(),
-			UUID.randomUUID(), //TODO
-			dto.getNecessaryPoints(),
-			dto.getLectureDisplayName(),
-			dto.getTaskTypeDisplayName(),
-			dto.getDifficultyDisplayName()
-		).getHttpResponse();
+		return this.taskController.createTask(dto).getHttpResponse();
 	}
 
-	@GetMapping("/lecture/{lectureDisplayName}/task")
-	public Object getAllTasksFromLecture(@PathVariable @NotNull @NotEmpty @NotBlank String lectureDisplayName) {
-		if (Validation.nullOrEmpty(lectureDisplayName)) return Error.INVALID_PARAM;
+	@GetMapping("/lecture/{lectureNameKey}/task")
+	public Object getAllTasksFromLecture(@PathVariable @NotNull @NotEmpty @NotBlank String lectureNameKey) {
+		if (Validation.nullOrEmpty(lectureNameKey)) return Error.INVALID_PARAM;
 
-		return this.taskController.getTasksFromLecture(lectureDisplayName).getHttpResponse();
+		return this.taskController.getTasksFromLecture(lectureNameKey).getHttpResponse();
 	}
 
 	@PatchMapping(value = "/task/verify/{taskId}")
@@ -56,15 +52,14 @@ public class TaskEndpoint {
 	}
 
 	@PutMapping(path = "/task/{taskId}")
-	public Object updateTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid UpdateTaskDTO updateTaskDTO) {
-		return this.taskController.updateTask(
-			taskId,
-			updateTaskDTO.getTask(),
-			updateTaskDTO.getNecessaryPoints(),
-			updateTaskDTO.getTaskTypeDisplayName(),
-			updateTaskDTO.getLectureDisplayName(),
-			updateTaskDTO.getDifficultyDisplayName()
-		).getHttpResponse();
+	public Object updateTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid UpdateTaskDTO dto) {
+		return this.taskController.updateTask(taskId, dto).getHttpResponse();
+	}
+
+	@PutMapping("/task/vote/{taskId}")
+	public Object voteTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid VoteTaskDTO dto) {
+		// TODO: Pass real userId instead of random UUID
+		return this.votingController.voteTask(taskId, dto.getVote(), UUID.randomUUID()).getHttpResponse();
 	}
 
 	@PostMapping("/task/next")

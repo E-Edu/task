@@ -22,6 +22,7 @@ public class TaskModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int taskId;
 
+	private String description;
 	private UUID authorId;
 	private String task;
 	private int necessaryPoints;
@@ -33,5 +34,20 @@ public class TaskModel {
 	private TaskTypeModel taskTypeId;
 	@ManyToOne
 	private DifficultyModel difficultyId;
+
+	/**
+	 * Creates a new {@link TaskModel} with given <i>taskId</i>.
+	 * Only call this method if you <b>really</b> want to save performance by not getting a task via
+	 * {@link de.themorpheus.edu.taskservice.controller.TaskController}.
+	 *
+	 * @param taskId the taskId
+	 * @return a new {@link TaskModel} instance
+	 */
+	public static TaskModel create(int taskId) {
+		//TODO: ObjectPool
+		TaskModel taskModel = new TaskModel();
+		taskModel.setTaskId(taskId);
+		return taskModel;
+	}
 
 }

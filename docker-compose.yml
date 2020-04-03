@@ -15,6 +15,32 @@ services:
     volumes:
       - ./task-microservice-mariadb-data:/var/lib/mysql
 
+  redis:
+    image: redis
+    command: redis-server
+    restart: always
+    expose:
+      - "6379"
+    volumes:
+      - "./redis:/data"
+
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    user: "0"
+    links:
+      - influxdb
+    volumes:
+      - /srv/docker/grafana/data:/var/lib/grafana
+
   task:
     image: eedu/taskms
     container_name: task
@@ -29,4 +55,14 @@ services:
       DATABASE_DATABASE: e-edu
       JWT_SECRET: SECRET
       SERVICE_SECRET: SECRET
-
+      PRODUCTIVE: "false"
+      SENTRY_ENABLED: "${SENTRY_ENABLED}"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_ENABLED: "true"
+      INFLUX_URI: "http://${influxdb}:8086"
+      INFLUX_USERNAME: 0
+      INFLUX_PASSWORD: ""
+      INFLUX_DB: "task"
+      INFLUX_STEP: "1m"
+      INFLUX_ENABLED: "true"

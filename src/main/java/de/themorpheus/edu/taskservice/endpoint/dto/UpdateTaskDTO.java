@@ -12,10 +12,10 @@ public class UpdateTaskDTO {
 	private String task;
 	private int necessaryPoints;
 
-	private String taskTypeDisplayName;
-	private String subjectDisplayName;
-	private String moduleDisplayName;
-	private String lectureDisplayName;
-	private String difficultyDisplayName;
+	private String taskTypeNameKey;
+	private String subjectNameKey;
+	private String moduleNameKey;
+	private String lectureNameKey;
+	private String difficultyNameKey;
 
 }

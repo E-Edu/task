@@ -9,6 +9,6 @@ public interface SubjectRepository extends JpaRepository<SubjectModel, Integer> 
 
 	SubjectModel getSubjectBySubjectId(int subjectId);
 
-	SubjectModel getSubjectByDisplayNameIgnoreCase(String displayName);
+	SubjectModel getSubjectByNameKeyIgnoreCase(String nameKey);
 
 }

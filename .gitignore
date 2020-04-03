@@ -201,3 +201,5 @@ mvnw.cmd
 
 # End of https://www.gitignore.io/api/java,maven,eclipse,intellij+all
 /task-microservice-mariadb-data/
+
+.sentryEnabled

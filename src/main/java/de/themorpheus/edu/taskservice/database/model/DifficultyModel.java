@@ -20,6 +20,6 @@ public class DifficultyModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int difficultyId;
 
-	private String displayName;
+	private String nameKey;
 
 }

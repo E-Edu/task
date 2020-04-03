@@ -16,27 +16,27 @@ public class LectureController {
 
 	@Autowired private ModuleController moduleController;
 
-	public ControllerResult<LectureModel> createLecture(String displayName, String moduleDisplayName) {
-		ControllerResult<ModuleModel> moduleModel = this.moduleController.getModuleByDisplayName(moduleDisplayName);
+	public ControllerResult<LectureModel> createLecture(String nameKey, String moduleNameKey) {
+		ControllerResult<ModuleModel> moduleModel = this.moduleController.getModuleByNameKey(moduleNameKey);
 		if (moduleModel.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "module");
-		return ControllerResult.of(this.lectureRepository.save(new LectureModel(-1, moduleModel.getResult(), displayName)));
+		return ControllerResult.of(this.lectureRepository.save(new LectureModel(-1, moduleModel.getResult(), nameKey)));
 	}
 
-	public ControllerResult<LectureModel> getLectureByDisplayName(String displayName) {
-		return ControllerResult.of(this.lectureRepository.getLectureByDisplayNameIgnoreCase(displayName));
+	public ControllerResult<LectureModel> getLectureByNameKey(String nameKey) {
+		return ControllerResult.of(this.lectureRepository.getLectureByNameKeyIgnoreCase(nameKey));
 	}
 
 	public ControllerResult<List<LectureModel>> getAllLectures() {
 		return ControllerResult.of(this.lectureRepository.findAll());
-
 	}
 
-	public void deleteLecture(String displayName) {
-		this.lectureRepository.deleteLectureByDisplayNameIgnoreCase(displayName);
+	public ControllerResult<LectureModel> deleteLecture(String nameKey) {
+		this.lectureRepository.deleteLectureByNameKeyIgnoreCase(nameKey);
+		return ControllerResult.empty();
 	}
 
-	public ControllerResult<List<LectureModel>> getAllLecturesFromModule(String moduleDisplayName) {
-		ControllerResult<ModuleModel> moduleModel = this.moduleController.getModuleByDisplayName(moduleDisplayName);
+	public ControllerResult<List<LectureModel>> getAllLecturesFromModule(String moduleNameKey) {
+		ControllerResult<ModuleModel> moduleModel = this.moduleController.getModuleByNameKey(moduleNameKey);
 		if (moduleModel.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "module");
 		return ControllerResult.of(this.lectureRepository.getLecturesByModuleId(moduleModel.getResult()));
 	}

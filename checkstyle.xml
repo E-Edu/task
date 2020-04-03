@@ -48,7 +48,6 @@
 		<module name="NonEmptyAtclauseDescription"/>
 
 		<!-- Check imports -->
-		<module name="ImportOrder"/>
 		<module name="UnusedImports"/>
 		<module name="AvoidStarImport"/>
 		<module name="RedundantImport"/>
