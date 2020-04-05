@@ -2,10 +2,6 @@ package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.TaskTypeController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskTypeDTO;
-import de.themorpheus.edu.taskservice.util.ControllerResult;
-import de.themorpheus.edu.taskservice.util.Error;
-import de.themorpheus.edu.taskservice.util.Validation;
-import io.micrometer.core.annotation.Timed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -18,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import io.micrometer.core.annotation.Timed;
 
 @Timed
 @RestController
@@ -32,8 +29,6 @@ public class TaskTypeEndpoint {
 
 	@GetMapping("/task_type/{nameKey}")
 	public Object getTaskType(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
-		if (Validation.nullOrEmpty(nameKey)) return Error.INVALID_PARAM;
-
 		return this.taskTypeController.getTaskTypeByNameKey(nameKey).getHttpResponse();
 	}
 
@@ -44,8 +39,7 @@ public class TaskTypeEndpoint {
 
 	@DeleteMapping("/task_type/{nameKey}")
 	public Object deleteTaskType(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
-		this.taskTypeController.deleteTaskType(nameKey);
-		return ControllerResult.empty();
+		return this.taskTypeController.deleteTaskType(nameKey).getHttpResponse();
 	}
 
 }

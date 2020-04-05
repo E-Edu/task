@@ -9,6 +9,10 @@ public interface SubjectRepository extends JpaRepository<SubjectModel, Integer> 
 
 	SubjectModel getSubjectBySubjectId(int subjectId);
 
+	void deleteSubjectByNameKeyIgnoreCase(String nameKey);
+
 	SubjectModel getSubjectByNameKeyIgnoreCase(String nameKey);
+
+	boolean existsByNameKey(String nameKey);
 
 }

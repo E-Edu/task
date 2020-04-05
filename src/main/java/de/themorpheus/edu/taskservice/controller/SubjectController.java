@@ -4,13 +4,14 @@ import de.themorpheus.edu.taskservice.database.model.SubjectModel;
 import de.themorpheus.edu.taskservice.database.repository.SubjectRepository;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
-import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SubjectController {
+
+	private static final String NAME_KEY = "subject";
 
 	@Autowired private SubjectRepository subjectRepository;
 
@@ -28,11 +29,11 @@ public class SubjectController {
 		return ControllerResult.of(this.subjectRepository.findAll());
 	}
 
-	public void deleteSubject(String nameKey) {
-		SubjectModel subjectModel = this.subjectRepository.getSubjectByNameKeyIgnoreCase(nameKey);
-		if (Validation.validateNull(subjectModel)) return;
+	public ControllerResult<Object> deleteSubject(String nameKey) {
+		if (!this.subjectRepository.existsByNameKey(nameKey)) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		this.subjectRepository.deleteById(subjectModel.getSubjectId());
+		this.subjectRepository.deleteSubjectByNameKeyIgnoreCase(nameKey);
+		return ControllerResult.empty();
 	}
 
 	public boolean doesSubjectExist(String nameKey) {

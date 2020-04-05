@@ -13,4 +13,6 @@ public interface DifficultyRepository extends JpaRepository<DifficultyModel, Int
 
 	DifficultyModel getDifficultyByNameKeyIgnoreCase(String nameKey);
 
+	boolean existsByNameKey(String nameKey);
+
 }

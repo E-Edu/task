@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class LectureController {
 
+	private static final String NAME_KEY = "lecture";
+
 	@Autowired private LectureRepository lectureRepository;
 
 	@Autowired private ModuleController moduleController;
@@ -31,6 +33,8 @@ public class LectureController {
 	}
 
 	public ControllerResult<LectureModel> deleteLecture(String nameKey) {
+		if (!this.lectureRepository.existsByNameKey(nameKey)) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
 		this.lectureRepository.deleteLectureByNameKeyIgnoreCase(nameKey);
 		return ControllerResult.empty();
 	}

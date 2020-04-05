@@ -6,8 +6,6 @@ import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.GetNextTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.VoteTaskDTO;
-import de.themorpheus.edu.taskservice.util.Error;
-import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -40,8 +38,6 @@ public class TaskEndpoint {
 
 	@GetMapping("/lecture/{lectureNameKey}/task")
 	public Object getAllTasksFromLecture(@PathVariable @NotNull @NotEmpty @NotBlank String lectureNameKey) {
-		if (Validation.nullOrEmpty(lectureNameKey)) return Error.INVALID_PARAM;
-
 		return this.taskController.getTasksFromLecture(lectureNameKey).getHttpResponse();
 	}
 

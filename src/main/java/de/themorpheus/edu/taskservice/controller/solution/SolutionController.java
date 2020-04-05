@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class SolutionController {
 
+	private static final String NAME_KEY = "solution";
 	private static List<SolutionInterface> solutionInterfaces = new ArrayList<>();
 
 	@Autowired private SolutionRepository solutionRepository;
@@ -40,14 +41,16 @@ public class SolutionController {
 
 	private ControllerResult<SolutionModel> getGenericSolution(TaskModel taskModel, String solutionTypeNameKey) {
 		SolutionModel solutionModel = this.solutionRepository.findSolutionModelByTaskId(taskModel);
-		if (solutionModel == null) return ControllerResult.of(Error.NOT_FOUND, "solution");
+		if (solutionModel == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 		if (!solutionModel.getSolutionType().equals(solutionTypeNameKey))
-			return ControllerResult.of(Error.WRONG_TYPE, "solution");
+			return ControllerResult.of(Error.WRONG_TYPE, NAME_KEY);
 
 		return ControllerResult.of(solutionModel);
 	}
 
 	public ControllerResult<SolutionModel> deleteSolution(int taskId) {
+		if (!this.solutionRepository.existsById(taskId)) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
 		ControllerResult<SolutionModel> solutionModel = this.getSolution(taskId);
 		if (solutionModel.isResultNotPresent()) return ControllerResult.ret(solutionModel);
 

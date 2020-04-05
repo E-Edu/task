@@ -17,4 +17,6 @@ public interface LectureRepository extends JpaRepository<LectureModel, Integer> 
 
 	List<LectureModel> getLecturesByModuleId(ModuleModel moduleId);
 
+	boolean existsByNameKey(String nameKey);
+
 }

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 public class TaskController {
 
 	private static final Random RANDOM = new Random();
+	private static final String NAME_KEY = "task";
 
 	@Autowired private TaskRepository taskRepository;
 	@Autowired private SolutionController solutionController;
@@ -69,6 +70,8 @@ public class TaskController {
 	}
 
 	public ControllerResult<SolutionModel> deleteTask(int taskId) {
+		if (!this.taskRepository.existsById(taskId)) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
 		this.taskRepository.deleteById(taskId);
 		return this.solutionController.deleteSolution(taskId);
 	}

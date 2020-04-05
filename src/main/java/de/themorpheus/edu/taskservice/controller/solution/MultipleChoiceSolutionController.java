@@ -50,7 +50,13 @@ public class MultipleChoiceSolutionController implements SolutionInterface {
 	}
 
 	public ControllerResult<MultipleChoiceSolutionModel> deleteMultipleChoiceSolution(int taskId, String solution) {
-		this.multipleChoiceSolutionRepository.deleteMultipleChoiceSolutionBySolutionIdAndSolution(taskId, solution);
+		ControllerResult<SolutionModel> solutionModel = this.solutionController.getSolution(taskId, NAME_KEY);
+		if (solutionModel.isResultNotPresent()) return ControllerResult.ret(solutionModel);
+
+		if (this.multipleChoiceSolutionRepository.existsById(solutionModel.getResult().getSolutionId()))
+			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		this.multipleChoiceSolutionRepository.deleteMultipleChoiceSolutionBySolutionIdAndSolution(solutionModel.getResult().getSolutionId(), solution);
 		return ControllerResult.empty();
 	}
 
