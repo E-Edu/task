@@ -15,13 +15,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MultipleChoiceSolutionController {
+public class MultipleChoiceSolutionController implements SolutionInterface{
 
 	private static final String NAME_KEY = "multiple_choice_solution";
 
 	@Autowired private MultipleChoiceSolutionRepository multipleChoiceSolutionRepository;
 
 	@Autowired private SolutionController solutionController;
+
+	public MultipleChoiceSolutionController() {
+		this.solutionController.registerSolutionInterface(this);
+	}
 
 	public ControllerResult<MultipleChoiceSolutionModel> createMultipleChoiceSolution(CreateMultipleChoiceSolutionDTO dto) {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getOrCreateSolution(dto.getTaskId(), NAME_KEY);
@@ -54,17 +58,6 @@ public class MultipleChoiceSolutionController {
 		return ControllerResult.empty();
 	}
 
-	public void deleteAll(int taskId) {
-		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getOrCreateSolution(taskId, NAME_KEY);
-		if (optionalSolution.isResultNotPresent()) return;
-
-		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository.findAllById(
-				Collections.singleton(optionalSolution.getResult().getSolutionId()));
-		if (multipleChoiceSolutionModels.isEmpty()) return;
-
-		this.multipleChoiceSolutionRepository.deleteAllMultipleChoiceSolutionsBySolutionId(optionalSolution.getResult().getSolutionId());
-	}
-
 	public ControllerResult<GetMultipleChoiceSolutionDTO> getMultipleChoiceSolution(int taskId) {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
@@ -81,6 +74,18 @@ public class MultipleChoiceSolutionController {
 		);
 
 		return ControllerResult.of(dto);
+	}
+
+	@Override
+	public void deleteAll(int taskId) {
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getOrCreateSolution(taskId, NAME_KEY);
+		if (optionalSolution.isResultNotPresent()) return;
+
+		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository.findAllById(
+				Collections.singleton(optionalSolution.getResult().getSolutionId()));
+		if (multipleChoiceSolutionModels.isEmpty()) return;
+
+		this.multipleChoiceSolutionRepository.deleteAllMultipleChoiceSolutionsBySolutionId(optionalSolution.getResult().getSolutionId());
 	}
 
 }
