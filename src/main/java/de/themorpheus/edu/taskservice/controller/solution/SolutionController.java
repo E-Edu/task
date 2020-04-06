@@ -13,13 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class SolutionController {
 
-	private static List<Object> solutionControllers = new ArrayList<>();
+	private static List<Solution> solutionControllers = new ArrayList<>();
 
 	@Autowired private SolutionRepository solutionRepository;
 	@Autowired private TaskController taskController;
@@ -54,10 +53,8 @@ public class SolutionController {
 
 		this.solutionRepository.delete(solutionModel.getResult());
 
-		for (Object solutionController : solutionControllers) {
-			Solution solution = (Solution) solutionController;
-			solution.deleteAll(solutionModel.getResult().getTaskId().getTaskId());
-		}
+		for (Solution solutionController : solutionControllers)
+			solutionController.deleteAll(solutionModel.getResult().getTaskId().getTaskId());
 
 		return ControllerResult.empty();
 	}
@@ -91,7 +88,7 @@ public class SolutionController {
 	@Bean
 	public void getSolutionInterfaces() throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
 		ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
-		provider.addIncludeFilter((TypeFilter) (metadataReader, metadataReaderFactory) -> {
+		provider.addIncludeFilter((metadataReader, metadataReaderFactory) -> {
 			String[] interfaceNames = metadataReader.getClassMetadata().getInterfaceNames();
 			if (interfaceNames.length == 0) return false;
 			for (String interfaceName : interfaceNames) if (interfaceName.equals(Solution.class.getName())) return true;
@@ -101,7 +98,7 @@ public class SolutionController {
 
 		for (BeanDefinition beanDefinition : provider.findCandidateComponents("de.themorpheus")) {
 			Class<?> clazz = Class.forName(beanDefinition.getBeanClassName());
-			solutionControllers.add(clazz.getDeclaredConstructor().newInstance());
+			solutionControllers.add((Solution) clazz.getDeclaredConstructor().newInstance());
 		}
 	}
 

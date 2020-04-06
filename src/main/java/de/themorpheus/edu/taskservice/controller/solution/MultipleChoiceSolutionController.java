@@ -49,6 +49,12 @@ public class MultipleChoiceSolutionController implements Solution {
 	}
 
 	public ControllerResult<MultipleChoiceSolutionModel> deleteMultipleChoiceSolution(int taskId, String solution) {
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
+		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
+
+		if (this.multipleChoiceSolutionRepository.existsById(optionalSolution.getResult().getSolutionId()))
+			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
 		this.multipleChoiceSolutionRepository.deleteMultipleChoiceSolutionBySolutionIdAndSolution(taskId, solution);
 		return ControllerResult.empty();
 	}
@@ -71,9 +77,8 @@ public class MultipleChoiceSolutionController implements Solution {
 		return ControllerResult.of(dto);
 	}
 
-	@Override
 	public void deleteAll(int taskId) {
-		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getOrCreateSolution(taskId, NAME_KEY);
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return;
 
 		int solutionId = optionalSolution.getResult().getSolutionId();
