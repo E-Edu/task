@@ -2,7 +2,6 @@ package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.LectureController;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateLectureDTO;
-import de.themorpheus.edu.taskservice.util.ControllerResult;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -44,8 +43,7 @@ public class LectureEndpoint {
 
 	@DeleteMapping("/lecture/{nameKey}")
 	public Object deleteLecture(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
-		this.lectureController.deleteLecture(nameKey);
-		return ControllerResult.empty();
+		return this.lectureController.deleteLecture(nameKey).getHttpResponse();
 	}
 
 }
