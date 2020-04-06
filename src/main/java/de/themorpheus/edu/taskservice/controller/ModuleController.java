@@ -12,15 +12,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class ModuleController {
 
+	private static final String NAME_KEY = "module";
+
 	@Autowired private ModuleRepository moduleRepository;
 
 	@Autowired private SubjectController subjectController;
 
 	public ControllerResult<ModuleModel> createModule(String nameKey, String subjectNameKey) {
-		ControllerResult<SubjectModel> subjectModelResult = this.subjectController.getSubjectByNameKey(subjectNameKey);
-		if (subjectModelResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "subject");
+		ControllerResult<SubjectModel> subjectModel = this.subjectController.getSubjectByNameKey(subjectNameKey);
+		if (subjectModel.isResultNotPresent()) return ControllerResult.ret(subjectModel);
 		return ControllerResult.of(this.moduleRepository.save(
-				new ModuleModel(-1, subjectModelResult.getResult(), nameKey)
+				new ModuleModel(-1, subjectModel.getResult(), nameKey)
 			)
 		);
 	}
@@ -29,8 +31,12 @@ public class ModuleController {
 		return ControllerResult.of(this.moduleRepository.getModuleByNameKeyIgnoreCase(nameKey));
 	}
 
-	public void deleteModule(String nameKey) {
+	public ControllerResult<Object> deleteModule(String nameKey) {
+		if (!this.moduleRepository.existsByNameKeyIgnoreCase(nameKey))
+			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
 		this.moduleRepository.deleteModuleByNameKeyIgnoreCase(nameKey);
+		return ControllerResult.empty();
 	}
 
 	public ControllerResult<List<ModuleModel>> getAllModules() {
@@ -38,9 +44,9 @@ public class ModuleController {
 	}
 
 	public ControllerResult<List<ModuleModel>> getAllModulesFromSubject(String subjectNameKey) {
-		ControllerResult<SubjectModel> subjectModelResult = this.subjectController.getSubjectByNameKey(subjectNameKey);
-		if (subjectModelResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "subject");
-		return ControllerResult.of(this.moduleRepository.getModulesBySubjectId(subjectModelResult.getResult()));
+		ControllerResult<SubjectModel> subjectModel = this.subjectController.getSubjectByNameKey(subjectNameKey);
+		if (subjectModel.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "subject");
+		return ControllerResult.of(this.moduleRepository.getModulesBySubjectId(subjectModel.getResult()));
 	}
 
 }
