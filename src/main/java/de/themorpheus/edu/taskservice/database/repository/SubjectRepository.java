@@ -11,8 +11,4 @@ public interface SubjectRepository extends JpaRepository<SubjectModel, Integer> 
 
 	SubjectModel getSubjectByNameKeyIgnoreCase(String nameKey);
 
-	boolean existsByNameKeyIgnoreCase(String nameKey);
-
-	void deleteByNameKey(String nameKey);
-
 }

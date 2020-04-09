@@ -63,9 +63,6 @@ public class WordsaladSolutionController {
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
-		if (!this.solutionWordsaladRepository.existsById(optionalSolution.getResult().getSolutionId()))
-			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
-
 		this.solutionWordsaladRepository.deleteById(optionalSolution.getResult().getSolutionId());
 		return ControllerResult.empty();
 	}

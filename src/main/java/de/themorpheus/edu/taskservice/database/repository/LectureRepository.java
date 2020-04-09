@@ -17,6 +17,4 @@ public interface LectureRepository extends JpaRepository<LectureModel, Integer> 
 
 	List<LectureModel> getLecturesByModuleId(ModuleModel moduleId);
 
-	boolean existsByNameKeyIgnoreCase(String nameKey);
-
 }

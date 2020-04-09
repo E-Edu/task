@@ -13,6 +13,4 @@ public interface TaskTypeRepository extends JpaRepository<TaskTypeModel, Integer
 
 	TaskTypeModel getTaskTypeByNameKeyIgnoreCase(String nameKey);
 
-	boolean existsByNameKeyIgnoreCase(String nameKey);
-
 }
