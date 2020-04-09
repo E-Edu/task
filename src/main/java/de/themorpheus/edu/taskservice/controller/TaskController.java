@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 public class TaskController {
 
 	private static final Random RANDOM = new Random();
+	private static final String NAME_KEY = "task";
 
 	@Autowired private TaskRepository taskRepository;
 
@@ -30,7 +31,7 @@ public class TaskController {
 	public ControllerResult<TaskModel> createTask(CreateTaskDTO dto) {
 		ControllerResult<LectureModel> lectureModelResult = this.lectureController.getLectureByNameKey(dto.getLectureNameKey());
 		ControllerResult<DifficultyModel> difficultyModelResult = this.difficultyController.getDifficultyByNameKey(dto.getDifficultyNameKey());
-		ControllerResult<TaskTypeModel> taskTypeModelResult = this.taskTypeController.getTaskTypeByNameKey(dto.getTaskTypeNameKey());
+		ControllerResult<TaskTypeModel> taskTypeModelResult = this.taskTypeController.getTaskType(dto.getTaskTypeNameKey());
 
 		if (lectureModelResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "lecture");
 		if (difficultyModelResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "difficulty");
@@ -53,7 +54,7 @@ public class TaskController {
 
 	public ControllerResult<TaskModel> getNextTask(List<Integer> finishedTaskIds) {
 		TaskModel taskModel = this.taskRepository.getTaskByTaskId(finishedTaskIds.get(0));
-		if (taskModel == null) return ControllerResult.of(Error.NOT_FOUND, "task");
+		if (taskModel == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		LectureModel lectureModel = taskModel.getLectureId();
 		if (lectureModel == null) return ControllerResult.of(Error.NOT_FOUND, "lecture");
@@ -72,7 +73,7 @@ public class TaskController {
 
 	public ControllerResult<TaskModel> getTaskById(int taskId) {
 		TaskModel taskModel = this.taskRepository.getTaskByTaskId(taskId);
-		if (taskModel == null) return ControllerResult.of(Error.NOT_FOUND, "task");
+		if (taskModel == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		return ControllerResult.of(taskModel);
 	}
@@ -97,7 +98,7 @@ public class TaskController {
 	}
 
 	public ControllerResult<TaskModel> verifyTask(TaskModel task) {
-		if (task == null) return ControllerResult.of(Error.NOT_FOUND, "task");
+		if (task == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		task.setVerified(true); //TODO: Single property update
 		return ControllerResult.of(this.taskRepository.save(task));
@@ -105,12 +106,12 @@ public class TaskController {
 
 	public ControllerResult<TaskModel> updateTask(int taskId, UpdateTaskDTO dto) {
 		TaskModel taskModel = this.taskRepository.getTaskByTaskId(taskId);
-		if (taskModel == null) return ControllerResult.of(Error.NOT_FOUND, "task");
+		if (taskModel == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		ControllerResult<LectureModel> lectureModelResult = this.lectureController
 			.getLectureByNameKey(dto.getLectureNameKey());
 		ControllerResult<TaskTypeModel> taskTypeModelResult = this.taskTypeController
-			.getTaskTypeByNameKey(dto.getTaskTypeNameKey());
+			.getTaskType(dto.getTaskTypeNameKey());
 		ControllerResult<DifficultyModel> difficultyModelResult = this.difficultyController
 			.getDifficultyByNameKey(dto.getDifficultyNameKey());
 

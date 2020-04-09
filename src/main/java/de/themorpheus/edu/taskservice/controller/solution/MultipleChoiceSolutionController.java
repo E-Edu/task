@@ -50,22 +50,18 @@ public class MultipleChoiceSolutionController {
 	}
 
 	public ControllerResult<MultipleChoiceSolutionModel> deleteMultipleChoiceSolution(int taskId, String solution) {
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
+		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
+
+		if (this.multipleChoiceSolutionRepository.existsById(optionalSolution.getResult().getSolutionId()))
+			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
 		this.multipleChoiceSolutionRepository.deleteMultipleChoiceSolutionBySolutionIdAndSolution(taskId, solution);
 		return ControllerResult.empty();
 	}
 
-	public void deleteAll(int taskId) {
-		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getOrCreateSolution(taskId, NAME_KEY);
-		if (optionalSolution.isResultNotPresent()) return;
-
-		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository.findAllById(
-				Collections.singleton(optionalSolution.getResult().getSolutionId()));
-		if (multipleChoiceSolutionModels.isEmpty()) return;
-
-		this.multipleChoiceSolutionRepository.deleteAllMultipleChoiceSolutionsBySolutionId(optionalSolution.getResult().getSolutionId());
-	}
-
 	public ControllerResult<GetMultipleChoiceSolutionDTO> getMultipleChoiceSolution(int taskId) {
+
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
@@ -81,6 +77,17 @@ public class MultipleChoiceSolutionController {
 		);
 
 		return ControllerResult.of(dto);
+	}
+
+	public void deleteAll(int taskId) {
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getOrCreateSolution(taskId, NAME_KEY);
+		if (optionalSolution.isResultNotPresent()) return;
+
+		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository.findAllById(
+				Collections.singleton(optionalSolution.getResult().getSolutionId()));
+		if (multipleChoiceSolutionModels.isEmpty()) return;
+
+		this.multipleChoiceSolutionRepository.deleteAllMultipleChoiceSolutionsBySolutionId(optionalSolution.getResult().getSolutionId());
 	}
 
 }
