@@ -9,13 +9,12 @@ import de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice.ret.C
 import de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice.ret.GetMultipleChoiceSolutionDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
-import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MultipleChoiceSolutionController {
+public class MultipleChoiceSolutionController implements Solution {
 
 	private static final String NAME_KEY = "multiple_choice_solution";
 
@@ -50,19 +49,14 @@ public class MultipleChoiceSolutionController {
 	}
 
 	public ControllerResult<MultipleChoiceSolutionModel> deleteMultipleChoiceSolution(int taskId, String solution) {
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
+		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
+
+		if (this.multipleChoiceSolutionRepository.existsById(optionalSolution.getResult().getSolutionId()))
+			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
 		this.multipleChoiceSolutionRepository.deleteMultipleChoiceSolutionBySolutionIdAndSolution(taskId, solution);
 		return ControllerResult.empty();
-	}
-
-	public void deleteAll(int taskId) {
-		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getOrCreateSolution(taskId, NAME_KEY);
-		if (optionalSolution.isResultNotPresent()) return;
-
-		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository.findAllById(
-				Collections.singleton(optionalSolution.getResult().getSolutionId()));
-		if (multipleChoiceSolutionModels.isEmpty()) return;
-
-		this.multipleChoiceSolutionRepository.deleteAllMultipleChoiceSolutionsBySolutionId(optionalSolution.getResult().getSolutionId());
 	}
 
 	public ControllerResult<GetMultipleChoiceSolutionDTO> getMultipleChoiceSolution(int taskId) {
@@ -81,6 +75,20 @@ public class MultipleChoiceSolutionController {
 		);
 
 		return ControllerResult.of(dto);
+	}
+
+	public void deleteAll(int taskId) {
+		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
+		if (optionalSolution.isResultNotPresent()) return;
+
+		int solutionId = optionalSolution.getResult().getSolutionId();
+		if (!this.multipleChoiceSolutionRepository.existsById(solutionId)) return;
+
+		List<MultipleChoiceSolutionModel> multipleChoiceSolutionModels = this.multipleChoiceSolutionRepository
+				.findAllMultipleChoiceSolutionsBySolutionIdOrderBySolutionDesc(solutionId);
+		if (multipleChoiceSolutionModels.isEmpty()) return;
+
+		this.multipleChoiceSolutionRepository.deleteAllMultipleChoiceSolutionsBySolutionId(solutionId);
 	}
 
 }
