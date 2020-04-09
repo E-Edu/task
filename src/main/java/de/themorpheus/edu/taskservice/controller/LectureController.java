@@ -12,16 +12,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class LectureController {
 
-	private static final String NAME_KEY = "lecture";
-
 	@Autowired private LectureRepository lectureRepository;
 
 	@Autowired private ModuleController moduleController;
 
 	public ControllerResult<LectureModel> createLecture(String nameKey, String moduleNameKey) {
 		ControllerResult<ModuleModel> moduleModel = this.moduleController.getModuleByNameKey(moduleNameKey);
-		if (moduleModel.isResultNotPresent()) return ControllerResult.ret(moduleModel);
-
+		if (moduleModel.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "module");
 		return ControllerResult.of(this.lectureRepository.save(new LectureModel(-1, moduleModel.getResult(), nameKey)));
 	}
 
@@ -34,9 +31,6 @@ public class LectureController {
 	}
 
 	public ControllerResult<LectureModel> deleteLecture(String nameKey) {
-		if (!this.lectureRepository.existsByNameKeyIgnoreCase(nameKey))
-			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
-
 		this.lectureRepository.deleteLectureByNameKeyIgnoreCase(nameKey);
 		return ControllerResult.empty();
 	}
@@ -44,7 +38,6 @@ public class LectureController {
 	public ControllerResult<List<LectureModel>> getAllLecturesFromModule(String moduleNameKey) {
 		ControllerResult<ModuleModel> moduleModel = this.moduleController.getModuleByNameKey(moduleNameKey);
 		if (moduleModel.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "module");
-
 		return ControllerResult.of(this.lectureRepository.getLecturesByModuleId(moduleModel.getResult()));
 	}
 

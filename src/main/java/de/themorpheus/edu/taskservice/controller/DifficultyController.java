@@ -3,15 +3,12 @@ package de.themorpheus.edu.taskservice.controller;
 import de.themorpheus.edu.taskservice.database.model.DifficultyModel;
 import de.themorpheus.edu.taskservice.database.repository.DifficultyRepository;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
-import de.themorpheus.edu.taskservice.util.Error;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DifficultyController {
-
-	private static final String NAME_KEY = "difficulty";
 
 	@Autowired private DifficultyRepository difficultyRepository;
 
@@ -24,9 +21,6 @@ public class DifficultyController {
 	}
 
 	public ControllerResult<DifficultyModel> deleteDifficulty(String nameKey) {
-		if (!this.difficultyRepository.existsByNameKeyIgnoreCase(nameKey))
-			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
-
 		this.difficultyRepository.deleteDifficultyByNameKeyIgnoreCase(nameKey);
 		return ControllerResult.empty();
 	}

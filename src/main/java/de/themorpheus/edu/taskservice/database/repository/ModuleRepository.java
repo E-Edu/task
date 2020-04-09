@@ -17,6 +17,4 @@ public interface ModuleRepository extends JpaRepository<ModuleModel, Integer> {
 
 	List<ModuleModel> getModulesBySubjectId(SubjectModel subjectId);
 
-	boolean existsByNameKeyIgnoreCase(String nameKey);
-
 }
