@@ -60,6 +60,7 @@ public class MultipleChoiceSolutionController implements Solution {
 	}
 
 	public ControllerResult<GetMultipleChoiceSolutionDTO> getMultipleChoiceSolution(int taskId) {
+
 		ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
 		if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
