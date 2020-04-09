@@ -6,8 +6,10 @@ import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.GetNextTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.VoteTaskDTO;
-import de.themorpheus.edu.taskservice.util.ControllerResult;
 import java.util.UUID;
+import de.themorpheus.edu.taskservice.util.Error;
+import de.themorpheus.edu.taskservice.util.Validation;
+import io.micrometer.core.annotation.Timed;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -22,7 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import io.micrometer.core.annotation.Timed;
 
 @Timed
 @RestController
@@ -64,8 +65,7 @@ public class TaskEndpoint {
 
 	@DeleteMapping("/task/{taskId}")
 	public Object deleteTask(@PathVariable @Min(0) int taskId) {
-		this.taskController.deleteTask(taskId);
-		return ControllerResult.empty().getHttpResponse();
+		return this.taskController.deleteTask(taskId).getHttpResponse();
 	}
 
 }

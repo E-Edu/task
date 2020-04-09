@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MultipleChoiceSolutionController {
+public class MultipleChoiceSolutionController implements Solution {
 
 	private static final String NAME_KEY = "multiple_choice_solution";
 
@@ -89,7 +89,7 @@ public class MultipleChoiceSolutionController {
 				.findAllMultipleChoiceSolutionsBySolutionIdOrderBySolutionDesc(solutionId);
 		if (multipleChoiceSolutionModels.isEmpty()) return;
 
-		this.multipleChoiceSolutionRepository.deleteAllMultipleChoiceSolutionsBySolutionId(optionalSolution.getResult().getSolutionId());
+		this.multipleChoiceSolutionRepository.deleteAllMultipleChoiceSolutionsBySolutionId(solutionId);
 	}
 
 }

@@ -1,9 +1,11 @@
 package de.themorpheus.edu.taskservice.controller;
 
+import de.themorpheus.edu.taskservice.controller.solution.SolutionController;
 import de.themorpheus.edu.taskservice.database.model.DifficultyModel;
 import de.themorpheus.edu.taskservice.database.model.LectureModel;
 import de.themorpheus.edu.taskservice.database.model.TaskModel;
 import de.themorpheus.edu.taskservice.database.model.TaskTypeModel;
+import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
 import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
@@ -23,6 +25,7 @@ public class TaskController {
 	private static final String NAME_KEY = "task";
 
 	@Autowired private TaskRepository taskRepository;
+	@Autowired private SolutionController solutionController;
 
 	@Autowired private LectureController lectureController;
 	@Autowired private TaskTypeController taskTypeController;
@@ -66,9 +69,9 @@ public class TaskController {
 		return ControllerResult.of(taskModels.get(RANDOM.nextInt(taskModels.size())));
 	}
 
-	public void deleteTask(int taskId) {
+	public ControllerResult<SolutionModel> deleteTask(int taskId) {
 		this.taskRepository.deleteById(taskId);
-		//TODO delete solution
+		return this.solutionController.deleteSolutions(taskId);
 	}
 
 	public ControllerResult<TaskModel> getTaskById(int taskId) {
