@@ -6,6 +6,7 @@ import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.repository.solution.SolutionRepository;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class SolutionController {
 
-	private static List<SolutionInterface> solutionInterfaces = new ArrayList<>();
+	private static List<Object> solutionControllers = new ArrayList<>();
 
 	@Autowired private SolutionRepository solutionRepository;
 	@Autowired private TaskController taskController;
@@ -47,13 +48,16 @@ public class SolutionController {
 		return ControllerResult.of(solutionModel);
 	}
 
-	public ControllerResult<SolutionModel> deleteSolution(int taskId) {
+	public ControllerResult<SolutionModel> deleteSolutions(int taskId) {
 		ControllerResult<SolutionModel> solutionModel = this.getSolution(taskId);
 		if (solutionModel.isResultNotPresent()) return ControllerResult.ret(solutionModel);
 
 		this.solutionRepository.delete(solutionModel.getResult());
 
-		for (SolutionInterface solutionInterface : solutionInterfaces) solutionInterface.deleteAll(solutionModel.getResult().getTaskId().getTaskId());
+		for (Object solutionController : solutionControllers) {
+			Solution solution = (Solution) solutionController;
+			solution.deleteAll(solutionModel.getResult().getTaskId().getTaskId());
+		}
 
 		return ControllerResult.empty();
 	}
@@ -85,19 +89,19 @@ public class SolutionController {
 	}
 
 	@Bean
-	public void getSolutionInterfaces() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+	public void getSolutionInterfaces() throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
 		ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
 		provider.addIncludeFilter((TypeFilter) (metadataReader, metadataReaderFactory) -> {
 			String[] interfaceNames = metadataReader.getClassMetadata().getInterfaceNames();
 			if (interfaceNames.length == 0) return false;
-			for (String interfaceName : interfaceNames) if (interfaceName.equals(SolutionInterface.class.getName())) return true;
+			for (String interfaceName : interfaceNames) if (interfaceName.equals(Solution.class.getName())) return true;
 
 			return false;
 		});
 
 		for (BeanDefinition beanDefinition : provider.findCandidateComponents("de.themorpheus")) {
 			Class<?> clazz = Class.forName(beanDefinition.getBeanClassName());
-			solutionInterfaces.add((SolutionInterface) clazz.newInstance());
+			solutionControllers.add(clazz.getDeclaredConstructor().newInstance());
 		}
 	}
 

@@ -70,7 +70,7 @@ public class TaskController {
 
 	public ControllerResult<SolutionModel> deleteTask(int taskId) {
 		this.taskRepository.deleteById(taskId);
-		return this.solutionController.deleteSolution(taskId);
+		return this.solutionController.deleteSolutions(taskId);
 	}
 
 	public ControllerResult<TaskModel> getTaskById(int taskId) {

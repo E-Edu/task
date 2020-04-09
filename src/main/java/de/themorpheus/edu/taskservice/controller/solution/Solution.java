@@ -1,6 +1,6 @@
 package de.themorpheus.edu.taskservice.controller.solution;
 
-interface SolutionInterface {
+interface Solution {
 
 	void deleteAll(int taskId);
 

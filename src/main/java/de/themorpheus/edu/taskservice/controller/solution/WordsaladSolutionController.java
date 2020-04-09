@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WordsaladSolutionController implements SolutionInterface {
+public class WordsaladSolutionController implements Solution {
 
 	private static final String NAME_KEY = "wordsalad_solution";
 
@@ -91,4 +91,5 @@ public class WordsaladSolutionController implements SolutionInterface {
 	public void deleteAll(int taskId) {
 		this.deleteSolutionWordsalad(taskId);
 	}
+
 }
