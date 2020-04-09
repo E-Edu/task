@@ -7,8 +7,6 @@ import de.themorpheus.edu.taskservice.endpoint.dto.GetNextTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.VoteTaskDTO;
 import java.util.UUID;
-import de.themorpheus.edu.taskservice.util.Error;
-import de.themorpheus.edu.taskservice.util.Validation;
 import io.micrometer.core.annotation.Timed;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
