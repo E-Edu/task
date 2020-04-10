@@ -8,27 +8,30 @@ import de.themorpheus.edu.taskservice.util.Error;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import static de.themorpheus.edu.taskservice.util.Constants.Module.NAME_KEY;
 
 @Component
 public class ModuleController {
-
-	private static final String NAME_KEY = "module";
 
 	@Autowired private ModuleRepository moduleRepository;
 
 	@Autowired private SubjectController subjectController;
 
 	public ControllerResult<ModuleModel> createModule(String nameKey, String subjectNameKey) {
-		ControllerResult<SubjectModel> subjectModel = this.subjectController.getSubjectByNameKey(subjectNameKey);
-		if (subjectModel.isResultNotPresent()) return ControllerResult.ret(subjectModel);
+		ControllerResult<SubjectModel> subjectResult = this.subjectController.getSubjectByNameKey(subjectNameKey);
+		if (subjectResult.isResultNotPresent()) return ControllerResult.ret(subjectResult);
+
 		return ControllerResult.of(this.moduleRepository.save(
-				new ModuleModel(-1, subjectModel.getResult(), nameKey)
+				new ModuleModel(-1, subjectResult.getResult(), nameKey)
 			)
 		);
 	}
 
 	public ControllerResult<ModuleModel> getModuleByNameKey(String nameKey) {
-		return ControllerResult.of(this.moduleRepository.getModuleByNameKeyIgnoreCase(nameKey));
+		ModuleModel module = this.moduleRepository.getModuleByNameKeyIgnoreCase(nameKey);
+		if (module == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		return ControllerResult.of(module);
 	}
 
 	public ControllerResult<ModuleModel> deleteModule(String nameKey) {
@@ -40,13 +43,20 @@ public class ModuleController {
 	}
 
 	public ControllerResult<List<ModuleModel>> getAllModules() {
-		return ControllerResult.of(this.moduleRepository.findAll());
+		List<ModuleModel> modules = this.moduleRepository.findAll();
+		if (modules.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		return ControllerResult.of(modules);
 	}
 
 	public ControllerResult<List<ModuleModel>> getAllModulesFromSubject(String subjectNameKey) {
-		ControllerResult<SubjectModel> subjectModel = this.subjectController.getSubjectByNameKey(subjectNameKey);
-		if (subjectModel.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "subject");
-		return ControllerResult.of(this.moduleRepository.getModulesBySubjectId(subjectModel.getResult()));
+		ControllerResult<SubjectModel> subjectResults = this.subjectController.getSubjectByNameKey(subjectNameKey);
+		if (subjectResults.isResultNotPresent()) return ControllerResult.ret(subjectResults);
+
+		List<ModuleModel> modules = this.moduleRepository.getModulesBySubjectId(subjectResults.getResult());
+		if (modules.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		return ControllerResult.of(modules);
 	}
 
 }

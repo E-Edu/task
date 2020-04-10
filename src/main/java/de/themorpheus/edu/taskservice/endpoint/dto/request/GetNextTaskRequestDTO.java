@@ -1,4 +1,4 @@
-package de.themorpheus.edu.taskservice.endpoint.dto;
+package de.themorpheus.edu.taskservice.endpoint.dto.request;
 
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetNextTaskDTO {
+public class GetNextTaskRequestDTO {
 
 	@NotNull @Size(min = 1)
 	private List<Integer> lastTaskIds;

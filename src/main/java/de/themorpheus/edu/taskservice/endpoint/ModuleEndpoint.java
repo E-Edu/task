@@ -1,7 +1,7 @@
 package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.ModuleController;
-import de.themorpheus.edu.taskservice.endpoint.dto.CreateModuleDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateModuleRequestDTO;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -22,7 +22,7 @@ public class ModuleEndpoint {
 	@Autowired private ModuleController moduleController;
 
 	@PostMapping("/module")
-	public Object createModule(@RequestBody @Valid CreateModuleDTO dto) {
+	public Object createModule(@RequestBody @Valid CreateModuleRequestDTO dto) {
 		return this.moduleController.createModule(dto.getNameKey(), dto.getSubjectNameKey()).getHttpResponse();
 	}
 

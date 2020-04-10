@@ -1,7 +1,7 @@
 package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.LectureController;
-import de.themorpheus.edu.taskservice.endpoint.dto.CreateLectureDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateLectureRequestDTO;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -22,7 +22,7 @@ public class LectureEndpoint {
 	@Autowired private LectureController lectureController;
 
 	@PostMapping(value = "/lecture")
-	public Object createLecture(@RequestBody @Valid CreateLectureDTO dto) {
+	public Object createLecture(@RequestBody @Valid CreateLectureRequestDTO dto) {
 		return this.lectureController.createLecture(dto.getNameKey(), dto.getModuleNameKey()).getHttpResponse();
 	}
 

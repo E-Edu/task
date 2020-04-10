@@ -11,5 +11,6 @@ public class i18n {
 	public static final String ALREADY_EXISTS = "ALREADY_EXISTS";
 	public static final String WRONG_ANSWER = "WRONG_ANSWER";
 	public static final String WRONG_TYPE = "WRONG_TYPE";
+	public static final String NO_CONTENT = "NO_CONTENT";
 
 }

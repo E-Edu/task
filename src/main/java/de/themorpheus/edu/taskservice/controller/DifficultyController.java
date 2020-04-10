@@ -7,20 +7,25 @@ import de.themorpheus.edu.taskservice.util.Error;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import static de.themorpheus.edu.taskservice.util.Constants.Difficulty.NAME_KEY;
 
 @Component
 public class DifficultyController {
 
-	private static final String NAME_KEY = "difficulty";
-
 	@Autowired private DifficultyRepository difficultyRepository;
 
 	public ControllerResult<DifficultyModel> createDifficulty(String nameKey) {
+		if (this.difficultyRepository.existsByNameKeyIgnoreCase(nameKey))
+			return ControllerResult.of(Error.ALREADY_EXISTS, NAME_KEY);
+
 		return ControllerResult.of(this.difficultyRepository.save(new DifficultyModel(-1, nameKey)));
 	}
 
 	public ControllerResult<DifficultyModel> getDifficultyByNameKey(String nameKey) {
-		return ControllerResult.of(this.difficultyRepository.getDifficultyByNameKeyIgnoreCase(nameKey));
+		DifficultyModel difficulty = this.difficultyRepository.getDifficultyByNameKeyIgnoreCase(nameKey);
+		if (difficulty == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		return ControllerResult.of(difficulty);
 	}
 
 	public ControllerResult<DifficultyModel> deleteDifficulty(String nameKey) {
@@ -32,7 +37,10 @@ public class DifficultyController {
 	}
 
 	public ControllerResult<List<DifficultyModel>> getAllDifficulties() {
-		return ControllerResult.of(this.difficultyRepository.findAll());
+		List<DifficultyModel> difficulties = this.difficultyRepository.findAll();
+		if (difficulties.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		return ControllerResult.of(difficulties);
 	}
 
 }

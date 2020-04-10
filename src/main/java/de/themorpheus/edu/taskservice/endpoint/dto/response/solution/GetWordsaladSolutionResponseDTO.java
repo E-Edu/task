@@ -1,4 +1,4 @@
-package de.themorpheus.edu.taskservice.endpoint.dto;
+package de.themorpheus.edu.taskservice.endpoint.dto.response.solution;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -8,11 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class CreateTaskTypeDTO {
+@AllArgsConstructor
+public class GetWordsaladSolutionResponseDTO {
 
-	@NotNull @NotBlank @NotEmpty
-	private String nameKey;
+	@NotNull @NotEmpty @NotBlank
+	private String solution;
 
 }

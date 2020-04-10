@@ -1,4 +1,4 @@
-package de.themorpheus.edu.taskservice.endpoint.dto.solution.multipleChoice.get;
+package de.themorpheus.edu.taskservice.endpoint.dto.request.solution;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateMultipleChoiceSolutionDTO {
+public class CreateMultipleChoiceSolutionRequestDTO {
 
 	@Min(0)
 	private int taskId;
