@@ -3,6 +3,7 @@ package de.themorpheus.edu.taskservice.database.model.solution;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,9 +15,9 @@ import lombok.NoArgsConstructor;
 @Table
 public class FreestyleSolutionModel {
 
-    @Id
-    private int taskId;
+	@Id
+	private int taskId;
 
-    private String solution;
+	private String solution;
 
 }
