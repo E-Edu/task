@@ -14,6 +14,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.stereotype.Controller;
+import static de.themorpheus.edu.taskservice.util.Constants.Solution.NAME_KEY;
 
 @Controller
 public class SolutionController {
@@ -23,14 +24,7 @@ public class SolutionController {
 	@Autowired private SolutionRepository solutionRepository;
 	@Autowired private TaskController taskController;
 
-	public ControllerResult<SolutionModel> createSolution(SolutionModel solutionModel) {
-		if (this.solutionRepository.findById(solutionModel.getSolutionId()).isPresent())
-			return ControllerResult.of(Error.ALREADY_EXISTS, "solution");
-
-		return ControllerResult.of(this.solutionRepository.save(solutionModel));
-	}
-
-	public ControllerResult<SolutionModel> getSolution(int taskId, String nameKey) {
+	public ControllerResult<SolutionModel> getGenericSolution(int taskId, String nameKey) {
 		return this.getGenericSolution(TaskModel.create(taskId), nameKey);
 	}
 
@@ -40,9 +34,10 @@ public class SolutionController {
 
 	private ControllerResult<SolutionModel> getGenericSolution(TaskModel taskModel, String solutionTypeNameKey) {
 		SolutionModel solutionModel = this.solutionRepository.findSolutionModelByTaskId(taskModel);
-		if (solutionModel == null) return ControllerResult.of(Error.NOT_FOUND, "solution");
+		if (solutionModel == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
 		if (!solutionModel.getSolutionType().equals(solutionTypeNameKey))
-			return ControllerResult.of(Error.WRONG_TYPE, "solution");
+			return ControllerResult.of(Error.WRONG_TYPE, NAME_KEY);
 
 		return ControllerResult.of(solutionModel);
 	}
@@ -68,7 +63,7 @@ public class SolutionController {
 	 * @return the existing solution or a new instance
 	 */
 	protected ControllerResult<SolutionModel> getOrCreateSolution(int taskId, String solutionTypeNameKey) {
-		ControllerResult<TaskModel> taskModelControllerResult = this.taskController.getTaskById(taskId);
+		ControllerResult<TaskModel> taskModelControllerResult = this.taskController.getTaskByTaskId(taskId);
 		if (taskModelControllerResult.isResultNotPresent()) return ControllerResult.ret(taskModelControllerResult);
 
 		SolutionModel solutionModel = this.solutionRepository.findSolutionModelByTaskId(taskModelControllerResult.getResult());
@@ -76,7 +71,7 @@ public class SolutionController {
 			this.solutionRepository.save(new SolutionModel(-1, taskModelControllerResult.getResult(), solutionTypeNameKey));
 		else if (!solutionModel.getSolutionType().equals(solutionTypeNameKey)) return ControllerResult.of(Error.WRONG_TYPE);
 
-		ControllerResult<SolutionModel> solutionModelControllerResult = this.getSolution(
+		ControllerResult<SolutionModel> solutionModelControllerResult = this.getGenericSolution(
 			taskModelControllerResult.getResult().getTaskId(),
 			solutionTypeNameKey
 		);

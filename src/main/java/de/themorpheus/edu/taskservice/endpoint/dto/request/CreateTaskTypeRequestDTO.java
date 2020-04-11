@@ -1,4 +1,4 @@
-package de.themorpheus.edu.taskservice.endpoint.dto;
+package de.themorpheus.edu.taskservice.endpoint.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateDifficultyDTO {
+public class CreateTaskTypeRequestDTO {
 
 	@NotNull @NotBlank @NotEmpty
 	private String nameKey;

@@ -1,7 +1,7 @@
 package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.TaskTypeController;
-import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskTypeDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskTypeRequestDTO;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -22,7 +22,7 @@ public class TaskTypeEndpoint {
 	@Autowired private TaskTypeController taskTypeController;
 
 	@PostMapping("/task_type")
-	public Object createTaskType(@RequestBody @Valid CreateTaskTypeDTO dto) {
+	public Object createTaskType(@RequestBody @Valid CreateTaskTypeRequestDTO dto) {
 		return this.taskTypeController.createTaskType(dto.getNameKey()).getHttpResponse();
 	}
 

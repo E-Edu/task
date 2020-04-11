@@ -18,6 +18,7 @@ public class Error extends ResponseEntity<Object> {
 	public static final Error ALREADY_EXISTS = new Error(HttpStatus.CONFLICT, i18n.ALREADY_EXISTS);
 	public static final Error WRONG_ANSWER = new Error(BAD_REQUEST, i18n.WRONG_ANSWER);
 	public static final Error WRONG_TYPE = new Error(HttpStatus.CONFLICT, i18n.WRONG_TYPE);
+	public static final Error NO_CONTENT = new Error(HttpStatus.NO_CONTENT, i18n.NO_CONTENT);
 
 	private final int status;
 	private final String messageKey;

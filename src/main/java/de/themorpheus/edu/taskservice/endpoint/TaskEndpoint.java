@@ -2,10 +2,10 @@ package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.TaskController;
 import de.themorpheus.edu.taskservice.controller.VotingController;
-import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.GetNextTaskDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.VoteTaskDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.GetNextTaskRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.UpdateTaskRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.VoteTaskRequestDTO;
 import java.util.UUID;
 import io.micrometer.core.annotation.Timed;
 import javax.validation.Valid;
@@ -31,7 +31,7 @@ public class TaskEndpoint {
 	@Autowired private VotingController votingController;
 
 	@PostMapping("/task")
-	public Object createTask(@RequestBody @Valid CreateTaskDTO dto) {
+	public Object createTask(@RequestBody @Valid CreateTaskRequestDTO dto) {
 		return this.taskController.createTask(dto).getHttpResponse();
 	}
 
@@ -40,24 +40,24 @@ public class TaskEndpoint {
 		return this.taskController.getTasksFromLecture(lectureNameKey).getHttpResponse();
 	}
 
-	@PatchMapping(value = "/task/verify/{taskId}")
+	@PatchMapping("/task/verify/{taskId}")
 	public Object verifyTask(@PathVariable @Min(0) int taskId) {
 		return this.taskController.verifyTask(taskId).getHttpResponse();
 	}
 
-	@PutMapping(path = "/task/{taskId}")
-	public Object updateTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid UpdateTaskDTO dto) {
+	@PutMapping("/task/{taskId}")
+	public Object updateTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid UpdateTaskRequestDTO dto) {
 		return this.taskController.updateTask(taskId, dto).getHttpResponse();
 	}
 
 	@PutMapping("/task/vote/{taskId}")
-	public Object voteTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid VoteTaskDTO dto) {
+	public Object voteTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid VoteTaskRequestDTO dto) {
 		// TODO: Pass real userId instead of random UUID
 		return this.votingController.voteTask(taskId, dto.getVote(), UUID.randomUUID()).getHttpResponse();
 	}
 
 	@PostMapping("/task/next")
-	public Object nextTask(@RequestBody @Valid GetNextTaskDTO dto) {
+	public Object nextTask(@RequestBody @Valid GetNextTaskRequestDTO dto) {
 		return this.taskController.getNextTask(dto.getLastTaskIds()).getHttpResponse();
 	}
 

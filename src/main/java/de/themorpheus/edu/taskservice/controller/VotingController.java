@@ -4,11 +4,8 @@ import de.themorpheus.edu.taskservice.database.model.TaskModel;
 import de.themorpheus.edu.taskservice.database.model.VotingModel;
 import de.themorpheus.edu.taskservice.database.repository.VotingRepository;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
-import de.themorpheus.edu.taskservice.util.Error;
-import de.themorpheus.edu.taskservice.util.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.UUID;
 
 @Component
@@ -18,19 +15,17 @@ public class VotingController {
 
 	@Autowired private TaskController taskController;
 
-	public ControllerResult<Object> voteTask(int taskId, int vote, UUID userId) {
-		TaskModel taskModel = this.taskController.getTaskByTaskId(taskId);
+	public ControllerResult<VotingModel> voteTask(int taskId, int vote, UUID userId) {
+		ControllerResult<TaskModel> task = this.taskController.getTaskByTaskId(taskId);
+		if (task.isResultNotPresent()) return ControllerResult.ret(task);
 
-		// Check if task exists
-		if (Validation.validateNull(taskModel)) return ControllerResult.of(Error.NOT_FOUND);
-
-		VotingModel votingModel = new VotingModel(
+		VotingModel voting = new VotingModel(
 			-1,
-			taskModel,
+			task.getResult(),
 			userId,
 			vote
 		);
-		return ControllerResult.of(this.votingRepository.save(votingModel));
+		return ControllerResult.of(this.votingRepository.save(voting));
 	}
 
 }

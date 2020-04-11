@@ -1,7 +1,7 @@
 package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.DifficultyController;
-import de.themorpheus.edu.taskservice.endpoint.dto.CreateDifficultyDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateDifficultyRequestDTO;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -22,7 +22,7 @@ public class DifficultyEndpoint {
 	@Autowired private DifficultyController difficultyController;
 
 	@PostMapping(value = "/difficulty")
-	public Object createDifficulty(@RequestBody @Valid CreateDifficultyDTO dto) {
+	public Object createDifficulty(@RequestBody @Valid CreateDifficultyRequestDTO dto) {
 		return this.difficultyController.createDifficulty(dto.getNameKey()).getHttpResponse();
 	}
 

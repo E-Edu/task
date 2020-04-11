@@ -7,8 +7,9 @@ import de.themorpheus.edu.taskservice.database.model.TaskModel;
 import de.themorpheus.edu.taskservice.database.model.TaskTypeModel;
 import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
-import de.themorpheus.edu.taskservice.endpoint.dto.CreateTaskDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.UpdateTaskDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.UpdateTaskRequestDTO;
+import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
@@ -17,12 +18,12 @@ import java.util.Random;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import static de.themorpheus.edu.taskservice.util.Constants.Task.NAME_KEY;
 
 @Component
 public class TaskController {
 
 	private static final Random RANDOM = new Random();
-	private static final String NAME_KEY = "task";
 
 	@Autowired private TaskRepository taskRepository;
 	@Autowired private SolutionController solutionController;
@@ -31,54 +32,49 @@ public class TaskController {
 	@Autowired private TaskTypeController taskTypeController;
 	@Autowired private DifficultyController difficultyController;
 
-	public ControllerResult<TaskModel> createTask(CreateTaskDTO dto) {
-		ControllerResult<LectureModel> lectureModelResult = this.lectureController.getLectureByNameKey(dto.getLectureNameKey());
-		ControllerResult<DifficultyModel> difficultyModelResult = this.difficultyController.getDifficultyByNameKey(dto.getDifficultyNameKey());
-		ControllerResult<TaskTypeModel> taskTypeModelResult = this.taskTypeController.getTaskType(dto.getTaskTypeNameKey());
+	public ControllerResult<TaskModel> createTask(CreateTaskRequestDTO dto) {
+		ControllerResult<LectureModel> lectureResult = this.lectureController.getLectureByNameKey(dto.getLectureNameKey());
+		ControllerResult<DifficultyModel> difficultyResult = this.difficultyController.getDifficultyByNameKey(dto.getDifficultyNameKey());
+		ControllerResult<TaskTypeModel> taskTypeResult = this.taskTypeController.getTaskType(dto.getTaskTypeNameKey());
 
-		if (lectureModelResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "lecture");
-		if (difficultyModelResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "difficulty");
-		if (taskTypeModelResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "taskType");
+		if (lectureResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, Constants.Lecture.NAME_KEY);
+		if (difficultyResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, Constants.Difficulty.NAME_KEY);
+		if (taskTypeResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, Constants.TaskType.NAME_KEY);
 
-		TaskModel taskModel = new TaskModel(
+		TaskModel task = new TaskModel(
 			-1,
 			dto.getDescription(),
 			UUID.randomUUID(), //TODO
 			dto.getTask(),
 			dto.getNecessaryPoints(),
 			false,
-			lectureModelResult.getResult(),
-			taskTypeModelResult.getResult(),
-			difficultyModelResult.getResult()
+			lectureResult.getResult(),
+			taskTypeResult.getResult(),
+			difficultyResult.getResult()
 		);
 
-		return ControllerResult.of(this.taskRepository.save(taskModel));
+		return ControllerResult.of(this.taskRepository.save(task));
 	}
 
 	public ControllerResult<TaskModel> getNextTask(List<Integer> finishedTaskIds) {
-		TaskModel taskModel = this.taskRepository.getTaskByTaskId(finishedTaskIds.get(0));
-		if (taskModel == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+		TaskModel task = this.taskRepository.getTaskByTaskId(finishedTaskIds.get(0));
+		if (task == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		LectureModel lectureModel = taskModel.getLectureId();
-		if (lectureModel == null) return ControllerResult.of(Error.NOT_FOUND, "lecture");
+		LectureModel lecture = task.getLectureId();
+		if (lecture == null) return ControllerResult.of(Error.NOT_FOUND, Constants.Lecture.NAME_KEY);
 
-		List<TaskModel> taskModels = this.taskRepository.getAllTasksByLectureId(lectureModel);
-		taskModels.removeIf(tm -> finishedTaskIds.contains(tm.getTaskId())); //TODO: Use SQL query
-		if (taskModels.isEmpty()) return ControllerResult.empty(); //TODO: return all tasks done (9xx)
+		List<TaskModel> tasks = this.taskRepository.getAllTasksByLectureId(lecture);
+		tasks.removeIf(tm -> finishedTaskIds.contains(tm.getTaskId())); //TODO: Use SQL query
+		if (tasks.isEmpty()) return ControllerResult.of(Error.NO_CONTENT, NAME_KEY);
 
-		return ControllerResult.of(taskModels.get(RANDOM.nextInt(taskModels.size())));
+		return ControllerResult.of(tasks.get(RANDOM.nextInt(tasks.size())));
 	}
 
 	public ControllerResult<SolutionModel> deleteTask(int taskId) {
+		if (!this.taskRepository.existsById(taskId)) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
 		this.taskRepository.deleteById(taskId);
 		return this.solutionController.deleteSolutions(taskId);
-	}
-
-	public ControllerResult<TaskModel> getTaskById(int taskId) {
-		TaskModel taskModel = this.taskRepository.getTaskByTaskId(taskId);
-		if (taskModel == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
-
-		return ControllerResult.of(taskModel);
 	}
 
 	public ControllerResult<List<TaskModel>> getAllTasks() {
@@ -86,49 +82,43 @@ public class TaskController {
 	}
 
 	public ControllerResult<List<TaskModel>> getTasksFromLecture(String lectureNameKey) {
-		ControllerResult<LectureModel> lectureModelResult = this.lectureController
+		ControllerResult<LectureModel> lectureResult = this.lectureController
 			.getLectureByNameKey(lectureNameKey);
-		if (lectureModelResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "lecture");
-		return ControllerResult.of(this.taskRepository.getAllTasksByLectureId(lectureModelResult.getResult()));
-	}
+		if (lectureResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, Constants.Lecture.NAME_KEY);
 
-	public ControllerResult<TaskModel> verifyTask(String task) {
-		return this.verifyTask(this.taskRepository.getTaskByTaskIgnoreCase(task));
+		return ControllerResult.of(this.taskRepository.getAllTasksByLectureId(lectureResult.getResult()));
 	}
 
 	public ControllerResult<TaskModel> verifyTask(int taskId) {
-		return this.verifyTask(this.taskRepository.getTaskByTaskId(taskId));
-	}
-
-	public ControllerResult<TaskModel> verifyTask(TaskModel task) {
+		TaskModel task = this.taskRepository.getTaskByTaskId(taskId);
 		if (task == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		task.setVerified(true); //TODO: Single property update
 		return ControllerResult.of(this.taskRepository.save(task));
 	}
 
-	public ControllerResult<TaskModel> updateTask(int taskId, UpdateTaskDTO dto) {
-		TaskModel taskModel = this.taskRepository.getTaskByTaskId(taskId);
-		if (taskModel == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+	public ControllerResult<TaskModel> updateTask(int taskId, UpdateTaskRequestDTO dto) {
+		TaskModel task = this.taskRepository.getTaskByTaskId(taskId);
+		if (task == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		ControllerResult<LectureModel> lectureModelResult = this.lectureController
+		ControllerResult<LectureModel> lectureResult = this.lectureController
 			.getLectureByNameKey(dto.getLectureNameKey());
-		ControllerResult<TaskTypeModel> taskTypeModelResult = this.taskTypeController
+		ControllerResult<TaskTypeModel> taskTypeResult = this.taskTypeController
 			.getTaskType(dto.getTaskTypeNameKey());
-		ControllerResult<DifficultyModel> difficultyModelResult = this.difficultyController
+		ControllerResult<DifficultyModel> difficultyResult = this.difficultyController
 			.getDifficultyByNameKey(dto.getDifficultyNameKey());
 
-		if (lectureModelResult.isResultPresent()) taskModel.setLectureId(lectureModelResult.getResult());
-		if (taskTypeModelResult.isResultPresent()) taskModel.setTaskTypeId(taskTypeModelResult.getResult());
-		if (difficultyModelResult.isResultPresent()) taskModel.setDifficultyId(difficultyModelResult.getResult());
-		if (Validation.validateNotNullOrEmpty(dto.getTask())) taskModel.setTask(dto.getTask());
-		if (Validation.greaterZero(dto.getNecessaryPoints())) taskModel.setNecessaryPoints(dto.getNecessaryPoints());
+		if (lectureResult.isResultPresent()) task.setLectureId(lectureResult.getResult());
+		if (taskTypeResult.isResultPresent()) task.setTaskTypeId(taskTypeResult.getResult());
+		if (difficultyResult.isResultPresent()) task.setDifficultyId(difficultyResult.getResult());
+		if (Validation.validateNotNullOrEmpty(dto.getTask())) task.setTask(dto.getTask());
+		if (Validation.greaterZero(dto.getNecessaryPoints())) task.setNecessaryPoints(dto.getNecessaryPoints());
 
-		return ControllerResult.of(this.taskRepository.save(taskModel));
+		return ControllerResult.of(this.taskRepository.save(task));
 	}
 
-	public TaskModel getTaskByTaskId(int taskId) {
-		return this.taskRepository.getTaskByTaskId(taskId);
+	public ControllerResult<TaskModel> getTaskByTaskId(int taskId) {
+		return ControllerResult.of(this.taskRepository.getTaskByTaskId(taskId));
 	}
 
 }

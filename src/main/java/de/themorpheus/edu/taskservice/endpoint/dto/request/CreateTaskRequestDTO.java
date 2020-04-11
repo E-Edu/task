@@ -1,4 +1,4 @@
-package de.themorpheus.edu.taskservice.endpoint.dto;
+package de.themorpheus.edu.taskservice.endpoint.dto.request;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateTaskDTO {
+public class CreateTaskRequestDTO {
 
 	@NotNull @NotBlank @NotEmpty
 	private String task;
