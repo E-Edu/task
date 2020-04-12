@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FreestyleSolutionController {
+public class FreestyleSolutionController implements Solution {
 
     private static final String NAME_KEY = "freestyle_solution";
 
@@ -63,6 +63,9 @@ public class FreestyleSolutionController {
         ControllerResult<SolutionModel> optionalSolution = this.solutionController.getSolution(taskId, NAME_KEY);
         if (optionalSolution.isResultNotPresent()) return ControllerResult.ret(optionalSolution);
 
+        if (!this.solutionFreestyleRepository.existsById(optionalSolution.getResult().getSolutionId()))
+            return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
         this.solutionFreestyleRepository.deleteById(optionalSolution.getResult().getSolutionId());
         return ControllerResult.empty();
     }
@@ -75,16 +78,16 @@ public class FreestyleSolutionController {
                 optionalSolution.getResult().getSolutionId());
         if (!freestyleSolutionModel.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-        List<Character> characters = new ArrayList<>(freestyleSolutionModel.get().getSolution().length());
-        for (char c : freestyleSolutionModel.get().getSolution().toCharArray()) characters.add(c);
+        GetFreestyleSolutionDTO dto = new GetFreestyleSolutionDTO(
+                freestyleSolutionModel.get().getSolution().toString()
+        );
 
-        StringBuilder output = new StringBuilder(freestyleSolutionModel.get().getSolution().length());
-        while (characters.size() != 0) {
-            int randPicker = (int) (Math.random() * characters.size());
-            output.append(characters.remove(randPicker));
-        }
+        return ControllerResult.of(dto);
+    }
 
-        return ControllerResult.of(new GetFreestyleSolutionDTO(output.toString()));
+    @Override
+    public void deleteAll(int taskId) {
+        this.deleteSolutionFreestyle(taskId);
     }
 
 }

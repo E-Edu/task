@@ -44,4 +44,5 @@ public class FreestyleSolutionEndpoint {
     public Object deleteFreestyleSolution(@PathVariable @Min(0) int taskId) {
         return this.freestyleSolutionController.deleteSolutionFreestyle(taskId).getHttpResponse();
     }
+
 }
