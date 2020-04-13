@@ -24,27 +24,27 @@ public class WordsaladSolutionEndpoint {
 
 	@PostMapping("/solution/wordsalad")
 	public Object createWordsaladSolution(@RequestBody @Valid CreateWordsaladSolutionRequestDTO dto) {
-		return this.wordsaladSolutionController.createSolutionWordsalad(dto).getHttpResponse();
+		return this.wordsaladSolutionController.createWordsaladSolution(dto).getHttpResponse();
 	}
 
 	@PostMapping("/solution/wordsalad/check")
 	public Object checkWordsaladSolution(@RequestBody @Valid CheckWordsaladSolutionRequestDTO dto) {
-		return this.wordsaladSolutionController.checkSolutionWordsalad(dto).getHttpResponse();
+		return this.wordsaladSolutionController.checkWordsaladSolution(dto).getHttpResponse();
 	}
 
 	@GetMapping("/solution/wordsalad/{taskId}")
 	public Object getWordsaladSolution(@PathVariable @Min(1) int taskId) {
-		return this.wordsaladSolutionController.getSolutionWordsalad(taskId).getHttpResponse();
+		return this.wordsaladSolutionController.getWordsaladSolution(taskId).getHttpResponse();
 	}
 
 	@PutMapping("/solution/wordsalad")
 	public Object updateWordsaladSolution(@RequestBody @Valid UpdateWordsaladSolutionRequestDTO dto) {
-		return this.wordsaladSolutionController.updateSolutionWordsalad(dto).getHttpResponse();
+		return this.wordsaladSolutionController.updateWordsaladSolution(dto).getHttpResponse();
 	}
 
 	@DeleteMapping("/solution/wordsalad/{taskId}")
 	public Object deleteWordsaladSolution(@PathVariable @Min(1) int taskId) {
-		return this.wordsaladSolutionController.deleteSolutionWordsalad(taskId).getHttpResponse();
+		return this.wordsaladSolutionController.deleteWordsaladSolution(taskId).getHttpResponse();
 	}
 
 }

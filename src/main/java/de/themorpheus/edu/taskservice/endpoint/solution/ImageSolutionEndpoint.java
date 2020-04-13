@@ -6,8 +6,12 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CreateImageS
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateImageSolutionRequestDTO;
 import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
@@ -19,27 +23,22 @@ public class ImageSolutionEndpoint {
 
 	@PostMapping("/solution/image")
 	public Object createImageSolution(@RequestBody @Valid CreateImageSolutionRequestDTO dto) {
-		return this.imageSolutionController.createSolutionImage(dto).getHttpResponse();
+		return this.imageSolutionController.createImageSolution(dto).getHttpResponse();
 	}
 
 	@PostMapping("/solution/image/check")
 	public Object checkImageSolution(@RequestBody @Valid CheckImageSolutionRequestDTO dto) {
-		return this.imageSolutionController.checkSolutionImage(dto).getHttpResponse();
-	}
-
-	@GetMapping("/solution/image/{taskId}")
-	public Object getImageSolution(@PathVariable @Min(0) int taskId) {
-		return this.imageSolutionController.getSolutionImage(taskId).getHttpResponse();
+		return this.imageSolutionController.checkImageSolution(dto).getHttpResponse();
 	}
 
 	@PutMapping("/solution/image")
 	public Object updateImageSolution(@RequestBody @Valid UpdateImageSolutionRequestDTO dto) {
-		return this.imageSolutionController.updateSolutionImage(dto).getHttpResponse();
+		return this.imageSolutionController.updateImageSolution(dto).getHttpResponse();
 	}
 
 	@DeleteMapping("/solution/image/{taskId}")
 	public Object deleteImageSolution(@PathVariable @Min(0) int taskId) {
-		return this.imageSolutionController.deleteSolutionImage(taskId).getHttpResponse();
+		return this.imageSolutionController.deleteImageSolution(taskId).getHttpResponse();
 	}
 
 }

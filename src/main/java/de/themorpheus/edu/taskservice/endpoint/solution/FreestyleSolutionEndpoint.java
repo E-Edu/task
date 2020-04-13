@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,27 +23,22 @@ public class FreestyleSolutionEndpoint {
 
 	@PostMapping("/solution/freestyle")
 	public Object createFreestyleSolution(@RequestBody @Valid CreateFreestyleSolutionRequestDTO dto) {
-		return this.freestyleSolutionController.createSolutionFreestyle(dto).getHttpResponse();
+		return this.freestyleSolutionController.createFreestyleSolution(dto).getHttpResponse();
 	}
 
 	@PostMapping("/solution/freestyle/check")
 	public Object checkFreestyleSolution(@RequestBody @Valid CheckFreestyleSolutionRequestDTO dto) {
-		return this.freestyleSolutionController.checkSolutionFreestyle(dto).getHttpResponse();
-	}
-
-	@GetMapping("/solution/freestyle/{taskId}")
-	public Object getFreestyleSolution(@PathVariable @Min(0) int taskId) {
-		return this.freestyleSolutionController.getSolutionFreestyle(taskId).getHttpResponse();
+		return this.freestyleSolutionController.checkFreestyleSolution(dto).getHttpResponse();
 	}
 
 	@PutMapping("/solution/freestyle")
 	public Object updateFreestyleSolution(@RequestBody @Valid UpdateFreestyleSolutionRequestDTO dto) {
-		return this.freestyleSolutionController.updateSolutionFreestyle(dto).getHttpResponse();
+		return this.freestyleSolutionController.updateFreestyleSolution(dto).getHttpResponse();
 	}
 
 	@DeleteMapping("/solution/freestyle/{taskId}")
-	public Object deleteFreestyleSolution(@PathVariable @Min(0) int taskId) {
-		return this.freestyleSolutionController.deleteSolutionFreestyle(taskId).getHttpResponse();
+	public Object deleteFreestyleSolution(@PathVariable @Min(1) int taskId) {
+		return this.freestyleSolutionController.deleteFreestyleSolution(taskId).getHttpResponse();
 	}
 
 }

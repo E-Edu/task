@@ -4,25 +4,27 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table
-public class ImageSolutionModel {
+public class UserImageSolutionModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int imageSolutionId;
+	private int userImageSolutionId;
 
-	@OneToOne
-	private SolutionModel solutionId;
+	@ManyToOne
+	private ImageSolutionModel imageSolutionId;
 	private String url;
+	private UUID userId;
 
 }
