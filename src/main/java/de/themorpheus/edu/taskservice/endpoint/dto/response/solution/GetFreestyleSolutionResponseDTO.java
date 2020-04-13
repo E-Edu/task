@@ -1,6 +1,5 @@
-package de.themorpheus.edu.taskservice.endpoint.dto.solution.freestyle.get;
+package de.themorpheus.edu.taskservice.endpoint.dto.response.solution;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -12,10 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckFreestyleSolutionDTO {
-
-	@Min(0)
-	private int taskId;
+public class GetFreestyleSolutionResponseDTO {
 
 	@NotNull
 	@NotEmpty

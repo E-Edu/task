@@ -73,7 +73,7 @@ public class SolutionController {
 		SolutionModel solutionModel = this.solutionRepository.findSolutionModelByTaskId(taskModelControllerResult.getResult());
 		if (solutionModel == null)
 			this.solutionRepository.save(new SolutionModel(-1, taskModelControllerResult.getResult(), solutionTypeNameKey));
-		else if (!solutionModel.getSolutionType().equals(solutionTypeNameKey)) return ControllerResult.of(Error.WRONG_TYPE);
+		else if (!solutionModel.getSolutionType().equals(solutionTypeNameKey)) return ControllerResult.of(Error.WRONG_TYPE, NAME_KEY);
 
 		ControllerResult<SolutionModel> solutionModelControllerResult = this.getGenericSolution(
 			taskModelControllerResult.getResult().getTaskId(),

@@ -1,13 +1,11 @@
 package de.themorpheus.edu.taskservice.endpoint.solution;
 
 import de.themorpheus.edu.taskservice.controller.solution.FreestyleSolutionController;
-import de.themorpheus.edu.taskservice.endpoint.dto.solution.freestyle.get.CheckFreestyleSolutionDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.solution.freestyle.get.CreateFreestyleSolutionDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.solution.freestyle.get.UpdateFreestyleSolutionDTO;
-
+import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CheckFreestyleSolutionRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CreateFreestyleSolutionRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateFreestyleSolutionRequestDTO;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,21 +14,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import io.micrometer.core.annotation.Timed;
 
+@Timed
 @RestController
 public class FreestyleSolutionEndpoint {
 
-	@Autowired
-	private FreestyleSolutionController freestyleSolutionController;
+	@Autowired private FreestyleSolutionController freestyleSolutionController;
 
 	@PostMapping("/solution/freestyle")
-	public Object createFreestyleSolution(@RequestBody @Valid CreateFreestyleSolutionDTO createFreestyleSolutionDTO) {
-		return this.freestyleSolutionController.createSolutionFreestyle(createFreestyleSolutionDTO).getHttpResponse();
+	public Object createFreestyleSolution(@RequestBody @Valid CreateFreestyleSolutionRequestDTO dto) {
+		return this.freestyleSolutionController.createSolutionFreestyle(dto).getHttpResponse();
 	}
 
 	@PostMapping("/solution/freestyle/check")
-	public Object checkFreestyleSolution(@RequestBody @Valid CheckFreestyleSolutionDTO checkFreestyleSolutionDTO) {
-		return this.freestyleSolutionController.checkSolutionFreestyle(checkFreestyleSolutionDTO).getHttpResponse();
+	public Object checkFreestyleSolution(@RequestBody @Valid CheckFreestyleSolutionRequestDTO dto) {
+		return this.freestyleSolutionController.checkSolutionFreestyle(dto).getHttpResponse();
 	}
 
 	@GetMapping("/solution/freestyle/{taskId}")
@@ -39,8 +38,8 @@ public class FreestyleSolutionEndpoint {
 	}
 
 	@PutMapping("/solution/freestyle")
-	public Object updateFreestyleSolution(@RequestBody @Valid UpdateFreestyleSolutionDTO updateFreestyleSolutionDTO) {
-		return this.freestyleSolutionController.updateSolutionFreestyle(updateFreestyleSolutionDTO).getHttpResponse();
+	public Object updateFreestyleSolution(@RequestBody @Valid UpdateFreestyleSolutionRequestDTO dto) {
+		return this.freestyleSolutionController.updateSolutionFreestyle(dto).getHttpResponse();
 	}
 
 	@DeleteMapping("/solution/freestyle/{taskId}")
