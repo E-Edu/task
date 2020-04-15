@@ -1,9 +1,8 @@
 package de.themorpheus.edu.taskservice.endpoint.dto.request.solution;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ public class CheckMultipleChoiceSolutionRequestDTO {
 	@Min(0)
 	private int taskId;
 
-	@NotNull @NotEmpty @NotBlank
-	private String[] solutions;
+	@NotNull @Size(min = 1)
+	private boolean[] solutions;
 
 }
