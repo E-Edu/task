@@ -2,12 +2,12 @@ package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.TaskController;
 import de.themorpheus.edu.taskservice.controller.VotingController;
+import de.themorpheus.edu.taskservice.controller.solution.SolutionController;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.GetNextTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.UpdateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.VoteTaskRequestDTO;
 import java.util.UUID;
-import io.micrometer.core.annotation.Timed;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import io.micrometer.core.annotation.Timed;
 
 @Timed
 @RestController
@@ -29,6 +30,7 @@ public class TaskEndpoint {
 
 	@Autowired private TaskController taskController;
 	@Autowired private VotingController votingController;
+	@Autowired private SolutionController solutionController;
 
 	@PostMapping("/task")
 	public Object createTask(@RequestBody @Valid CreateTaskRequestDTO dto) {
@@ -41,17 +43,17 @@ public class TaskEndpoint {
 	}
 
 	@PatchMapping("/task/verify/{taskId}")
-	public Object verifyTask(@PathVariable @Min(0) int taskId) {
+	public Object verifyTask(@PathVariable @Min(1) int taskId) {
 		return this.taskController.verifyTask(taskId).getHttpResponse();
 	}
 
 	@PutMapping("/task/{taskId}")
-	public Object updateTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid UpdateTaskRequestDTO dto) {
+	public Object updateTask(@PathVariable @Min(1) int taskId, @RequestBody @Valid UpdateTaskRequestDTO dto) {
 		return this.taskController.updateTask(taskId, dto).getHttpResponse();
 	}
 
 	@PutMapping("/task/vote/{taskId}")
-	public Object voteTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid VoteTaskRequestDTO dto) {
+	public Object voteTask(@PathVariable @Min(1) int taskId, @RequestBody @Valid VoteTaskRequestDTO dto) {
 		// TODO: Pass real userId instead of random UUID
 		return this.votingController.voteTask(taskId, dto.getVote(), UUID.randomUUID()).getHttpResponse();
 	}
@@ -62,8 +64,13 @@ public class TaskEndpoint {
 	}
 
 	@DeleteMapping("/task/{taskId}")
-	public Object deleteTask(@PathVariable @Min(0) int taskId) {
+	public Object deleteTask(@PathVariable @Min(1) int taskId) {
 		return this.taskController.deleteTask(taskId).getHttpResponse();
+	}
+
+	@PostMapping
+	public Object getSolutionType(@PathVariable @Min(1) int taskId) {
+		return this.solutionController.getSolution(taskId);
 	}
 
 }
