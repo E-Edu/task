@@ -31,7 +31,7 @@ public class TaskTypeEndpoint {
 		return this.taskTypeController.getTaskType(nameKey).getHttpResponse();
 	}
 
-	@GetMapping("/task_types")
+	@GetMapping("/task_type")
 	public Object getTaskTypes() {
 		return this.taskTypeController.getAllTaskTypes().getHttpResponse();
 	}

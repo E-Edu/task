@@ -27,7 +27,7 @@ public class WordsaladSolutionController implements Solution {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getOrCreateSolution(dto.getTaskId(), NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
-		if (this.solutionWordsaladRepository.existsById(dto.getTaskId()))
+		if (this.solutionWordsaladRepository.existsBySolutionId(solutionResult.getResult()))
 			return ControllerResult.of(Error.ALREADY_EXISTS, NAME_KEY);
 
 		return ControllerResult.of(this.solutionWordsaladRepository.save(
@@ -40,7 +40,8 @@ public class WordsaladSolutionController implements Solution {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(dto.getTaskId(), NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
-		Optional<WordsaladSolutionModel> optionalWordsaladSolution = this.solutionWordsaladRepository.findById(solutionResult.getResult().getSolutionId());
+		Optional<WordsaladSolutionModel> optionalWordsaladSolution = this.solutionWordsaladRepository
+				.findBySolutionId(solutionResult.getResult());
 		if (!optionalWordsaladSolution.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		if (!optionalWordsaladSolution.get().getSolution().equalsIgnoreCase(dto.getSolution()))
@@ -54,7 +55,7 @@ public class WordsaladSolutionController implements Solution {
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
 		Optional<WordsaladSolutionModel> optionalWordsaladSolution = this.solutionWordsaladRepository
-				.findById(solutionResult.getResult().getSolutionId());
+				.findBySolutionId(solutionResult.getResult());
 		if (!optionalWordsaladSolution.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		WordsaladSolutionModel wordsaladSolution = optionalWordsaladSolution.get();
@@ -66,10 +67,10 @@ public class WordsaladSolutionController implements Solution {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(taskId, NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
-		if (!this.solutionWordsaladRepository.existsById(solutionResult.getResult().getSolutionId()))
+		if (!this.solutionWordsaladRepository.existsBySolutionId(solutionResult.getResult()))
 			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		this.solutionWordsaladRepository.deleteById(solutionResult.getResult().getSolutionId());
+		this.solutionWordsaladRepository.deleteBySolutionId(solutionResult.getResult());
 		return ControllerResult.empty();
 	}
 
@@ -77,8 +78,8 @@ public class WordsaladSolutionController implements Solution {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(taskId, NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
-		Optional<WordsaladSolutionModel> optionalWordsaladSolution = this.solutionWordsaladRepository.findById(
-				solutionResult.getResult().getSolutionId());
+		Optional<WordsaladSolutionModel> optionalWordsaladSolution = this.solutionWordsaladRepository
+				.findBySolutionId(solutionResult.getResult());
 		if (!optionalWordsaladSolution.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		List<Character> characters = new ArrayList<>(optionalWordsaladSolution.get().getSolution().length());
