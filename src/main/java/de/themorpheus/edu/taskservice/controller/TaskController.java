@@ -85,13 +85,6 @@ public class TaskController {
 		return ControllerResult.of(new GetSolutionTypeResponseDTO(solutionResult.getResult().getSolutionType()));
 	}
 
-	public ControllerResult<GetSolutionTypeResponseDTO> getSolutionType(int taskId) {
-		ControllerResult<SolutionModel> solutionResult = this.solutionController.getSolution(taskId);
-		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
-
-		return ControllerResult.of(new GetSolutionTypeResponseDTO(solutionResult.getResult().getSolutionType()));
-	}
-
 	public ControllerResult<List<TaskModel>> getAllTasks() {
 		return ControllerResult.of(this.taskRepository.findAll());
 	}
