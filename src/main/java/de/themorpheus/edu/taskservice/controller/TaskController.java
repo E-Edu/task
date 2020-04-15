@@ -9,6 +9,7 @@ import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.UpdateTaskRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.GetSolutionTypeResponseDTO;
 import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
@@ -75,6 +76,13 @@ public class TaskController {
 
 		this.taskRepository.deleteById(taskId);
 		return this.solutionController.deleteSolutions(taskId);
+	}
+
+	public ControllerResult<GetSolutionTypeResponseDTO> getSolutionType(int taskId) {
+		ControllerResult<SolutionModel> solutionResult = this.solutionController.getSolution(taskId);
+		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
+
+		return ControllerResult.of(new GetSolutionTypeResponseDTO(solutionResult.getResult().getSolutionType()));
 	}
 
 	public ControllerResult<List<TaskModel>> getAllTasks() {
