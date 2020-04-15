@@ -24,6 +24,6 @@ public class MultipleChoiceSolutionModel {
 	@ManyToOne
 	private SolutionModel solutionId;
 	private String solution;
-	private boolean isCorrect;
+	private boolean correct;
 
 }

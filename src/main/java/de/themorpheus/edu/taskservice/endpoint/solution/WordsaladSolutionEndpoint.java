@@ -33,7 +33,7 @@ public class WordsaladSolutionEndpoint {
 	}
 
 	@GetMapping("/solution/wordsalad/{taskId}")
-	public Object getWordsaladSolution(@PathVariable @Min(0) int taskId) {
+	public Object getWordsaladSolution(@PathVariable @Min(1) int taskId) {
 		return this.wordsaladSolutionController.getSolutionWordsalad(taskId).getHttpResponse();
 	}
 
@@ -43,7 +43,7 @@ public class WordsaladSolutionEndpoint {
 	}
 
 	@DeleteMapping("/solution/wordsalad/{taskId}")
-	public Object deleteWordsaladSolution(@PathVariable @Min(0) int taskId) {
+	public Object deleteWordsaladSolution(@PathVariable @Min(1) int taskId) {
 		return this.wordsaladSolutionController.deleteSolutionWordsalad(taskId).getHttpResponse();
 	}
 

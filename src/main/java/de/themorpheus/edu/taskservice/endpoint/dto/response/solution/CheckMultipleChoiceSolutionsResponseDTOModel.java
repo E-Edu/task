@@ -1,6 +1,6 @@
 package de.themorpheus.edu.taskservice.endpoint.dto.response.solution;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,9 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetWordsaladSolutionResponseDTO {
+public class CheckMultipleChoiceSolutionsResponseDTOModel {
 
-	@NotBlank
-	private String solution;
+	@Min(1)
+	private int multipleChoiceSolutionId;
+
+	private boolean correct;
 
 }

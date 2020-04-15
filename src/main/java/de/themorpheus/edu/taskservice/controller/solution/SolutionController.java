@@ -42,16 +42,20 @@ public class SolutionController {
 		return ControllerResult.of(solutionModel);
 	}
 
-	public ControllerResult<SolutionModel> deleteSolutions(int taskId) {
+	public ControllerResult<SolutionModel> deleteAllSolutions(int taskId) {
 		ControllerResult<SolutionModel> solutionModel = this.getSolution(taskId);
 		if (solutionModel.isResultNotPresent()) return ControllerResult.ret(solutionModel);
-
-		this.solutionRepository.delete(solutionModel.getResult());
 
 		for (Solution solutionController : solutionControllers)
 			solutionController.deleteAll(solutionModel.getResult().getTaskId().getTaskId());
 
+		this.solutionRepository.delete(solutionModel.getResult());
+
 		return ControllerResult.empty();
+	}
+
+	public void deleteSolution(SolutionModel solutionId) {
+		this.solutionRepository.delete(solutionId);
 	}
 
 	/**

@@ -9,13 +9,13 @@ import java.util.List;
 @Repository
 public interface MultipleChoiceSolutionRepository extends JpaRepository<MultipleChoiceSolutionModel, Integer> {
 
+	List<MultipleChoiceSolutionModel> findAllMultipleChoiceSolutionsBySolutionIdOrderByMultipleChoiceSolutionId(SolutionModel solutionModel);
+
 	void deleteMultipleChoiceSolutionBySolutionIdAndSolution(SolutionModel solutionId, String solution);
 
 	void deleteAllMultipleChoiceSolutionsBySolutionId(SolutionModel solutionId);
 
 	boolean existsBySolution(String solution);
-
-	List<MultipleChoiceSolutionModel> findAllMultipleChoiceSolutionsBySolutionIdOrderBySolutionDesc(SolutionModel solutionId);
 
 	boolean existsBySolutionId(SolutionModel solutionId);
 
