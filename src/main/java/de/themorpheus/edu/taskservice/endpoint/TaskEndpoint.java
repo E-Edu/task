@@ -71,4 +71,9 @@ public class TaskEndpoint {
 		return this.taskController.getSolutionType(taskId);
 	}
 
+	@GetMapping("/task/{taskId}")
+	public Object getTask(@PathVariable @Min(1) int taskId) {
+		return this.taskController.getTaskByTaskId(taskId).getHttpResponse();
+	}
+
 }
