@@ -2,7 +2,7 @@ package de.themorpheus.edu.taskservice.controller.solution;
 
 import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.model.solution.WordsaladSolutionModel;
-import de.themorpheus.edu.taskservice.database.repository.solution.SolutionWordsaladRepository;
+import de.themorpheus.edu.taskservice.database.repository.solution.WordsaladSolutionRepository;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CheckWordsaladSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CreateWordsaladSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateWordsaladSolutionRequestDTO;
@@ -23,18 +23,18 @@ import static de.themorpheus.edu.taskservice.util.Constants.Solution.Wordsalad.N
 @Component
 public class WordsaladSolutionController implements Solution {
 
-	@Autowired private SolutionWordsaladRepository solutionWordsaladRepository;
+	@Autowired private WordsaladSolutionRepository wordsaladSolutionRepository;
 
 	@Autowired private SolutionController solutionController;
 
-	public ControllerResult<CreateWordsaladSolutionResponseDTO> createSolutionWordsalad(CreateWordsaladSolutionRequestDTO dto) {
+	public ControllerResult<CreateWordsaladSolutionResponseDTO> createWordsaladSolution(CreateWordsaladSolutionRequestDTO dto) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getOrCreateSolution(dto.getTaskId(), NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
-		if (this.solutionWordsaladRepository.existsBySolutionId(solutionResult.getResult()))
+		if (this.wordsaladSolutionRepository.existsBySolutionId(solutionResult.getResult()))
 			return ControllerResult.of(Error.ALREADY_EXISTS, NAME_KEY);
 
-		WordsaladSolutionModel wordsaladSolution = this.solutionWordsaladRepository
+		WordsaladSolutionModel wordsaladSolution = this.wordsaladSolutionRepository
 				.save(new WordsaladSolutionModel(-1, solutionResult.getResult(), dto.getSolution()));
 
 		return ControllerResult.of(new CreateWordsaladSolutionResponseDTO(
@@ -44,11 +44,11 @@ public class WordsaladSolutionController implements Solution {
 		);
 	}
 
-	public ControllerResult<CheckWordsaladSolutionResponseDTO> checkSolutionWordsalad(CheckWordsaladSolutionRequestDTO dto) {
+	public ControllerResult<CheckWordsaladSolutionResponseDTO> checkWordsaladSolution(CheckWordsaladSolutionRequestDTO dto) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(dto.getTaskId(), NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
-		Optional<WordsaladSolutionModel> optionalWordsaladSolution = this.solutionWordsaladRepository
+		Optional<WordsaladSolutionModel> optionalWordsaladSolution = this.wordsaladSolutionRepository
 				.findBySolutionId(solutionResult.getResult());
 
 		return optionalWordsaladSolution.map(wordsaladSolutionModel -> ControllerResult.of(
@@ -57,17 +57,17 @@ public class WordsaladSolutionController implements Solution {
 				.orElseGet(() -> ControllerResult.of(Error.NOT_FOUND, NAME_KEY));
 	}
 
-	public ControllerResult<UpdateWordsaladSolutionResponseDTO> updateSolutionWordsalad(UpdateWordsaladSolutionRequestDTO dto) {
+	public ControllerResult<UpdateWordsaladSolutionResponseDTO> updateWordsaladSolution(UpdateWordsaladSolutionRequestDTO dto) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(dto.getTaskId(), NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
-		Optional<WordsaladSolutionModel> optionalWordsaladSolution = this.solutionWordsaladRepository
+		Optional<WordsaladSolutionModel> optionalWordsaladSolution = this.wordsaladSolutionRepository
 				.findBySolutionId(solutionResult.getResult());
 		if (!optionalWordsaladSolution.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		WordsaladSolutionModel wordsaladSolution = optionalWordsaladSolution.get();
 		wordsaladSolution.setSolution(dto.getSolution());
-		this.solutionWordsaladRepository.save(wordsaladSolution);
+		this.wordsaladSolutionRepository.save(wordsaladSolution);
 
 		return ControllerResult.of(new UpdateWordsaladSolutionResponseDTO(
 				wordsaladSolution.getWordsaladSolutionId(),
@@ -77,24 +77,24 @@ public class WordsaladSolutionController implements Solution {
 	}
 
 	@Transactional
-	public ControllerResult<WordsaladSolutionModel> deleteSolutionWordsalad(int taskId) {
+	public ControllerResult<WordsaladSolutionModel> deleteWordsaladSolution(int taskId) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(taskId, NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
-		if (!this.solutionWordsaladRepository.existsBySolutionId(solutionResult.getResult()))
+		if (!this.wordsaladSolutionRepository.existsBySolutionId(solutionResult.getResult()))
 			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		this.solutionWordsaladRepository.deleteBySolutionId(solutionResult.getResult());
+		this.wordsaladSolutionRepository.deleteBySolutionId(solutionResult.getResult());
 		this.deleteSolutionIdIfDatabaseIsEmpty(solutionResult.getResult());
 
 		return ControllerResult.empty();
 	}
 
-	public ControllerResult<GetWordsaladSolutionResponseDTO> getSolutionWordsalad(int taskId) {
+	public ControllerResult<GetWordsaladSolutionResponseDTO> getWordsaladSolution(int taskId) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(taskId, NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
-		Optional<WordsaladSolutionModel> optionalWordsaladSolution = this.solutionWordsaladRepository
+		Optional<WordsaladSolutionModel> optionalWordsaladSolution = this.wordsaladSolutionRepository
 				.findBySolutionId(solutionResult.getResult());
 		if (!optionalWordsaladSolution.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
@@ -112,12 +112,12 @@ public class WordsaladSolutionController implements Solution {
 
 	@Override
 	public void deleteAll(int taskId) {
-		this.deleteSolutionWordsalad(taskId);
+		this.deleteWordsaladSolution(taskId);
 	}
 
 	@Override
 	public void deleteSolutionIdIfDatabaseIsEmpty(SolutionModel solutionId) {
-		if (!this.solutionWordsaladRepository.existsBySolutionId(solutionId))
+		if (!this.wordsaladSolutionRepository.existsBySolutionId(solutionId))
 			this.solutionController.deleteSolution(solutionId);
 	}
 
