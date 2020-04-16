@@ -68,7 +68,7 @@ public class TaskEndpoint {
 
 	@PostMapping("/task/solution_type/{task_id}")
 	public Object getSolutionTypeOfTask(@PathVariable @Min(1) int taskId) {
-		return this.taskController.getSolutionType(taskId);
+		return this.taskController.getSolutionType(taskId).getHttpResponse();
 	}
 
 	@GetMapping("/task/{taskId}")
