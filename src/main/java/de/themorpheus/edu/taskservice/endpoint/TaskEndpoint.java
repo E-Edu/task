@@ -66,6 +66,11 @@ public class TaskEndpoint {
 		return this.taskController.deleteTask(taskId).getHttpResponse();
 	}
 
+	@PostMapping("/task/solution_type/{task_id}")
+	public Object getSolutionTypeOfTask(@PathVariable @Min(1) int taskId) {
+		return this.taskController.getSolutionType(taskId).getHttpResponse();
+	}
+
 	@GetMapping("/task/{taskId}")
 	public Object getTask(@PathVariable @Min(1) int taskId) {
 		return this.taskController.getTaskByTaskId(taskId).getHttpResponse();
