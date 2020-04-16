@@ -41,17 +41,17 @@ public class TaskEndpoint {
 	}
 
 	@PatchMapping("/task/verify/{taskId}")
-	public Object verifyTask(@PathVariable @Min(0) int taskId) {
+	public Object verifyTask(@PathVariable @Min(1) int taskId) {
 		return this.taskController.verifyTask(taskId).getHttpResponse();
 	}
 
 	@PutMapping("/task/{taskId}")
-	public Object updateTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid UpdateTaskRequestDTO dto) {
+	public Object updateTask(@PathVariable @Min(1) int taskId, @RequestBody @Valid UpdateTaskRequestDTO dto) {
 		return this.taskController.updateTask(taskId, dto).getHttpResponse();
 	}
 
 	@PutMapping("/task/vote/{taskId}")
-	public Object voteTask(@PathVariable @Min(0) int taskId, @RequestBody @Valid VoteTaskRequestDTO dto) {
+	public Object voteTask(@PathVariable @Min(1) int taskId, @RequestBody @Valid VoteTaskRequestDTO dto) {
 		// TODO: Pass real userId instead of random UUID
 		return this.votingController.voteTask(taskId, dto.getVote(), UUID.randomUUID()).getHttpResponse();
 	}
@@ -62,7 +62,7 @@ public class TaskEndpoint {
 	}
 
 	@DeleteMapping("/task/{taskId}")
-	public Object deleteTask(@PathVariable @Min(0) int taskId) {
+	public Object deleteTask(@PathVariable @Min(1) int taskId) {
 		return this.taskController.deleteTask(taskId).getHttpResponse();
 	}
 

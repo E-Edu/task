@@ -1,4 +1,4 @@
-package de.themorpheus.edu.taskservice.endpoint.dto.request.solution;
+package de.themorpheus.edu.taskservice.endpoint.dto.response.solution;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateWordsaladSolutionRequestDTO {
+public class GetMultipleChoiceSolutionResponseDTOModel {
 
-	@Min(0)
-	private int taskId;
+	@Min(1)
+	private int multipleChoiceSolutionId;
 
 	@NotBlank
 	private String solution;

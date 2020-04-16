@@ -75,7 +75,7 @@ public class TaskController {
 		if (!this.taskRepository.existsById(taskId)) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		this.taskRepository.deleteById(taskId);
-		return this.solutionController.deleteSolutions(taskId);
+		return this.solutionController.deleteAllSolutions(taskId);
 	}
 
 	public ControllerResult<GetSolutionTypeResponseDTO> getSolutionType(int taskId) {

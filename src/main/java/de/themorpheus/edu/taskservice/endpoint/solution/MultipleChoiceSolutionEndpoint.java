@@ -6,8 +6,6 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CreateMultip
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +37,7 @@ public class MultipleChoiceSolutionEndpoint {
 	}
 
 	@DeleteMapping("/solution/multiple_choice/{taskId}/{solution}")
-	public Object deleteMultipleChoiceSolution(@PathVariable @Min(0) int taskId, @PathVariable @NotNull @NotEmpty @NotBlank String solution) {
+	public Object deleteMultipleChoiceSolution(@PathVariable @Min(0) int taskId, @PathVariable @NotBlank String solution) {
 		return this.multipleChoiceSolutionController.deleteMultipleChoiceSolution(taskId, solution).getHttpResponse();
 	}
 
