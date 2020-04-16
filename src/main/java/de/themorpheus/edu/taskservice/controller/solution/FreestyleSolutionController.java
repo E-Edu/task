@@ -8,11 +8,14 @@ import de.themorpheus.edu.taskservice.database.repository.solution.UserFreestyle
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CheckFreestyleSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CreateFreestyleSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateFreestyleSolutionRequestDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetFreestyleSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CheckFreestyleSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CreateFreestyleSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.UpdateFreestyleSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import java.util.Optional;
 import java.util.UUID;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import static de.themorpheus.edu.taskservice.util.Constants.Solution.Freestyle.NAME_KEY;
@@ -26,20 +29,24 @@ public class FreestyleSolutionController implements Solution {
 
 	@Autowired private SolutionController solutionController;
 
-	public ControllerResult<FreestyleSolutionModel> createFreestyleSolution(CreateFreestyleSolutionRequestDTO dto) {
+	public ControllerResult<CreateFreestyleSolutionResponseDTO> createFreestyleSolution(CreateFreestyleSolutionRequestDTO dto) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getOrCreateSolution(dto.getTaskId(), NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
 		if (this.freestyleSolutionRepository.existsBySolutionId(solutionResult.getResult()))
 			return ControllerResult.of(Error.ALREADY_EXISTS, NAME_KEY);
 
-		return ControllerResult.of(this.freestyleSolutionRepository.save(
-				new FreestyleSolutionModel(-1, solutionResult.getResult(), dto.getSolution())
+		FreestyleSolutionModel freestyleSolution = this.freestyleSolutionRepository.save(
+				new FreestyleSolutionModel(-1, solutionResult.getResult(), dto.getSolution()));
+
+		return ControllerResult.of(new CreateFreestyleSolutionResponseDTO(
+				freestyleSolution.getFreestyleSolutionId(),
+				freestyleSolution.getSolution()
 				)
 		);
 	}
 
-	public ControllerResult<GetFreestyleSolutionResponseDTO> checkFreestyleSolution(CheckFreestyleSolutionRequestDTO dto) {
+	public ControllerResult<CheckFreestyleSolutionResponseDTO> checkFreestyleSolution(CheckFreestyleSolutionRequestDTO dto) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(dto.getTaskId(), NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
@@ -57,10 +64,10 @@ public class FreestyleSolutionController implements Solution {
 
 		//TODO: PubSubService publish new Freestyle for teacher
 
-		return ControllerResult.of(new GetFreestyleSolutionResponseDTO(optionalFreestyleSolution.get().getSolution()));
+		return ControllerResult.of(new CheckFreestyleSolutionResponseDTO(optionalFreestyleSolution.get().getSolution()));
 	}
 
-	public ControllerResult<FreestyleSolutionModel> updateFreestyleSolution(UpdateFreestyleSolutionRequestDTO dto) {
+	public ControllerResult<UpdateFreestyleSolutionResponseDTO> updateFreestyleSolution(UpdateFreestyleSolutionRequestDTO dto) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(dto.getTaskId(), NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
@@ -70,9 +77,16 @@ public class FreestyleSolutionController implements Solution {
 
 		FreestyleSolutionModel freestyleSolution = optionalFreestyleSolution.get();
 		freestyleSolution.setSolution(dto.getSolution());
-		return ControllerResult.of(this.freestyleSolutionRepository.save(freestyleSolution));
+		freestyleSolution = this.freestyleSolutionRepository.save(freestyleSolution);
+
+		return ControllerResult.of(new UpdateFreestyleSolutionResponseDTO(
+				freestyleSolution.getFreestyleSolutionId(),
+				freestyleSolution.getSolution()
+				)
+		);
 	}
 
+	@Transactional
 	public ControllerResult<FreestyleSolutionModel> deleteFreestyleSolution(int taskId) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(taskId, NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
@@ -81,6 +95,8 @@ public class FreestyleSolutionController implements Solution {
 			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		this.freestyleSolutionRepository.deleteBySolutionId(solutionResult.getResult());
+		this.deleteSolutionIdIfDatabaseIsEmpty(solutionResult.getResult());
+
 		return ControllerResult.empty();
 	}
 

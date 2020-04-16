@@ -3,6 +3,8 @@ package de.themorpheus.edu.taskservice.controller;
 import de.themorpheus.edu.taskservice.database.model.ModuleModel;
 import de.themorpheus.edu.taskservice.database.model.SubjectModel;
 import de.themorpheus.edu.taskservice.database.repository.ModuleRepository;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateModuleRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.GetAllModulesResponseDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import java.util.List;
@@ -17,14 +19,12 @@ public class ModuleController {
 
 	@Autowired private SubjectController subjectController;
 
-	public ControllerResult<ModuleModel> createModule(String nameKey, String subjectNameKey) {
-		ControllerResult<SubjectModel> subjectResult = this.subjectController.getSubjectByNameKey(subjectNameKey);
+	public ControllerResult<ModuleModel> createModule(CreateModuleRequestDTO dto) {
+		ControllerResult<SubjectModel> subjectResult = this.subjectController.getSubjectByNameKey(dto.getSubjectNameKey());
 		if (subjectResult.isResultNotPresent()) return ControllerResult.ret(subjectResult);
 
 		return ControllerResult.of(this.moduleRepository.save(
-				new ModuleModel(-1, subjectResult.getResult(), nameKey)
-			)
-		);
+				new ModuleModel(-1, subjectResult.getResult(), dto.getNameKey())));
 	}
 
 	public ControllerResult<ModuleModel> getModuleByNameKey(String nameKey) {
@@ -49,14 +49,14 @@ public class ModuleController {
 		return ControllerResult.of(modules);
 	}
 
-	public ControllerResult<List<ModuleModel>> getAllModulesFromSubject(String subjectNameKey) {
+	public ControllerResult<GetAllModulesResponseDTO> getAllModulesFromSubject(String subjectNameKey) {
 		ControllerResult<SubjectModel> subjectResults = this.subjectController.getSubjectByNameKey(subjectNameKey);
 		if (subjectResults.isResultNotPresent()) return ControllerResult.ret(subjectResults);
 
 		List<ModuleModel> modules = this.moduleRepository.getModulesBySubjectId(subjectResults.getResult());
 		if (modules.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		return ControllerResult.of(modules);
+		return ControllerResult.of(new GetAllModulesResponseDTO(modules));
 	}
 
 }

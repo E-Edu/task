@@ -8,11 +8,14 @@ import de.themorpheus.edu.taskservice.database.repository.solution.UserImageSolu
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CheckImageSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CreateImageSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateImageSolutionRequestDTO;
-import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetImageSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CheckImageSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CreateImageSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.UpdateImageSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import java.util.Optional;
 import java.util.UUID;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import static de.themorpheus.edu.taskservice.util.Constants.Solution.Image.NAME_KEY;
@@ -26,19 +29,21 @@ public class ImageSolutionController implements Solution {
 
 	@Autowired private SolutionController solutionController;
 
-	public ControllerResult<ImageSolutionModel> createImageSolution(CreateImageSolutionRequestDTO dto) {
+	public ControllerResult<CreateImageSolutionResponseDTO> createImageSolution(CreateImageSolutionRequestDTO dto) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getOrCreateSolution(dto.getTaskId(), NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
+
 		if (this.imageSolutionRepository.existsBySolutionId(solutionResult.getResult()))
 			return ControllerResult.of(Error.ALREADY_EXISTS, NAME_KEY);
 
-		return ControllerResult.of(this.imageSolutionRepository.save(
-				new ImageSolutionModel(-1, solutionResult.getResult(), dto.getUrl())
-				)
-		);
+		ImageSolutionModel imageSolution = this.imageSolutionRepository.save(
+				new ImageSolutionModel(-1, solutionResult.getResult(), dto.getUrl()));
+
+		return ControllerResult.of(
+				new CreateImageSolutionResponseDTO(imageSolution.getImageSolutionId(), imageSolution.getUrl()));
 	}
 
-	public ControllerResult<GetImageSolutionResponseDTO> checkImageSolution(CheckImageSolutionRequestDTO dto) {
+	public ControllerResult<CheckImageSolutionResponseDTO> checkImageSolution(CheckImageSolutionRequestDTO dto) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(dto.getTaskId(), NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
@@ -56,10 +61,10 @@ public class ImageSolutionController implements Solution {
 
 		//TODO: PubSubService publish new Image for teacher
 
-		return ControllerResult.of(new GetImageSolutionResponseDTO(optionalImageSolution.get().getUrl()));
+		return ControllerResult.of(new CheckImageSolutionResponseDTO(optionalImageSolution.get().getUrl()));
 	}
 
-	public ControllerResult<ImageSolutionModel> updateImageSolution(UpdateImageSolutionRequestDTO dto) {
+	public ControllerResult<UpdateImageSolutionResponseDTO> updateImageSolution(UpdateImageSolutionRequestDTO dto) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(dto.getTaskId(), NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
@@ -69,9 +74,13 @@ public class ImageSolutionController implements Solution {
 
 		ImageSolutionModel imageSolution = optionalImageSolution.get();
 		imageSolution.setUrl(dto.getUrl());
-		return ControllerResult.of(this.imageSolutionRepository.save(imageSolution));
+		imageSolution = this.imageSolutionRepository.save(imageSolution);
+
+		return ControllerResult.of(
+				new UpdateImageSolutionResponseDTO(imageSolution.getImageSolutionId(), imageSolution.getUrl()));
 	}
 
+	@Transactional
 	public ControllerResult<ImageSolutionModel> deleteImageSolution(int taskId) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(taskId, NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
@@ -80,6 +89,7 @@ public class ImageSolutionController implements Solution {
 			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		this.imageSolutionRepository.deleteBySolutionId(solutionResult.getResult());
+		this.deleteSolutionIdIfDatabaseIsEmpty(solutionResult.getResult());
 		return ControllerResult.empty();
 	}
 

@@ -10,8 +10,6 @@ import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +34,7 @@ public class TaskEndpoint {
 	}
 
 	@GetMapping("/lecture/{lectureNameKey}/task")
-	public Object getAllTasksFromLecture(@PathVariable @NotNull @NotEmpty @NotBlank String lectureNameKey) {
+	public Object getAllTasksFromLecture(@PathVariable @NotBlank String lectureNameKey) {
 		return this.taskController.getTasksFromLecture(lectureNameKey).getHttpResponse();
 	}
 
@@ -53,7 +51,7 @@ public class TaskEndpoint {
 	@PutMapping("/task/vote/{taskId}")
 	public Object voteTask(@PathVariable @Min(1) int taskId, @RequestBody @Valid VoteTaskRequestDTO dto) {
 		// TODO: Pass real userId instead of random UUID
-		return this.votingController.voteTask(taskId, dto.getVote(), UUID.randomUUID()).getHttpResponse();
+		return this.votingController.voteTask(taskId, dto, UUID.randomUUID()).getHttpResponse();
 	}
 
 	@PostMapping("/task/next")
