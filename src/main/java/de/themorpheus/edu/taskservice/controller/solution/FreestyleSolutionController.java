@@ -1,7 +1,7 @@
 package de.themorpheus.edu.taskservice.controller.solution;
 
-import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.model.solution.FreestyleSolutionModel;
+import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.model.solution.UserFreestyleSolutionModel;
 import de.themorpheus.edu.taskservice.database.repository.solution.FreestyleSolutionRepository;
 import de.themorpheus.edu.taskservice.database.repository.solution.UserFreestyleSolutionRepository;
@@ -9,6 +9,8 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CheckFreesty
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CreateFreestyleSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateFreestyleSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetFreestyleSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.pubsub.dto.UserSentFreestyleSolutionDTO;
+import de.themorpheus.edu.taskservice.pubsub.pub.MessagePublisher;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import java.util.Optional;
@@ -21,10 +23,11 @@ import static de.themorpheus.edu.taskservice.util.Constants.Solution.Freestyle.N
 public class FreestyleSolutionController implements Solution {
 
 	@Autowired private FreestyleSolutionRepository freestyleSolutionRepository;
-
 	@Autowired private UserFreestyleSolutionRepository userFreestyleSolutionRepository;
 
 	@Autowired private SolutionController solutionController;
+
+	@Autowired private MessagePublisher messagePublisher;
 
 	public ControllerResult<FreestyleSolutionModel> createFreestyleSolution(CreateFreestyleSolutionRequestDTO dto) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getOrCreateSolution(dto.getTaskId(), NAME_KEY);
@@ -52,10 +55,15 @@ public class FreestyleSolutionController implements Solution {
 				optionalFreestyleSolution.get(),
 				dto.getSolution(),
 				UUID.randomUUID()
-			)
+				)
 		);
 
-		//TODO: PubSubService publish new Freestyle for teacher
+		this.messagePublisher.publish(new UserSentFreestyleSolutionDTO(
+				solutionResult.getResult().getTaskId().getAuthorId(),
+				UUID.randomUUID(),
+				dto.getSolution()
+				)
+		);
 
 		return ControllerResult.of(new GetFreestyleSolutionResponseDTO(optionalFreestyleSolution.get().getSolution()));
 	}

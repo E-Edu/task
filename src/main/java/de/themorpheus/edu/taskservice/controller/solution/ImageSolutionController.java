@@ -9,22 +9,25 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CheckImageSo
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CreateImageSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateImageSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetImageSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.pubsub.dto.UserSentImageSolutionDTO;
+import de.themorpheus.edu.taskservice.pubsub.pub.MessagePublisher;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import static de.themorpheus.edu.taskservice.util.Constants.Solution.Image.NAME_KEY;
 
 @Component
 public class ImageSolutionController implements Solution {
 
 	@Autowired private ImageSolutionRepository imageSolutionRepository;
-
 	@Autowired private UserImageSolutionRepository userImageSolutionRepository;
 
 	@Autowired private SolutionController solutionController;
+
+	@Autowired private MessagePublisher messagePublisher;
 
 	public ControllerResult<ImageSolutionModel> createImageSolution(CreateImageSolutionRequestDTO dto) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getOrCreateSolution(dto.getTaskId(), NAME_KEY);
@@ -51,10 +54,15 @@ public class ImageSolutionController implements Solution {
 				optionalImageSolution.get(),
 				dto.getUrl(),
 				UUID.randomUUID()
-			)
+				)
 		);
 
-		//TODO: PubSubService publish new Image for teacher
+		this.messagePublisher.publish(new UserSentImageSolutionDTO(
+				solutionResult.getResult().getTaskId().getAuthorId(),
+				UUID.randomUUID(),
+				dto.getUrl()
+				)
+		);
 
 		return ControllerResult.of(new GetImageSolutionResponseDTO(optionalImageSolution.get().getUrl()));
 	}
