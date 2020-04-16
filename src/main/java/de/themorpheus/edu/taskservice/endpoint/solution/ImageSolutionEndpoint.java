@@ -4,7 +4,8 @@ import de.themorpheus.edu.taskservice.controller.solution.ImageSolutionControlle
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CheckImageSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CreateImageSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateImageSolutionRequestDTO;
-import io.micrometer.core.annotation.Timed;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,8 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
+import io.micrometer.core.annotation.Timed;
 
 @Timed
 @RestController
@@ -37,7 +37,7 @@ public class ImageSolutionEndpoint {
 	}
 
 	@DeleteMapping("/solution/image/{taskId}")
-	public Object deleteImageSolution(@PathVariable @Min(0) int taskId) {
+	public Object deleteImageSolution(@PathVariable @Min(1) int taskId) {
 		return this.imageSolutionController.deleteImageSolution(taskId).getHttpResponse();
 	}
 

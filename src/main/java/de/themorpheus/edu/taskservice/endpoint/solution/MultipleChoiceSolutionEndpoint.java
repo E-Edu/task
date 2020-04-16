@@ -32,12 +32,12 @@ public class MultipleChoiceSolutionEndpoint {
 	}
 
 	@GetMapping("/solution/multiple_choice/{taskId}")
-	public Object getMultipleChoiceSolution(@PathVariable @Min(0) int taskId) {
+	public Object getMultipleChoiceSolution(@PathVariable @Min(1) int taskId) {
 		return this.multipleChoiceSolutionController.getMultipleChoiceSolution(taskId).getHttpResponse();
 	}
 
 	@DeleteMapping("/solution/multiple_choice/{taskId}/{solution}")
-	public Object deleteMultipleChoiceSolution(@PathVariable @Min(0) int taskId, @PathVariable @NotBlank String solution) {
+	public Object deleteMultipleChoiceSolution(@PathVariable @Min(1) int taskId, @PathVariable @NotBlank String solution) {
 		return this.multipleChoiceSolutionController.deleteMultipleChoiceSolution(taskId, solution).getHttpResponse();
 	}
 

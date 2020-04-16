@@ -4,8 +4,6 @@ import de.themorpheus.edu.taskservice.controller.ModuleController;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateModuleRequestDTO;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +21,11 @@ public class ModuleEndpoint {
 
 	@PostMapping("/module")
 	public Object createModule(@RequestBody @Valid CreateModuleRequestDTO dto) {
-		return this.moduleController.createModule(dto.getNameKey(), dto.getSubjectNameKey()).getHttpResponse();
+		return this.moduleController.createModule(dto).getHttpResponse();
 	}
 
 	@GetMapping("/module/{nameKey}")
-	public Object getModule(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
+	public Object getModule(@PathVariable @NotBlank String nameKey) {
 		return this.moduleController.getModuleByNameKey(nameKey).getHttpResponse();
 	}
 
@@ -37,12 +35,12 @@ public class ModuleEndpoint {
 	}
 
 	@GetMapping("/subject/{subjectNameKey}/module")
-	public Object getModulesFromSubject(@PathVariable @NotNull @NotEmpty @NotBlank String subjectNameKey) {
+	public Object getModulesFromSubject(@PathVariable @NotBlank String subjectNameKey) {
 		return this.moduleController.getAllModulesFromSubject(subjectNameKey).getHttpResponse();
 	}
 
 	@DeleteMapping("/module/{nameKey}")
-	public Object deleteModule(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
+	public Object deleteModule(@PathVariable @NotBlank String nameKey) {
 		return this.moduleController.deleteModule(nameKey).getHttpResponse();
 	}
 
