@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Component
-@PubSubDTO("user.ban")
+@PubSubDTO("report.user.ban")
 public class UserBanDTO {
 
 	private UUID userId;
