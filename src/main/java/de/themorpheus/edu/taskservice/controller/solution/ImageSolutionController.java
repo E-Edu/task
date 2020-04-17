@@ -11,10 +11,10 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateImageS
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetImageSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import static de.themorpheus.edu.taskservice.util.Constants.Solution.Image.NAME_KEY;
 
 @Component
@@ -84,8 +84,8 @@ public class ImageSolutionController implements Solution {
 	}
 
 	@Override
-	public void deleteAll(int taskId) {
-		this.deleteImageSolution(taskId);
+	public void deleteAll(SolutionModel solution) {
+		this.imageSolutionRepository.deleteBySolutionId(solution);
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package de.themorpheus.edu.taskservice.controller.solution;
 
-import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.model.solution.FreestyleSolutionModel;
+import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.model.solution.UserFreestyleSolutionModel;
 import de.themorpheus.edu.taskservice.database.repository.solution.FreestyleSolutionRepository;
 import de.themorpheus.edu.taskservice.database.repository.solution.UserFreestyleSolutionRepository;
@@ -85,8 +85,8 @@ public class FreestyleSolutionController implements Solution {
 	}
 
 	@Override
-	public void deleteAll(int taskId) {
-		this.deleteFreestyleSolution(taskId);
+	public void deleteAll(SolutionModel solution) {
+		this.freestyleSolutionRepository.deleteBySolutionId(solution);
 	}
 
 	@Override

@@ -19,7 +19,7 @@ import static de.themorpheus.edu.taskservice.util.Constants.Solution.NAME_KEY;
 @Controller
 public class SolutionController {
 
-	private static List<Solution> solutionControllers = new ArrayList<>();
+	private static final List<Solution> SOLUTION_CONTROLLERS = new ArrayList<>();
 
 	@Autowired private SolutionRepository solutionRepository;
 	@Autowired private TaskController taskController;
@@ -46,8 +46,8 @@ public class SolutionController {
 		ControllerResult<SolutionModel> solutionModel = this.getSolution(taskId);
 		if (solutionModel.isResultNotPresent()) return ControllerResult.ret(solutionModel);
 
-		for (Solution solutionController : solutionControllers)
-			solutionController.deleteAll(solutionModel.getResult().getTaskId().getTaskId());
+		for (Solution solutionController : SOLUTION_CONTROLLERS)
+			solutionController.deleteAll(solutionModel.getResult());
 
 		this.solutionRepository.delete(solutionModel.getResult());
 
@@ -97,7 +97,7 @@ public class SolutionController {
 
 		for (BeanDefinition beanDefinition : provider.findCandidateComponents("de.themorpheus")) {
 			Class<?> clazz = Class.forName(beanDefinition.getBeanClassName());
-			solutionControllers.add((Solution) clazz.getDeclaredConstructor().newInstance());
+			SOLUTION_CONTROLLERS.add((Solution) clazz.getDeclaredConstructor().newInstance());
 		}
 	}
 

@@ -111,8 +111,8 @@ public class WordsaladSolutionController implements Solution {
 	}
 
 	@Override
-	public void deleteAll(int taskId) {
-		this.deleteWordsaladSolution(taskId);
+	public void deleteAll(SolutionModel solution) {
+		this.wordsaladSolutionRepository.deleteBySolutionId(solution);
 	}
 
 	@Override
