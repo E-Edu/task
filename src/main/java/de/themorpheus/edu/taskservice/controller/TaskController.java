@@ -7,6 +7,7 @@ import de.themorpheus.edu.taskservice.database.model.TaskModel;
 import de.themorpheus.edu.taskservice.database.model.TaskTypeModel;
 import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
+import de.themorpheus.edu.taskservice.database.repository.UserBanRepository;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.UpdateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.GetSolutionTypeResponseDTO;
@@ -32,6 +33,7 @@ public class TaskController {
 	@Autowired private LectureController lectureController;
 	@Autowired private TaskTypeController taskTypeController;
 	@Autowired private DifficultyController difficultyController;
+	@Autowired private UserBanRepository userBanRepository;
 
 	public ControllerResult<TaskModel> createTask(CreateTaskRequestDTO dto) {
 		ControllerResult<LectureModel> lectureResult = this.lectureController.getLectureByNameKey(dto.getLectureNameKey());
@@ -65,7 +67,7 @@ public class TaskController {
 		if (lecture == null) return ControllerResult.of(Error.NOT_FOUND, Constants.Lecture.NAME_KEY);
 
 		List<TaskModel> tasks = this.taskRepository.getAllTasksByLectureId(lecture);
-		tasks.removeIf(tm -> finishedTaskIds.contains(tm.getTaskId())); //TODO: Use SQL query
+		tasks.removeIf(tm -> finishedTaskIds.contains(tm.getTaskId()) || userBanRepository.existsByUserId(UUID.randomUUID())); //TODO: Use SQL query
 		if (tasks.isEmpty()) return ControllerResult.of(Error.NO_CONTENT, NAME_KEY);
 
 		return ControllerResult.of(tasks.get(RANDOM.nextInt(tasks.size())));
@@ -89,12 +91,16 @@ public class TaskController {
 		return ControllerResult.of(this.taskRepository.findAll());
 	}
 
-	public ControllerResult<List<TaskModel>> getTasksFromLecture(String lectureNameKey) {
+	public ControllerResult<List<TaskModel>> getTasksFromLecture(String lectureNameKey, boolean showBanned) {
 		ControllerResult<LectureModel> lectureResult = this.lectureController
 			.getLectureByNameKey(lectureNameKey);
 		if (lectureResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, Constants.Lecture.NAME_KEY);
 
-		return ControllerResult.of(this.taskRepository.getAllTasksByLectureId(lectureResult.getResult()));
+		List<TaskModel> tasks = this.taskRepository.getAllTasksByLectureId(lectureResult.getResult());
+		tasks.removeIf(tm -> userBanRepository.existsByUserId(UUID.randomUUID()) || userBanRepository.existsByUserId(UUID.randomUUID()) && !showBanned);
+		if (tasks.isEmpty()) return ControllerResult.of(Error.NO_CONTENT, NAME_KEY);
+
+		return ControllerResult.of(tasks);
 	}
 
 	public ControllerResult<TaskModel> verifyTask(int taskId) {
