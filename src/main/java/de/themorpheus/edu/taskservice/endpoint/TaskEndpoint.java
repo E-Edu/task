@@ -4,6 +4,7 @@ import de.themorpheus.edu.taskservice.controller.TaskController;
 import de.themorpheus.edu.taskservice.controller.VotingController;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.GetNextTaskRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.MarkTaskAsDoneDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.UpdateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.VoteTaskRequestDTO;
 import java.util.UUID;
@@ -73,6 +74,11 @@ public class TaskEndpoint {
 	@GetMapping("/task/{taskId}")
 	public Object getTask(@PathVariable @Min(1) int taskId) {
 		return this.taskController.getTaskByTaskId(taskId).getHttpResponse();
+	}
+
+	@PostMapping("/task/done")
+	public Object markAsDone(@RequestBody @Valid MarkTaskAsDoneDTO dto) {
+		return this.taskController.markTaskAsDone(dto.getTaskId(), dto.getDate()).getHttpResponse();
 	}
 
 }

@@ -3,9 +3,11 @@ package de.themorpheus.edu.taskservice.controller;
 import de.themorpheus.edu.taskservice.controller.solution.SolutionController;
 import de.themorpheus.edu.taskservice.database.model.DifficultyModel;
 import de.themorpheus.edu.taskservice.database.model.LectureModel;
+import de.themorpheus.edu.taskservice.database.model.TaskDoneModel;
 import de.themorpheus.edu.taskservice.database.model.TaskModel;
 import de.themorpheus.edu.taskservice.database.model.TaskTypeModel;
 import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
+import de.themorpheus.edu.taskservice.database.repository.TaskDoneRepository;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
 import de.themorpheus.edu.taskservice.database.repository.UserBanRepository;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskRequestDTO;
@@ -15,6 +17,8 @@ import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -34,6 +38,7 @@ public class TaskController {
 	@Autowired private TaskTypeController taskTypeController;
 	@Autowired private DifficultyController difficultyController;
 	@Autowired private UserBanRepository userBanRepository;
+	@Autowired private TaskDoneRepository taskDoneRepository;
 
 	public ControllerResult<TaskModel> createTask(CreateTaskRequestDTO dto) {
 		ControllerResult<LectureModel> lectureResult = this.lectureController.getLectureByNameKey(dto.getLectureNameKey());
@@ -133,6 +138,10 @@ public class TaskController {
 
 	public ControllerResult<TaskModel> getTaskByTaskId(int taskId) {
 		return ControllerResult.of(this.taskRepository.getTaskByTaskId(taskId));
+	}
+
+	public ControllerResult<TaskDoneModel> markTaskAsDone(int taskId, Date date) {
+		return ControllerResult.of(taskDoneRepository.save(new TaskDoneModel(-1, UUID.randomUUID(), taskId, date)));
 	}
 
 }
