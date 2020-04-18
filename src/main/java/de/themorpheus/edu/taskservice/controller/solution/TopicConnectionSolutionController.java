@@ -18,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import static de.themorpheus.edu.taskservice.util.Constants.Solution.TopicConnection.NAME_KEY;
 
+@Component
 public class TopicConnectionSolutionController implements Solution {
 
 	@Autowired private TopicConnectionSolutionRepository topicConnectionSolutionRepository;

@@ -42,9 +42,9 @@ public class Constants {
 
 		public static final String NAME_KEY = "solution";
 
-		public static class Equation {
+		public static class SimpleEquation {
 
-			public static final String NAME_KEY = "equation_solution";
+			public static final String NAME_KEY = "simple_equation_solution";
 
 		}
 
