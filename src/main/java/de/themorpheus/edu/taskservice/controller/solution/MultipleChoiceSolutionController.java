@@ -55,17 +55,17 @@ public class MultipleChoiceSolutionController implements Solution {
 		if (multipleChoiceSolutions.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 		if (multipleChoiceSolutions.size() != dto.getSolutions().length) return ControllerResult.of(Error.INVALID_PARAM, NAME_KEY);
 
-		List<CheckMultipleChoiceSolutionsResponseDTOModel> checkedMultipleChoiceSolutionsResponseDTOs = new ArrayList<>();
+		List<CheckMultipleChoiceSolutionsResponseDTOModel> checkMultipleChoiceSolutionsResponseDTOs = new ArrayList<>();
 		for (int i = 0; i < multipleChoiceSolutions.size(); i++) {
 			MultipleChoiceSolutionModel multipleChoiceSolution = multipleChoiceSolutions.get(i);
-			checkedMultipleChoiceSolutionsResponseDTOs.add(new CheckMultipleChoiceSolutionsResponseDTOModel(
+			checkMultipleChoiceSolutionsResponseDTOs.add(new CheckMultipleChoiceSolutionsResponseDTOModel(
 						multipleChoiceSolution.getMultipleChoiceSolutionId(),
 						multipleChoiceSolution.isCorrect() == dto.getSolutions()[i]
 					)
 			);
 		}
 
-		return ControllerResult.of(new CheckMultipleChoiceSolutionsResponseDTO(checkedMultipleChoiceSolutionsResponseDTOs));
+		return ControllerResult.of(new CheckMultipleChoiceSolutionsResponseDTO(checkMultipleChoiceSolutionsResponseDTOs));
 	}
 
 	@Transactional

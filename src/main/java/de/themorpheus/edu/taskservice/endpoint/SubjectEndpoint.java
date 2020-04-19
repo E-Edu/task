@@ -4,8 +4,6 @@ import de.themorpheus.edu.taskservice.controller.SubjectController;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateSubjectRequestDTO;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +21,11 @@ public class SubjectEndpoint {
 
 	@PostMapping("/subject")
 	public Object createSubject(@RequestBody @Valid CreateSubjectRequestDTO dto) {
-		return this.subjectController.createSubject(dto.getNameKey(), dto.getDescriptionKey()).getHttpResponse();
+		return this.subjectController.createSubject(dto).getHttpResponse();
 	}
 
 	@GetMapping("/subject/{nameKey}")
-	public Object getSubject(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
+	public Object getSubject(@PathVariable @NotBlank String nameKey) {
 		return this.subjectController.getSubjectByNameKey(nameKey).getHttpResponse();
 	}
 
@@ -37,7 +35,7 @@ public class SubjectEndpoint {
 	}
 
 	@DeleteMapping("/subject/{nameKey}")
-	public Object deleteSubject(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
+	public Object deleteSubject(@PathVariable @NotBlank String nameKey) {
 		return this.subjectController.deleteSubject(nameKey).getHttpResponse();
 	}
 
