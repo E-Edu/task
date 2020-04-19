@@ -78,4 +78,9 @@ public class TaskEndpoint {
 		return this.taskController.getAllTaskByUser(Constants.UserId.TEST_UUID).getHttpResponse();
 	}
 
+	@PatchMapping("task/done/{taskId}")
+	public Object markTaskAsDone(@PathVariable @Min(1) int taskId) {
+		return this.taskController.markTaskAsDone(taskId).getHttpResponse();
+	}
+
 }
