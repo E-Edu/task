@@ -94,8 +94,8 @@ public class ImageSolutionController implements Solution {
 	}
 
 	@Override
-	public void deleteAll(int taskId) {
-		this.deleteImageSolution(taskId);
+	public void deleteAll(SolutionModel solution) {
+		this.imageSolutionRepository.deleteBySolutionId(solution);
 	}
 
 	@Override

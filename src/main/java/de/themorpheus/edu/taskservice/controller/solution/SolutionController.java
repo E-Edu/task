@@ -16,7 +16,7 @@ import static de.themorpheus.edu.taskservice.util.Constants.Solution.NAME_KEY;
 @Controller
 public class SolutionController {
 
-	private static List<Solution> solutionControllers = new ArrayList<>();
+	private static final List<Solution> SOLUTION_CONTROLLERS = new ArrayList<>();
 
 	@Autowired private SolutionRepository solutionRepository;
 	@Autowired private TaskController taskController;
@@ -45,8 +45,8 @@ public class SolutionController {
 		ControllerResult<SolutionModel> solution = this.getSolution(taskId);
 		if (solution.isResultNotPresent()) return ControllerResult.ret(solution);
 
-		for (Solution solutionController : solutionControllers)
-				solutionController.deleteAll(solution.getResult().getTaskId().getTaskId());
+		for (Solution solutionController : SOLUTION_CONTROLLERS)
+			solutionController.deleteAll(solution.getResult());
 
 		this.solutionRepository.delete(solution.getResult());
 
@@ -85,7 +85,7 @@ public class SolutionController {
 	}
 
 	static void registerGenericSolutionController(Solution solution) {
-		solutionControllers.add(solution);
+		SOLUTION_CONTROLLERS.add(solution);
 	}
 
 }

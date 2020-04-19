@@ -101,8 +101,8 @@ public class FreestyleSolutionController implements Solution {
 	}
 
 	@Override
-	public void deleteAll(int taskId) {
-		this.deleteFreestyleSolution(taskId);
+	public void deleteAll(SolutionModel solution) {
+		this.freestyleSolutionRepository.deleteBySolutionId(solution);
 	}
 
 	@Override

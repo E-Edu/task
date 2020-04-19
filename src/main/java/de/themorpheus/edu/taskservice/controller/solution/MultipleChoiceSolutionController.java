@@ -104,19 +104,8 @@ public class MultipleChoiceSolutionController implements Solution {
 	}
 
 	@Override
-	public void deleteAll(int taskId) {
-		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(taskId, NAME_KEY);
-		if (solutionResult.isResultNotPresent()) return;
-
-		SolutionModel solutionId = solutionResult.getResult();
-		if (!this.multipleChoiceSolutionRepository.existsBySolutionId(solutionId)) return;
-
-		List<MultipleChoiceSolutionModel> multipleChoiceSolutions = this.multipleChoiceSolutionRepository
-				.findAllMultipleChoiceSolutionsBySolutionIdOrderByMultipleChoiceSolutionId(solutionId);
-		if (multipleChoiceSolutions.isEmpty()) return;
-
-		this.multipleChoiceSolutionRepository.deleteAllMultipleChoiceSolutionsBySolutionId(solutionId);
-		this.solutionController.deleteSolution(solutionId);
+	public void deleteAll(SolutionModel solution) {
+		this.multipleChoiceSolutionRepository.deleteAllMultipleChoiceSolutionsBySolutionId(solution);
 	}
 
 	@Override
