@@ -15,6 +15,7 @@ import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,10 +59,10 @@ public class TaskController {
 	}
 
 	public ControllerResult<TaskModel> getNextTask(List<Integer> finishedTaskIds) {
-		TaskModel task = this.taskRepository.getTaskByTaskId(finishedTaskIds.get(0));
-		if (task == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+		Optional<TaskModel> optionalTask = this.taskRepository.getTaskByTaskId(finishedTaskIds.get(0));
+		if (!optionalTask.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		LectureModel lecture = task.getLectureId();
+		LectureModel lecture = optionalTask.get().getLectureId();
 		if (lecture == null) return ControllerResult.of(Error.NOT_FOUND, Constants.Lecture.NAME_KEY);
 
 		List<TaskModel> tasks = this.taskRepository.getAllTasksByLectureId(lecture);
@@ -100,16 +101,16 @@ public class TaskController {
 	}
 
 	public ControllerResult<TaskModel> verifyTask(int taskId) {
-		TaskModel task = this.taskRepository.getTaskByTaskId(taskId);
-		if (task == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+		Optional<TaskModel> optionalTask = this.taskRepository.getTaskByTaskId(taskId);
+		if (!optionalTask.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		task.setVerified(true); //TODO: Single property update
-		return ControllerResult.of(this.taskRepository.save(task));
+		optionalTask.get().setVerified(true); //TODO: Single property update
+		return ControllerResult.of(this.taskRepository.save(optionalTask.get()));
 	}
 
 	public ControllerResult<TaskModel> updateTask(int taskId, UpdateTaskRequestDTO dto) {
-		TaskModel task = this.taskRepository.getTaskByTaskId(taskId);
-		if (task == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+		Optional<TaskModel> optionalTask = this.taskRepository.getTaskByTaskId(taskId);
+		if (!optionalTask.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		ControllerResult<LectureModel> lectureResult = this.lectureController
 			.getLectureByNameKey(dto.getLectureNameKey());
@@ -118,6 +119,7 @@ public class TaskController {
 		ControllerResult<DifficultyModel> difficultyResult = this.difficultyController
 			.getDifficultyByNameKey(dto.getDifficultyNameKey());
 
+		TaskModel task = optionalTask.get();
 		if (lectureResult.isResultPresent()) task.setLectureId(lectureResult.getResult());
 		if (taskTypeResult.isResultPresent()) task.setTaskTypeId(taskTypeResult.getResult());
 		if (difficultyResult.isResultPresent()) task.setDifficultyId(difficultyResult.getResult());
@@ -128,7 +130,9 @@ public class TaskController {
 	}
 
 	public ControllerResult<TaskModel> getTaskByTaskId(int taskId) {
-		return ControllerResult.of(this.taskRepository.getTaskByTaskId(taskId));
+		Optional<TaskModel> optionalTask = this.taskRepository.getTaskByTaskId(taskId);
+
+		return optionalTask.map(ControllerResult::of).orElseGet(() -> ControllerResult.of(Error.NOT_FOUND, NAME_KEY));
 	}
 
 }

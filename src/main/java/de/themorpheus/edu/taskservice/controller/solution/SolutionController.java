@@ -6,14 +6,10 @@ import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.repository.solution.SolutionRepository;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.stereotype.Controller;
 import static de.themorpheus.edu.taskservice.util.Constants.Solution.NAME_KEY;
 
@@ -88,21 +84,8 @@ public class SolutionController {
 		return ControllerResult.of(solutionModelControllerResult.getResult());
 	}
 
-	@Bean
-	public void getSolutionInterfaces() throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-		ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
-		provider.addIncludeFilter((metadataReader, metadataReaderFactory) -> {
-			String[] interfaceNames = metadataReader.getClassMetadata().getInterfaceNames();
-			if (interfaceNames.length == 0) return false;
-			for (String interfaceName : interfaceNames) if (interfaceName.equals(Solution.class.getName())) return true;
-
-			return false;
-		});
-
-		for (BeanDefinition beanDefinition : provider.findCandidateComponents("de.themorpheus")) {
-			Class<?> clazz = Class.forName(beanDefinition.getBeanClassName());
-			solutionControllers.add((Solution) clazz.getDeclaredConstructor().newInstance());
-		}
+	static void registerGenericSolutionController(Solution solution) {
+		solutionControllers.add(solution);
 	}
 
 }
