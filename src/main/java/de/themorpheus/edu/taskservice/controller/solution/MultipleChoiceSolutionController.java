@@ -8,6 +8,8 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CreateMultip
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CheckMultipleChoiceSolutionsResponseDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CheckMultipleChoiceSolutionsResponseDTOModel;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CreateMultipleChoiceSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetAllMultipleChoiceSolutionsResponseDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetAllMultipleChoiceSolutionsResponseDTOModel;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetMultipleChoiceSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetMultipleChoiceSolutionResponseDTOModel;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
@@ -15,6 +17,7 @@ import de.themorpheus.edu.taskservice.util.Error;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -69,15 +72,14 @@ public class MultipleChoiceSolutionController implements Solution {
 	}
 
 	@Transactional
-	public ControllerResult<MultipleChoiceSolutionModel> deleteMultipleChoiceSolution(int taskId, String solution) {
-		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(taskId, NAME_KEY);
-		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
+	public ControllerResult<MultipleChoiceSolutionModel> deleteMultipleChoiceSolution(int multipleChoiceSolutionId) {
+		Optional<MultipleChoiceSolutionModel> optionalMultipleChoiceSolution = this.multipleChoiceSolutionRepository
+				.findById(multipleChoiceSolutionId);
 
-		if (!this.multipleChoiceSolutionRepository.existsBySolutionId(solutionResult.getResult()))
-			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+		if (!optionalMultipleChoiceSolution.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		this.multipleChoiceSolutionRepository.deleteMultipleChoiceSolutionBySolutionIdAndSolution(solutionResult.getResult(), solution);
-		this.deleteSolutionIdIfDatabaseIsEmpty(solutionResult.getResult());
+		this.multipleChoiceSolutionRepository.delete(optionalMultipleChoiceSolution.get());
+		this.deleteSolutionIdIfDatabaseIsEmpty(optionalMultipleChoiceSolution.get().getSolutionId());
 
 		return ControllerResult.empty();
 	}
@@ -101,6 +103,27 @@ public class MultipleChoiceSolutionController implements Solution {
 		Collections.shuffle(getMultipleChoiceSolutionResponseDTOs);
 
 		return ControllerResult.of(new GetMultipleChoiceSolutionResponseDTO(getMultipleChoiceSolutionResponseDTOs));
+	}
+
+	public ControllerResult<GetAllMultipleChoiceSolutionsResponseDTO> getAllMultipleChoiceSolution(int taskId) {
+		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(taskId, NAME_KEY);
+		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
+
+		List<MultipleChoiceSolutionModel> multipleChoiceSolutions = this.multipleChoiceSolutionRepository
+				.findAllMultipleChoiceSolutionsBySolutionIdOrderByMultipleChoiceSolutionId(solutionResult.getResult());
+		if (multipleChoiceSolutions.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		List<GetAllMultipleChoiceSolutionsResponseDTOModel> getAllMultipleChoiceSolutionsResponseDTOs = new ArrayList<>();
+		for (MultipleChoiceSolutionModel multipleChoiceSolution : multipleChoiceSolutions) {
+			getAllMultipleChoiceSolutionsResponseDTOs.add(new GetAllMultipleChoiceSolutionsResponseDTOModel(
+					multipleChoiceSolution.getMultipleChoiceSolutionId(),
+					multipleChoiceSolution.getSolution(),
+					multipleChoiceSolution.isCorrect()
+					)
+			);
+		}
+
+		return ControllerResult.of(new GetAllMultipleChoiceSolutionsResponseDTO(getAllMultipleChoiceSolutionsResponseDTOs));
 	}
 
 	@Override

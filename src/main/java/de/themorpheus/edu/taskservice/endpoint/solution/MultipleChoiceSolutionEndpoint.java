@@ -5,7 +5,6 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CheckMultipl
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CreateMultipleChoiceSolutionRequestDTO;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,9 +35,14 @@ public class MultipleChoiceSolutionEndpoint {
 		return this.multipleChoiceSolutionController.getMultipleChoiceSolution(taskId).getHttpResponse();
 	}
 
-	@DeleteMapping("/solution/multiple_choice/{taskId}/{solution}")
-	public Object deleteMultipleChoiceSolution(@PathVariable @Min(1) int taskId, @PathVariable @NotBlank String solution) {
-		return this.multipleChoiceSolutionController.deleteMultipleChoiceSolution(taskId, solution).getHttpResponse();
+	@GetMapping("/solution/multiple_choice/{task_id}/all")//TODO: Just for teachers
+	public Object getAllMultipleChoiceSolutions(@PathVariable @Min(1) int taskId) {
+		return this.multipleChoiceSolutionController.getAllMultipleChoiceSolution(taskId).getHttpResponse();
+	}
+
+	@DeleteMapping("/solution/multiple_choice/{multipleChoiceSolutionId}")
+	public Object deleteMultipleChoiceSolution(@PathVariable @Min(1) int multipleChoiceSolutionId) {
+		return this.multipleChoiceSolutionController.deleteMultipleChoiceSolution(multipleChoiceSolutionId).getHttpResponse();
 	}
 
 }
