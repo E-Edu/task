@@ -1,12 +1,9 @@
 package de.themorpheus.edu.taskservice.endpoint;
 
 import de.themorpheus.edu.taskservice.controller.LectureController;
-import de.themorpheus.edu.taskservice.endpoint.dto.CreateLectureDTO;
-import de.themorpheus.edu.taskservice.util.ControllerResult;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateLectureRequestDTO;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,13 +19,13 @@ public class LectureEndpoint {
 
 	@Autowired private LectureController lectureController;
 
-	@PostMapping(value = "/lecture")
-	public Object createLecture(@RequestBody @Valid CreateLectureDTO dto) {
-		return this.lectureController.createLecture(dto.getNameKey(), dto.getModuleNameKey()).getHttpResponse();
+	@PostMapping("/lecture")
+	public Object createLecture(@RequestBody @Valid CreateLectureRequestDTO dto) {
+		return this.lectureController.createLecture(dto).getHttpResponse();
 	}
 
 	@GetMapping("/lecture/{nameKey}")
-	public Object getLecture(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
+	public Object getLecture(@PathVariable @NotBlank String nameKey) {
 		return this.lectureController.getLectureByNameKey(nameKey).getHttpResponse();
 	}
 
@@ -38,14 +35,13 @@ public class LectureEndpoint {
 	}
 
 	@GetMapping("/module/{moduleNameKey}/lecture")
-	public Object getLecturesFromModule(@PathVariable @NotNull @NotEmpty @NotBlank String moduleNameKey) {
+	public Object getLecturesFromModule(@PathVariable @NotBlank String moduleNameKey) {
 		return this.lectureController.getAllLecturesFromModule(moduleNameKey).getHttpResponse();
 	}
 
 	@DeleteMapping("/lecture/{nameKey}")
-	public Object deleteLecture(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
-		this.lectureController.deleteLecture(nameKey);
-		return ControllerResult.empty();
+	public Object deleteLecture(@PathVariable @NotBlank String nameKey) {
+		return this.lectureController.deleteLecture(nameKey).getHttpResponse();
 	}
 
 }

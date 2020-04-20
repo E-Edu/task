@@ -3,11 +3,14 @@ package de.themorpheus.edu.taskservice.controller;
 import de.themorpheus.edu.taskservice.database.model.ModuleModel;
 import de.themorpheus.edu.taskservice.database.model.SubjectModel;
 import de.themorpheus.edu.taskservice.database.repository.ModuleRepository;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateModuleRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.GetAllModulesResponseDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import static de.themorpheus.edu.taskservice.util.Constants.Module.NAME_KEY;
 
 @Component
 public class ModuleController {
@@ -16,31 +19,44 @@ public class ModuleController {
 
 	@Autowired private SubjectController subjectController;
 
-	public ControllerResult<ModuleModel> createModule(String nameKey, String subjectNameKey) {
-		ControllerResult<SubjectModel> subjectModelResult = this.subjectController.getSubjectByNameKey(subjectNameKey);
-		if (subjectModelResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "subject");
+	public ControllerResult<ModuleModel> createModule(CreateModuleRequestDTO dto) {
+		ControllerResult<SubjectModel> subjectResult = this.subjectController.getSubjectByNameKey(dto.getSubjectNameKey());
+		if (subjectResult.isResultNotPresent()) return ControllerResult.ret(subjectResult);
+
 		return ControllerResult.of(this.moduleRepository.save(
-				new ModuleModel(-1, subjectModelResult.getResult(), nameKey)
-			)
-		);
+				new ModuleModel(-1, subjectResult.getResult(), dto.getNameKey())));
 	}
 
 	public ControllerResult<ModuleModel> getModuleByNameKey(String nameKey) {
-		return ControllerResult.of(this.moduleRepository.getModuleByNameKeyIgnoreCase(nameKey));
+		ModuleModel module = this.moduleRepository.getModuleByNameKeyIgnoreCase(nameKey);
+		if (module == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		return ControllerResult.of(module);
 	}
 
-	public void deleteModule(String nameKey) {
+	public ControllerResult<ModuleModel> deleteModule(String nameKey) {
+		if (!this.moduleRepository.existsByNameKeyIgnoreCase(nameKey))
+			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
 		this.moduleRepository.deleteModuleByNameKeyIgnoreCase(nameKey);
+		return ControllerResult.empty();
 	}
 
 	public ControllerResult<List<ModuleModel>> getAllModules() {
-		return ControllerResult.of(this.moduleRepository.findAll());
+		List<ModuleModel> modules = this.moduleRepository.findAll();
+		if (modules.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		return ControllerResult.of(modules);
 	}
 
-	public ControllerResult<List<ModuleModel>> getAllModulesFromSubject(String subjectNameKey) {
-		ControllerResult<SubjectModel> subjectModelResult = this.subjectController.getSubjectByNameKey(subjectNameKey);
-		if (subjectModelResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, "subject");
-		return ControllerResult.of(this.moduleRepository.getModulesBySubjectId(subjectModelResult.getResult()));
+	public ControllerResult<GetAllModulesResponseDTO> getAllModulesFromSubject(String subjectNameKey) {
+		ControllerResult<SubjectModel> subjectResults = this.subjectController.getSubjectByNameKey(subjectNameKey);
+		if (subjectResults.isResultNotPresent()) return ControllerResult.ret(subjectResults);
+
+		List<ModuleModel> modules = this.moduleRepository.getModulesBySubjectId(subjectResults.getResult());
+		if (modules.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		return ControllerResult.of(new GetAllModulesResponseDTO(modules));
 	}
 
 }

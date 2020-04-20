@@ -3,13 +3,12 @@ package de.themorpheus.edu.taskservice.controller;
 import de.themorpheus.edu.taskservice.database.model.TaskModel;
 import de.themorpheus.edu.taskservice.database.model.VotingModel;
 import de.themorpheus.edu.taskservice.database.repository.VotingRepository;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.VoteTaskRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.VoteTaskResponseDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
-import de.themorpheus.edu.taskservice.util.Error;
-import de.themorpheus.edu.taskservice.util.Validation;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 @Component
 public class VotingController {
@@ -18,19 +17,19 @@ public class VotingController {
 
 	@Autowired private TaskController taskController;
 
-	public ControllerResult<Object> voteTask(int taskId, int vote, UUID userId) {
-		TaskModel taskModel = this.taskController.getTaskByTaskId(taskId);
+	public ControllerResult<VoteTaskResponseDTO> voteTask(int taskId, VoteTaskRequestDTO dto, UUID userId) {
+		ControllerResult<TaskModel> task = this.taskController.getTaskByTaskId(taskId);
+		if (task.isResultNotPresent()) return ControllerResult.ret(task);
 
-		// Check if task exists
-		if (Validation.validateNull(taskModel)) return ControllerResult.of(Error.NOT_FOUND);
-
-		VotingModel votingModel = new VotingModel(
+		VotingModel voting = new VotingModel(
 			-1,
-			taskModel,
+			task.getResult(),
 			userId,
-			vote
+			dto.getVote()
 		);
-		return ControllerResult.of(this.votingRepository.save(votingModel));
+		voting = this.votingRepository.save(voting);
+
+		return ControllerResult.of(new VoteTaskResponseDTO(voting.getVotingModelId(), voting.getValue(), voting.getUserId()));
 	}
 
 }

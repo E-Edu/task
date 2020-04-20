@@ -86,7 +86,6 @@ public class ControllerResult<T> {
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static <T> ControllerResult<T> ret(ControllerResult instance) {
-		if (instance.isErrorPresent()) throw new IllegalArgumentException("No error present in controller result");
 		return instance;
 	}
 
