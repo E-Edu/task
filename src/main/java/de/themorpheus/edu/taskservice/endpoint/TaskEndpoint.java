@@ -6,7 +6,7 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.GetNextTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.UpdateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.VoteTaskRequestDTO;
-import java.util.UUID;
+import de.themorpheus.edu.taskservice.util.Constants;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -50,8 +50,7 @@ public class TaskEndpoint {
 
 	@PutMapping("/task/vote/{taskId}")
 	public Object voteTask(@PathVariable @Min(1) int taskId, @RequestBody @Valid VoteTaskRequestDTO dto) {
-		// TODO: Pass real userId instead of random UUID
-		return this.votingController.voteTask(taskId, dto, UUID.randomUUID()).getHttpResponse();
+		return this.votingController.voteTask(taskId, dto, Constants.UserId.TEST_UUID).getHttpResponse();
 	}
 
 	@PostMapping("/task/next")
@@ -72,6 +71,11 @@ public class TaskEndpoint {
 	@GetMapping("/task/{taskId}")
 	public Object getTask(@PathVariable @Min(1) int taskId) {
 		return this.taskController.getTaskByTaskId(taskId).getHttpResponse();
+	}
+
+	@GetMapping("task/my")
+	public Object getTasksCreatedByUser() {
+		return this.taskController.getAllTaskByUser(Constants.UserId.TEST_UUID).getHttpResponse();
 	}
 
 }
