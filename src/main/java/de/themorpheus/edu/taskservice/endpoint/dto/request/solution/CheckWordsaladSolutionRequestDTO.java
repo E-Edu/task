@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CheckWordsaladSolutionRequestDTO {
 
-	@Min(0)
+	@Min(1)
 	private int taskId;
 
 	@NotBlank

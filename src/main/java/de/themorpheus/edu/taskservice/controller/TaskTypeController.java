@@ -2,6 +2,8 @@ package de.themorpheus.edu.taskservice.controller;
 
 import de.themorpheus.edu.taskservice.database.model.TaskTypeModel;
 import de.themorpheus.edu.taskservice.database.repository.TaskTypeRepository;
+import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskTypeRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.GetAllTaskTypesResponseDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import java.util.List;
@@ -14,11 +16,11 @@ public class TaskTypeController {
 
 	@Autowired private TaskTypeRepository taskTypeRepository;
 
-	public ControllerResult<TaskTypeModel> createTaskType(String nameKey) {
-		if (this.taskTypeRepository.existsByNameKeyIgnoreCase(nameKey))
+	public ControllerResult<TaskTypeModel> createTaskType(CreateTaskTypeRequestDTO dto) {
+		if (this.taskTypeRepository.existsByNameKeyIgnoreCase(dto.getNameKey()))
 			return ControllerResult.of(Error.ALREADY_EXISTS, NAME_KEY);
 
-		return ControllerResult.of(this.taskTypeRepository.save(new TaskTypeModel(-1, nameKey)));
+		return ControllerResult.of(this.taskTypeRepository.save(new TaskTypeModel(-1, dto.getNameKey())));
 	}
 
 	public ControllerResult<TaskTypeModel> getTaskType(String nameKey) {
@@ -36,11 +38,11 @@ public class TaskTypeController {
 		return ControllerResult.empty();
 	}
 
-	public ControllerResult<List<TaskTypeModel>> getAllTaskTypes() {
+	public ControllerResult<GetAllTaskTypesResponseDTO> getAllTaskTypes() {
 		List<TaskTypeModel> taskTypeModels = this.taskTypeRepository.findAll();
 		if (taskTypeModels.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		return ControllerResult.of(taskTypeModels);
+		return ControllerResult.of(new GetAllTaskTypesResponseDTO(taskTypeModels));
 	}
 
 }

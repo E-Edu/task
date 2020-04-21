@@ -1,6 +1,7 @@
 package de.themorpheus.edu.taskservice.database.model;
 
 import java.util.UUID;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +24,8 @@ public class TaskModel {
 	private int taskId;
 
 	private String description;
+
+	@Column(columnDefinition = "BINARY(16)", nullable = false)
 	private UUID authorId;
 	private String task;
 	private int necessaryPoints;

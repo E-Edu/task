@@ -4,8 +4,6 @@ import de.themorpheus.edu.taskservice.controller.DifficultyController;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateDifficultyRequestDTO;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,13 +19,13 @@ public class DifficultyEndpoint {
 
 	@Autowired private DifficultyController difficultyController;
 
-	@PostMapping(value = "/difficulty")
+	@PostMapping("/difficulty")
 	public Object createDifficulty(@RequestBody @Valid CreateDifficultyRequestDTO dto) {
-		return this.difficultyController.createDifficulty(dto.getNameKey()).getHttpResponse();
+		return this.difficultyController.createDifficulty(dto).getHttpResponse();
 	}
 
 	@GetMapping("/difficulty/{nameKey}")
-	public Object getDifficulty(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
+	public Object getDifficulty(@PathVariable @NotBlank String nameKey) {
 		return this.difficultyController.getDifficultyByNameKey(nameKey).getHttpResponse();
 	}
 
@@ -37,7 +35,7 @@ public class DifficultyEndpoint {
 	}
 
 	@DeleteMapping("/difficulty/{nameKey}")
-	public Object deleteDifficulty(@PathVariable @NotNull @NotEmpty @NotBlank String nameKey) {
+	public Object deleteDifficulty(@PathVariable @NotBlank String nameKey) {
 		return this.difficultyController.deleteDifficulty(nameKey).getHttpResponse();
 	}
 

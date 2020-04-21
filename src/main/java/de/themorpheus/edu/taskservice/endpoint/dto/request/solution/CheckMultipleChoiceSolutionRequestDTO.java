@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CheckMultipleChoiceSolutionRequestDTO {
 
-	@Min(0)
+	@Min(1)
 	private int taskId;
 
 	@NotNull @Size(min = 1)

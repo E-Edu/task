@@ -1,6 +1,7 @@
 package de.themorpheus.edu.taskservice.controller;
 
 import de.themorpheus.edu.taskservice.controller.solution.SolutionController;
+import de.themorpheus.edu.taskservice.controller.user.UserDataHandler;
 import de.themorpheus.edu.taskservice.database.model.DifficultyModel;
 import de.themorpheus.edu.taskservice.database.model.LectureModel;
 import de.themorpheus.edu.taskservice.database.model.TaskModel;
@@ -9,12 +10,14 @@ import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.UpdateTaskRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.GetAllTasksByUserResponseDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.GetSolutionTypeResponseDTO;
 import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +25,7 @@ import org.springframework.stereotype.Component;
 import static de.themorpheus.edu.taskservice.util.Constants.Task.NAME_KEY;
 
 @Component
-public class TaskController {
+public class TaskController implements UserDataHandler {
 
 	private static final Random RANDOM = new Random();
 
@@ -45,7 +48,7 @@ public class TaskController {
 		TaskModel task = new TaskModel(
 			-1,
 			dto.getDescription(),
-			UUID.randomUUID(), //TODO
+			Constants.UserId.TEST_UUID,
 			dto.getTask(),
 			dto.getNecessaryPoints(),
 			false,
@@ -58,10 +61,10 @@ public class TaskController {
 	}
 
 	public ControllerResult<TaskModel> getNextTask(List<Integer> finishedTaskIds) {
-		TaskModel task = this.taskRepository.getTaskByTaskId(finishedTaskIds.get(0));
-		if (task == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+		Optional<TaskModel> optionalTask = this.taskRepository.getTaskByTaskId(finishedTaskIds.get(0));
+		if (!optionalTask.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		LectureModel lecture = task.getLectureId();
+		LectureModel lecture = optionalTask.get().getLectureId();
 		if (lecture == null) return ControllerResult.of(Error.NOT_FOUND, Constants.Lecture.NAME_KEY);
 
 		List<TaskModel> tasks = this.taskRepository.getAllTasksByLectureId(lecture);
@@ -74,8 +77,10 @@ public class TaskController {
 	public ControllerResult<SolutionModel> deleteTask(int taskId) {
 		if (!this.taskRepository.existsById(taskId)) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
+		ControllerResult<SolutionModel> solutionResult = this.solutionController.deleteAllSolutions(taskId);
 		this.taskRepository.deleteById(taskId);
-		return this.solutionController.deleteAllSolutions(taskId);
+
+		return solutionResult;
 	}
 
 	public ControllerResult<GetSolutionTypeResponseDTO> getSolutionType(int taskId) {
@@ -83,6 +88,13 @@ public class TaskController {
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
 		return ControllerResult.of(new GetSolutionTypeResponseDTO(solutionResult.getResult().getSolutionType()));
+	}
+
+	public ControllerResult<GetAllTasksByUserResponseDTO> getAllTaskByUser(UUID authorId) {
+		List<TaskModel> taskModels = this.taskRepository.findAllByAuthorId(authorId);
+		if (taskModels.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		return ControllerResult.of(new GetAllTasksByUserResponseDTO(taskModels));
 	}
 
 	public ControllerResult<List<TaskModel>> getAllTasks() {
@@ -98,16 +110,16 @@ public class TaskController {
 	}
 
 	public ControllerResult<TaskModel> verifyTask(int taskId) {
-		TaskModel task = this.taskRepository.getTaskByTaskId(taskId);
-		if (task == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+		Optional<TaskModel> optionalTask = this.taskRepository.getTaskByTaskId(taskId);
+		if (!optionalTask.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		task.setVerified(true); //TODO: Single property update
-		return ControllerResult.of(this.taskRepository.save(task));
+		optionalTask.get().setVerified(true); //TODO: Single property update
+		return ControllerResult.of(this.taskRepository.save(optionalTask.get()));
 	}
 
 	public ControllerResult<TaskModel> updateTask(int taskId, UpdateTaskRequestDTO dto) {
-		TaskModel task = this.taskRepository.getTaskByTaskId(taskId);
-		if (task == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+		Optional<TaskModel> optionalTask = this.taskRepository.getTaskByTaskId(taskId);
+		if (!optionalTask.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		ControllerResult<LectureModel> lectureResult = this.lectureController
 			.getLectureByNameKey(dto.getLectureNameKey());
@@ -116,6 +128,7 @@ public class TaskController {
 		ControllerResult<DifficultyModel> difficultyResult = this.difficultyController
 			.getDifficultyByNameKey(dto.getDifficultyNameKey());
 
+		TaskModel task = optionalTask.get();
 		if (lectureResult.isResultPresent()) task.setLectureId(lectureResult.getResult());
 		if (taskTypeResult.isResultPresent()) task.setTaskTypeId(taskTypeResult.getResult());
 		if (difficultyResult.isResultPresent()) task.setDifficultyId(difficultyResult.getResult());
@@ -126,7 +139,22 @@ public class TaskController {
 	}
 
 	public ControllerResult<TaskModel> getTaskByTaskId(int taskId) {
-		return ControllerResult.of(this.taskRepository.getTaskByTaskId(taskId));
+		Optional<TaskModel> optionalTask = this.taskRepository.getTaskByTaskId(taskId);
+
+		return optionalTask.map(ControllerResult::of).orElseGet(() -> ControllerResult.of(Error.NOT_FOUND, NAME_KEY));
+	}
+
+	@Override
+	public void deleteOrMaskUserData(UUID userId) {
+		this.taskRepository.findAllByAuthorId(userId).forEach(taskModel -> {
+			taskModel.setAuthorId(Constants.UserId.EMPTY_UUID);
+			this.taskRepository.save(taskModel);
+		});
+	}
+
+	@Override
+	public Object getUserData(UUID userId) {
+		return this.taskRepository.findAllByAuthorId(userId);
 	}
 
 }

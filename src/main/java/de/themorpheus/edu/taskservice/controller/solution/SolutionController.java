@@ -6,20 +6,17 @@ import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.repository.solution.SolutionRepository;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.stereotype.Controller;
 import static de.themorpheus.edu.taskservice.util.Constants.Solution.NAME_KEY;
 
 @Controller
 public class SolutionController {
 
-	private static List<Solution> solutionControllers = new ArrayList<>();
+	private static final List<Solution> SOLUTION_CONTROLLERS = new ArrayList<>();
 
 	@Autowired private SolutionRepository solutionRepository;
 	@Autowired private TaskController taskController;
@@ -29,27 +26,29 @@ public class SolutionController {
 	}
 
 	public ControllerResult<SolutionModel> getSolution(int taskId) {
-		return ControllerResult.of(this.solutionRepository.findSolutionModelByTaskId(TaskModel.create(taskId)));
+		Optional<SolutionModel> optionalSolution = this.solutionRepository.findSolutionModelByTaskId(TaskModel.create(taskId));
+
+		return optionalSolution.map(ControllerResult::of).orElseGet(() -> ControllerResult.of(Error.NOT_FOUND, NAME_KEY));
 	}
 
-	private ControllerResult<SolutionModel> getGenericSolution(TaskModel taskModel, String solutionTypeNameKey) {
-		SolutionModel solutionModel = this.solutionRepository.findSolutionModelByTaskId(taskModel);
-		if (solutionModel == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+	private ControllerResult<SolutionModel> getGenericSolution(TaskModel task, String solutionTypeNameKey) {
+		Optional<SolutionModel> optionalSolution = this.solutionRepository.findSolutionModelByTaskId(task);
+		if (!optionalSolution.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		if (!solutionModel.getSolutionType().equals(solutionTypeNameKey))
+		if (!optionalSolution.get().getSolutionType().equals(solutionTypeNameKey))
 			return ControllerResult.of(Error.WRONG_TYPE, NAME_KEY);
 
-		return ControllerResult.of(solutionModel);
+		return ControllerResult.of(optionalSolution.get());
 	}
 
 	public ControllerResult<SolutionModel> deleteAllSolutions(int taskId) {
-		ControllerResult<SolutionModel> solutionModel = this.getSolution(taskId);
-		if (solutionModel.isResultNotPresent()) return ControllerResult.ret(solutionModel);
+		ControllerResult<SolutionModel> solution = this.getSolution(taskId);
+		if (solution.isResultNotPresent()) return ControllerResult.ret(solution);
 
-		for (Solution solutionController : solutionControllers)
-			solutionController.deleteAll(solutionModel.getResult().getTaskId().getTaskId());
+		for (Solution solutionController : SOLUTION_CONTROLLERS)
+			solutionController.deleteAll(solution.getResult());
 
-		this.solutionRepository.delete(solutionModel.getResult());
+		this.solutionRepository.delete(solution.getResult());
 
 		return ControllerResult.empty();
 	}
@@ -70,10 +69,11 @@ public class SolutionController {
 		ControllerResult<TaskModel> taskModelControllerResult = this.taskController.getTaskByTaskId(taskId);
 		if (taskModelControllerResult.isResultNotPresent()) return ControllerResult.ret(taskModelControllerResult);
 
-		SolutionModel solutionModel = this.solutionRepository.findSolutionModelByTaskId(taskModelControllerResult.getResult());
-		if (solutionModel == null)
+		Optional<SolutionModel> optionalSolution = this.solutionRepository.findSolutionModelByTaskId(taskModelControllerResult.getResult());
+		if (!optionalSolution.isPresent())
 			this.solutionRepository.save(new SolutionModel(-1, taskModelControllerResult.getResult(), solutionTypeNameKey));
-		else if (!solutionModel.getSolutionType().equals(solutionTypeNameKey)) return ControllerResult.of(Error.WRONG_TYPE, NAME_KEY);
+		else if (!optionalSolution.get().getSolutionType().equals(solutionTypeNameKey))
+			return ControllerResult.of(Error.WRONG_TYPE, NAME_KEY);
 
 		ControllerResult<SolutionModel> solutionModelControllerResult = this.getGenericSolution(
 			taskModelControllerResult.getResult().getTaskId(),
@@ -84,21 +84,8 @@ public class SolutionController {
 		return ControllerResult.of(solutionModelControllerResult.getResult());
 	}
 
-	@Bean
-	public void getSolutionInterfaces() throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-		ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
-		provider.addIncludeFilter((metadataReader, metadataReaderFactory) -> {
-			String[] interfaceNames = metadataReader.getClassMetadata().getInterfaceNames();
-			if (interfaceNames.length == 0) return false;
-			for (String interfaceName : interfaceNames) if (interfaceName.equals(Solution.class.getName())) return true;
-
-			return false;
-		});
-
-		for (BeanDefinition beanDefinition : provider.findCandidateComponents("de.themorpheus")) {
-			Class<?> clazz = Class.forName(beanDefinition.getBeanClassName());
-			solutionControllers.add((Solution) clazz.getDeclaredConstructor().newInstance());
-		}
+	static void registerGenericSolutionController(Solution solution) {
+		SOLUTION_CONTROLLERS.add(solution);
 	}
 
 }
