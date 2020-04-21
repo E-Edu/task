@@ -1,5 +1,7 @@
 package de.themorpheus.edu.taskservice.database.model.solution;
 
+import java.util.UUID;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,7 +11,6 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -25,6 +26,8 @@ public class UserFreestyleSolutionModel {
 	@ManyToOne
 	private FreestyleSolutionModel freestyleSolutionId;
 	private String solution;
+
+	@Column(columnDefinition = "BINARY(16)", nullable = false)
 	private UUID userId;
 
 }

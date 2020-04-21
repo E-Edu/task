@@ -1,5 +1,6 @@
 package de.themorpheus.edu.taskservice.controller.solution;
 
+import de.themorpheus.edu.taskservice.controller.user.UserDataHandler;
 import de.themorpheus.edu.taskservice.database.model.solution.ImageSolutionModel;
 import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.model.solution.UserImageSolutionModel;
@@ -11,6 +12,7 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateImageS
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CheckImageSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CreateImageSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.UpdateImageSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import java.util.Optional;
@@ -21,7 +23,7 @@ import org.springframework.stereotype.Component;
 import static de.themorpheus.edu.taskservice.util.Constants.Solution.Image.NAME_KEY;
 
 @Component
-public class ImageSolutionController implements Solution {
+public class ImageSolutionController implements Solution, UserDataHandler {
 
 	@Autowired private ImageSolutionRepository imageSolutionRepository;
 
@@ -55,7 +57,7 @@ public class ImageSolutionController implements Solution {
 				-1,
 				optionalImageSolution.get(),
 				dto.getUrl(),
-				UUID.randomUUID()
+				Constants.UserId.TEST_UUID
 			)
 		);
 
@@ -102,6 +104,16 @@ public class ImageSolutionController implements Solution {
 	public void deleteSolutionIdIfDatabaseIsEmpty(SolutionModel solutionId) {
 		if (!this.imageSolutionRepository.existsBySolutionId(solutionId))
 			this.solutionController.deleteSolution(solutionId);
+	}
+
+	@Override
+	public void deleteOrMaskUserData(UUID userId) {
+		this.userImageSolutionRepository.deleteAllByUserId(userId);
+	}
+
+	@Override
+	public Object getUserData(UUID userId) {
+		return this.userImageSolutionRepository.findAllByUserId(userId);
 	}
 
 }

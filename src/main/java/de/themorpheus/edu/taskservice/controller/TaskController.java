@@ -1,6 +1,7 @@
 package de.themorpheus.edu.taskservice.controller;
 
 import de.themorpheus.edu.taskservice.controller.solution.SolutionController;
+import de.themorpheus.edu.taskservice.controller.user.UserDataHandler;
 import de.themorpheus.edu.taskservice.database.model.DifficultyModel;
 import de.themorpheus.edu.taskservice.database.model.LectureModel;
 import de.themorpheus.edu.taskservice.database.model.TaskModel;
@@ -9,6 +10,7 @@ import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.UpdateTaskRequestDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.GetAllTasksByUserResponseDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.GetSolutionTypeResponseDTO;
 import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
@@ -23,7 +25,7 @@ import org.springframework.stereotype.Component;
 import static de.themorpheus.edu.taskservice.util.Constants.Task.NAME_KEY;
 
 @Component
-public class TaskController {
+public class TaskController implements UserDataHandler {
 
 	private static final Random RANDOM = new Random();
 
@@ -46,7 +48,7 @@ public class TaskController {
 		TaskModel task = new TaskModel(
 			-1,
 			dto.getDescription(),
-			UUID.randomUUID(), //TODO
+			Constants.UserId.TEST_UUID,
 			dto.getTask(),
 			dto.getNecessaryPoints(),
 			false,
@@ -86,6 +88,13 @@ public class TaskController {
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
 		return ControllerResult.of(new GetSolutionTypeResponseDTO(solutionResult.getResult().getSolutionType()));
+	}
+
+	public ControllerResult<GetAllTasksByUserResponseDTO> getAllTaskByUser(UUID authorId) {
+		List<TaskModel> taskModels = this.taskRepository.findAllByAuthorId(authorId);
+		if (taskModels.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		return ControllerResult.of(new GetAllTasksByUserResponseDTO(taskModels));
 	}
 
 	public ControllerResult<List<TaskModel>> getAllTasks() {
@@ -133,6 +142,19 @@ public class TaskController {
 		Optional<TaskModel> optionalTask = this.taskRepository.getTaskByTaskId(taskId);
 
 		return optionalTask.map(ControllerResult::of).orElseGet(() -> ControllerResult.of(Error.NOT_FOUND, NAME_KEY));
+	}
+
+	@Override
+	public void deleteOrMaskUserData(UUID userId) {
+		this.taskRepository.findAllByAuthorId(userId).forEach(taskModel -> {
+			taskModel.setAuthorId(Constants.UserId.EMPTY_UUID);
+			this.taskRepository.save(taskModel);
+		});
+	}
+
+	@Override
+	public Object getUserData(UUID userId) {
+		return this.taskRepository.findAllByAuthorId(userId);
 	}
 
 }

@@ -1,6 +1,7 @@
 package de.themorpheus.edu.taskservice.database.model;
 
 import java.util.UUID;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,6 +26,7 @@ public class VotingModel {
 	@OneToOne
 	private TaskModel taskId;
 
+	@Column(columnDefinition = "BINARY(16)", nullable = false)
 	private UUID userId;
 
 	private int value;

@@ -1,5 +1,7 @@
 package de.themorpheus.edu.taskservice.util;
 
+import java.util.UUID;
+
 public class Constants {
 
 	public static class Difficulty {
@@ -77,6 +79,14 @@ public class Constants {
 			public static final String NAME_KEY = "wordsalad_solution";
 
 		}
+
+	}
+
+	public static class UserId {
+
+		public static final UUID TEST_UUID = UUID.fromString("52bd088c-d6ad-4cee-9f93-cabfc8c07234"); //TODO: use real userId
+
+		public static final UUID EMPTY_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
 	}
 
