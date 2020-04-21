@@ -12,6 +12,8 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateFreest
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CheckFreestyleSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CreateFreestyleSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.UpdateFreestyleSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.pubsub.dto.UserSentFreestyleSolutionDTO;
+import de.themorpheus.edu.taskservice.pubsub.pub.MessagePublisher;
 import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
@@ -26,10 +28,11 @@ import static de.themorpheus.edu.taskservice.util.Constants.Solution.Freestyle.N
 public class FreestyleSolutionController implements Solution, UserDataHandler {
 
 	@Autowired private FreestyleSolutionRepository freestyleSolutionRepository;
-
 	@Autowired private UserFreestyleSolutionRepository userFreestyleSolutionRepository;
 
 	@Autowired private SolutionController solutionController;
+
+	@Autowired private MessagePublisher messagePublisher;
 
 	public ControllerResult<CreateFreestyleSolutionResponseDTO> createFreestyleSolution(CreateFreestyleSolutionRequestDTO dto) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getOrCreateSolution(dto.getTaskId(), NAME_KEY);
@@ -64,7 +67,13 @@ public class FreestyleSolutionController implements Solution, UserDataHandler {
 			)
 		);
 
-		//TODO: PubSubService publish new Freestyle for teacher
+		this.messagePublisher.publish(new UserSentFreestyleSolutionDTO(
+				solutionResult.getResult().getTaskId().getTaskId(),
+				solutionResult.getResult().getTaskId().getAuthorId(),
+				Constants.UserId.TEST_UUID,
+				dto.getSolution()
+				)
+		);
 
 		return ControllerResult.of(new CheckFreestyleSolutionResponseDTO(optionalFreestyleSolution.get().getSolution()));
 	}

@@ -12,6 +12,8 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateImageS
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CheckImageSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CreateImageSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.UpdateImageSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.pubsub.dto.UserSentImageSolutionDTO;
+import de.themorpheus.edu.taskservice.pubsub.pub.MessagePublisher;
 import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
@@ -26,10 +28,11 @@ import static de.themorpheus.edu.taskservice.util.Constants.Solution.Image.NAME_
 public class ImageSolutionController implements Solution, UserDataHandler {
 
 	@Autowired private ImageSolutionRepository imageSolutionRepository;
-
 	@Autowired private UserImageSolutionRepository userImageSolutionRepository;
 
 	@Autowired private SolutionController solutionController;
+
+	@Autowired private MessagePublisher messagePublisher;
 
 	public ControllerResult<CreateImageSolutionResponseDTO> createImageSolution(CreateImageSolutionRequestDTO dto) {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getOrCreateSolution(dto.getTaskId(), NAME_KEY);
@@ -61,7 +64,13 @@ public class ImageSolutionController implements Solution, UserDataHandler {
 			)
 		);
 
-		//TODO: PubSubService publish new Image for teacher
+		this.messagePublisher.publish(new UserSentImageSolutionDTO(
+				solutionResult.getResult().getTaskId().getTaskId(),
+				solutionResult.getResult().getTaskId().getAuthorId(),
+				Constants.UserId.TEST_UUID,
+				dto.getUrl()
+				)
+		);
 
 		return ControllerResult.of(new CheckImageSolutionResponseDTO(optionalImageSolution.get().getUrl()));
 	}
