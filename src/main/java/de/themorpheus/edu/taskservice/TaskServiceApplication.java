@@ -1,15 +1,14 @@
 package de.themorpheus.edu.taskservice;
 
-import de.themorpheus.edu.taskservice.cli.CLIManager;
 import de.themorpheus.edu.taskservice.util.GitInfo;
-import io.sentry.Sentry;
-import io.sentry.SentryClient;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import java.io.IOException;
+import io.sentry.Sentry;
+import io.sentry.SentryClient;
 
 @EnableJpaRepositories
 @SpringBootApplication(scanBasePackages = "de.themorpheus.edu.taskservice")
@@ -25,8 +24,6 @@ public class TaskServiceApplication {
 		initSentry();
 
 		SpringApplication.run(TaskServiceApplication.class, args);
-
-		CLIManager.initCli(args);
 
 		LOGGER.info("Influx enabled: {}", INFLUX_ENABLED);
 	}
