@@ -69,7 +69,7 @@ public class TaskController implements UserDataHandler {
 
 		List<TaskModel> tasks = this.taskRepository.getAllTasksByLectureId(lecture);
 		tasks.removeIf(tm -> finishedTaskIds.contains(tm.getTaskId())); //TODO: Use SQL query
-		if (tasks.isEmpty()) return ControllerResult.of(Error.NO_CONTENT, NAME_KEY);
+		if (tasks.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		return ControllerResult.of(tasks.get(RANDOM.nextInt(tasks.size())));
 	}
@@ -146,9 +146,9 @@ public class TaskController implements UserDataHandler {
 
 	@Override
 	public void deleteOrMaskUserData(UUID userId) {
-		this.taskRepository.findAllByAuthorId(userId).forEach(taskModel -> {
-			taskModel.setAuthorId(Constants.UserId.EMPTY_UUID);
-			this.taskRepository.save(taskModel);
+		this.taskRepository.findAllByAuthorId(userId).forEach(task -> {
+			task.setAuthorId(Constants.UserId.EMPTY_UUID);
+			this.taskRepository.save(task);
 		});
 	}
 

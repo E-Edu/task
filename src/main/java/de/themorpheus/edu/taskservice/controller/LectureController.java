@@ -8,6 +8,7 @@ import de.themorpheus.edu.taskservice.endpoint.dto.response.GetAllLecturesRespon
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import static de.themorpheus.edu.taskservice.util.Constants.Lecture.NAME_KEY;
@@ -30,6 +31,12 @@ public class LectureController {
 				new LectureModel(-1, module.getResult(), dto.getNameKey())));
 	}
 
+	public ControllerResult<LectureModel> getLectureByLectureId(int lectureId) {
+		Optional<LectureModel> optionalLecture = this.lectureRepository.findById(lectureId);
+
+		return optionalLecture.map(ControllerResult::of).orElseGet(() -> ControllerResult.of(Error.NOT_FOUND, NAME_KEY));
+	}
+
 	public ControllerResult<LectureModel> getLectureByNameKey(String nameKey) {
 		LectureModel lecture = this.lectureRepository.getLectureByNameKeyIgnoreCase(nameKey);
 		if (lecture == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
@@ -44,14 +51,6 @@ public class LectureController {
 		return ControllerResult.of(lectureModels);
 	}
 
-	public ControllerResult<LectureModel> deleteLecture(String nameKey) {
-		if (!this.lectureRepository.existsByNameKeyIgnoreCase(nameKey))
-			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
-
-		this.lectureRepository.deleteLectureByNameKeyIgnoreCase(nameKey);
-		return ControllerResult.empty();
-	}
-
 	public ControllerResult<GetAllLecturesResponseDTO> getAllLecturesFromModule(String moduleNameKey) {
 		ControllerResult<ModuleModel> moduleResult = this.moduleController.getModuleByNameKey(moduleNameKey);
 		if (moduleResult.isResultNotPresent()) return ControllerResult.ret(moduleResult);
@@ -60,6 +59,14 @@ public class LectureController {
 		if (lectures.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		return ControllerResult.of(new GetAllLecturesResponseDTO(lectures));
+	}
+
+	public ControllerResult<LectureModel> deleteLecture(String nameKey) {
+		if (!this.lectureRepository.existsByNameKeyIgnoreCase(nameKey))
+			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		this.lectureRepository.deleteLectureByNameKeyIgnoreCase(nameKey);
+		return ControllerResult.empty();
 	}
 
 }

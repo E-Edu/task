@@ -7,9 +7,11 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.GetNextTaskRequestDTO
 import de.themorpheus.edu.taskservice.endpoint.dto.request.UpdateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.VoteTaskRequestDTO;
 import de.themorpheus.edu.taskservice.util.Constants;
+import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,8 +75,13 @@ public class TaskEndpoint {
 		return this.taskController.getTaskByTaskId(taskId).getHttpResponse();
 	}
 
-	@GetMapping("task/my")
-	public Object getTasksCreatedByUser() {
+	@GetMapping("/task/user/{userId}")
+	public Object getTaskByUser(@PathVariable @NotNull UUID userId) {
+		return this.taskController.getAllTaskByUser(userId).getHttpResponse();
+	}
+
+	@GetMapping("/task/own")
+	public Object getOwnTasks() {
 		return this.taskController.getAllTaskByUser(Constants.UserId.TEST_UUID).getHttpResponse();
 	}
 

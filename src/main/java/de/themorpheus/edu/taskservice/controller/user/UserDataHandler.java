@@ -11,6 +11,8 @@ public interface UserDataHandler {
 	/**
 	 * Deletes or masks the given userId everywhere.
 	 *
+	 * <p><b>Important: Just delete the the entry with the userId if there is no foreign key!</b></p>
+	 *
 	 * @param userId the userId which has to deleted or masked everywhere
 	 */
 	void deleteOrMaskUserData(UUID userId);
