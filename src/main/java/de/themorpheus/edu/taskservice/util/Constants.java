@@ -40,6 +40,12 @@ public class Constants {
 
 	}
 
+	public static class TaskGroup {
+
+		public static final String NAME_KEY = "task_group";
+
+	}
+
 	public static class TaskType {
 
 		public static final String NAME_KEY = "task_type";

@@ -7,6 +7,7 @@ import de.themorpheus.edu.taskservice.endpoint.dto.response.GetAllDifficultiesRe
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import static de.themorpheus.edu.taskservice.util.Constants.Difficulty.NAME_KEY;
@@ -23,11 +24,24 @@ public class DifficultyController {
 		return ControllerResult.of(this.difficultyRepository.save(new DifficultyModel(-1, dto.getNameKey())));
 	}
 
+	public ControllerResult<DifficultyModel> getDifficultyByDifficultyId(int difficultyId) {
+		Optional<DifficultyModel> optionalDifficulty = this.difficultyRepository.findById(difficultyId);
+
+		return optionalDifficulty.map(ControllerResult::of).orElseGet(() -> ControllerResult.of(Error.NOT_FOUND, NAME_KEY));
+	}
+
 	public ControllerResult<DifficultyModel> getDifficultyByNameKey(String nameKey) {
 		DifficultyModel difficulty = this.difficultyRepository.getDifficultyByNameKeyIgnoreCase(nameKey);
 		if (difficulty == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		return ControllerResult.of(difficulty);
+	}
+
+	public ControllerResult<GetAllDifficultiesResponseDTO> getAllDifficulties() {
+		List<DifficultyModel> difficulties = this.difficultyRepository.findAll();
+		if (difficulties.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		return ControllerResult.of(new GetAllDifficultiesResponseDTO(difficulties));
 	}
 
 	public ControllerResult<DifficultyModel> deleteDifficulty(String nameKey) {
@@ -36,13 +50,6 @@ public class DifficultyController {
 
 		this.difficultyRepository.deleteDifficultyByNameKeyIgnoreCase(nameKey);
 		return ControllerResult.empty();
-	}
-
-	public ControllerResult<GetAllDifficultiesResponseDTO> getAllDifficulties() {
-		List<DifficultyModel> difficulties = this.difficultyRepository.findAll();
-		if (difficulties.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
-
-		return ControllerResult.of(new GetAllDifficultiesResponseDTO(difficulties));
 	}
 
 }
