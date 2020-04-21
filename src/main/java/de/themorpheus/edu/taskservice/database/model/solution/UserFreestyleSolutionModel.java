@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetAllUserFreestyleSolutionsResponseDTOModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,5 +30,9 @@ public class UserFreestyleSolutionModel {
 
 	@Column(columnDefinition = "BINARY(16)", nullable = false)
 	private UUID userId;
+
+	public GetAllUserFreestyleSolutionsResponseDTOModel toGetAllResponseDTOModel() {
+		return new GetAllUserFreestyleSolutionsResponseDTOModel(this.userId, this.solution);
+	}
 
 }

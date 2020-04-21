@@ -1,5 +1,6 @@
 package de.themorpheus.edu.taskservice.database.repository.solution;
 
+import de.themorpheus.edu.taskservice.database.model.solution.FreestyleSolutionModel;
 import de.themorpheus.edu.taskservice.database.model.solution.UserFreestyleSolutionModel;
 import java.util.List;
 import java.util.UUID;
@@ -12,5 +13,7 @@ public interface UserFreestyleSolutionRepository extends JpaRepository<UserFrees
 	List<UserFreestyleSolutionModel> findAllByUserId(UUID userId);
 
 	void deleteAllByUserId(UUID userId);
+
+	List<UserFreestyleSolutionModel> findAllByFreestyleSolutionId(FreestyleSolutionModel FreestylSolutionId);
 
 }
