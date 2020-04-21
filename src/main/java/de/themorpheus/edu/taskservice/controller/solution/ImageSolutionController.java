@@ -65,8 +65,9 @@ public class ImageSolutionController implements Solution, UserDataHandler {
 		);
 
 		this.messagePublisher.publish(new UserSentImageSolutionDTO(
+				solutionResult.getResult().getTaskId().getTaskId(),
 				solutionResult.getResult().getTaskId().getAuthorId(),
-				UUID.randomUUID(),
+				Constants.UserId.TEST_UUID,
 				dto.getUrl()
 				)
 		);

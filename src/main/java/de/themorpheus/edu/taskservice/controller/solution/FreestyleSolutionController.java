@@ -68,8 +68,9 @@ public class FreestyleSolutionController implements Solution, UserDataHandler {
 		);
 
 		this.messagePublisher.publish(new UserSentFreestyleSolutionDTO(
+				solutionResult.getResult().getTaskId().getTaskId(),
 				solutionResult.getResult().getTaskId().getAuthorId(),
-				UUID.randomUUID(),
+				Constants.UserId.TEST_UUID,
 				dto.getSolution()
 				)
 		);
