@@ -11,12 +11,16 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CreateFreest
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateFreestyleSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CheckFreestyleSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CreateFreestyleSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetAllUserFreestyleSolutionsResponseDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetAllUserFreestyleSolutionsResponseDTOModel;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.UpdateFreestyleSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.pubsub.dto.UserSentFreestyleSolutionDTO;
 import de.themorpheus.edu.taskservice.pubsub.pub.MessagePublisher;
 import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.transaction.Transactional;
@@ -95,6 +99,24 @@ public class FreestyleSolutionController implements Solution, UserDataHandler {
 				freestyleSolution.getSolution()
 				)
 		);
+	}
+
+	public ControllerResult<GetAllUserFreestyleSolutionsResponseDTO> getAllUserFreestyleSolution(int taskId) {
+		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(taskId, NAME_KEY);
+		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
+
+		Optional<FreestyleSolutionModel> optionalFreestyleSolution = this.freestyleSolutionRepository
+				.findBySolutionId(solutionResult.getResult());
+		if (!optionalFreestyleSolution.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		FreestyleSolutionModel freestyleSolution = optionalFreestyleSolution.get();
+		List<GetAllUserFreestyleSolutionsResponseDTOModel> userFreestyleSolutions = new ArrayList<>();
+		this.userFreestyleSolutionRepository.findAllByFreestyleSolutionId(freestyleSolution).forEach(
+				userFreestyleSolution -> userFreestyleSolutions.add(userFreestyleSolution.toGetAllResponseDTOModel()));
+		if (userFreestyleSolutions.isEmpty()) return ControllerResult
+			.of(Error.NOT_FOUND, Constants.Solution.Freestyle.UserSolutions.NAME_KEY);
+
+		return ControllerResult.of(new GetAllUserFreestyleSolutionsResponseDTO(userFreestyleSolutions));
 	}
 
 	@Transactional

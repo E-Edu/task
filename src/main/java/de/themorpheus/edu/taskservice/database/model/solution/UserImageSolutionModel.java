@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetAllUserImageSolutionsResponseDTOModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,4 +31,7 @@ public class UserImageSolutionModel {
 	@Column(columnDefinition = "BINARY(16)", nullable = false)
 	private UUID userId;
 
+	public GetAllUserImageSolutionsResponseDTOModel toGetAllResponseDTOModel() {
+		return new GetAllUserImageSolutionsResponseDTOModel(this.userId, this.url);
+	}
 }

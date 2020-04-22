@@ -1,5 +1,6 @@
 package de.themorpheus.edu.taskservice.database.repository.solution;
 
+import de.themorpheus.edu.taskservice.database.model.solution.ImageSolutionModel;
 import de.themorpheus.edu.taskservice.database.model.solution.UserImageSolutionModel;
 import java.util.List;
 import java.util.UUID;
@@ -12,5 +13,7 @@ public interface UserImageSolutionRepository extends JpaRepository<UserImageSolu
 	List<UserImageSolutionModel> findAllByUserId(UUID userId);
 
 	void deleteAllByUserId(UUID userId);
+
+	List<UserImageSolutionModel> findAllByImageSolutionId(ImageSolutionModel ImageSolutionId);
 
 }

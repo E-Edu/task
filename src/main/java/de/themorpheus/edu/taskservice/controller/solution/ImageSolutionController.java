@@ -11,12 +11,16 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.CreateImageS
 import de.themorpheus.edu.taskservice.endpoint.dto.request.solution.UpdateImageSolutionRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CheckImageSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.CreateImageSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetAllUserImageSolutionResponseDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.GetAllUserImageSolutionsResponseDTOModel;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.solution.UpdateImageSolutionResponseDTO;
 import de.themorpheus.edu.taskservice.pubsub.dto.UserSentImageSolutionDTO;
 import de.themorpheus.edu.taskservice.pubsub.pub.MessagePublisher;
 import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.transaction.Transactional;
@@ -89,6 +93,24 @@ public class ImageSolutionController implements Solution, UserDataHandler {
 
 		return ControllerResult.of(
 				new UpdateImageSolutionResponseDTO(imageSolution.getImageSolutionId(), imageSolution.getUrl()));
+	}
+
+	public ControllerResult<GetAllUserImageSolutionResponseDTO> getAllUserImageSolution(int taskId) {
+		ControllerResult<SolutionModel> solutionResult = this.solutionController.getGenericSolution(taskId, NAME_KEY);
+		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
+
+		Optional<ImageSolutionModel> optionalImageSolution = this.imageSolutionRepository
+				.findBySolutionId(solutionResult.getResult());
+		if (!optionalImageSolution.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		ImageSolutionModel imageSolution = optionalImageSolution.get();
+		List<GetAllUserImageSolutionsResponseDTOModel> userImageSolutions = new ArrayList<>();
+		this.userImageSolutionRepository.findAllByImageSolutionId(imageSolution).forEach(
+				userImageSolution -> userImageSolutions.add(userImageSolution.toGetAllResponseDTOModel()));
+		if (userImageSolutions.isEmpty()) return ControllerResult
+			.of(Error.NOT_FOUND, Constants.Solution.Image.UserSolutions.NAME_KEY);
+
+		return ControllerResult.of(new GetAllUserImageSolutionResponseDTO(userImageSolutions));
 	}
 
 	@Transactional
