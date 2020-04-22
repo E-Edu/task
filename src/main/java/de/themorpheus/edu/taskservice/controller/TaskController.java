@@ -4,18 +4,22 @@ import de.themorpheus.edu.taskservice.controller.solution.SolutionController;
 import de.themorpheus.edu.taskservice.controller.user.UserDataHandler;
 import de.themorpheus.edu.taskservice.database.model.DifficultyModel;
 import de.themorpheus.edu.taskservice.database.model.LectureModel;
+import de.themorpheus.edu.taskservice.database.model.TaskDoneModel;
 import de.themorpheus.edu.taskservice.database.model.TaskModel;
 import de.themorpheus.edu.taskservice.database.model.TaskTypeModel;
 import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
+import de.themorpheus.edu.taskservice.database.repository.TaskDoneRepository;
 import de.themorpheus.edu.taskservice.database.repository.TaskRepository;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.UpdateTaskRequestDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.GetAllTasksByUserResponseDTO;
+import de.themorpheus.edu.taskservice.endpoint.dto.response.GetMarkTaskAsDoneResponseDTO;
 import de.themorpheus.edu.taskservice.endpoint.dto.response.GetSolutionTypeResponseDTO;
 import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.Validation;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -35,6 +39,7 @@ public class TaskController implements UserDataHandler {
 	@Autowired private LectureController lectureController;
 	@Autowired private TaskTypeController taskTypeController;
 	@Autowired private DifficultyController difficultyController;
+	@Autowired private TaskDoneRepository taskDoneRepository;
 
 	public ControllerResult<TaskModel> createTask(CreateTaskRequestDTO dto) {
 		ControllerResult<LectureModel> lectureResult = this.lectureController.getLectureByNameKey(dto.getLectureNameKey());
@@ -155,6 +160,25 @@ public class TaskController implements UserDataHandler {
 	@Override
 	public Object getUserData(UUID userId) {
 		return this.taskRepository.findAllByAuthorId(userId);
+	}
+
+	public ControllerResult<GetMarkTaskAsDoneResponseDTO> markTaskAsDone(int taskId) {
+		Optional<TaskModel> optionalTask = this.taskRepository.getTaskByTaskId(taskId);
+		if (!optionalTask.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		TaskModel task = optionalTask.get();
+		if (taskDoneRepository.existsByTaskIdAndUserId(task, Constants.UserId.TEST_UUID))
+			return ControllerResult.of(Error.ALREADY_EXISTS, Constants.Task.TaskDone.NAME_KEY);
+
+		TaskDoneModel taskDone = taskDoneRepository.save(new TaskDoneModel(
+				-1,
+				Constants.UserId.TEST_UUID,
+				task,
+				new Date(System.currentTimeMillis())
+			)
+		);
+
+		return ControllerResult.of(new GetMarkTaskAsDoneResponseDTO(taskDone.getTaskDoneId(), taskDone.getDate()));
 	}
 
 }

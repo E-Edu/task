@@ -32,6 +32,12 @@ public class Constants {
 
 		public static final String NAME_KEY = "task";
 
+		public static class TaskDone {
+
+			public static final String NAME_KEY = "task_done";
+
+		}
+
 	}
 
 	public static class TaskType {
