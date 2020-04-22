@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,6 +21,12 @@ import io.micrometer.core.annotation.Timed;
 public class FreestyleSolutionEndpoint {
 
 	@Autowired private FreestyleSolutionController freestyleSolutionController;
+
+	//TODO: Just teacher access
+	@GetMapping("/solution/freestyle/user/{taskId}")
+	public Object getAllUserFreestyleSolutions(@PathVariable @Min(1) int taskId) {
+		return this.freestyleSolutionController.getAllUserFreestyleSolution(taskId).getHttpResponse();
+	}
 
 	@PostMapping("/solution/freestyle")
 	public Object createFreestyleSolution(@RequestBody @Valid CreateFreestyleSolutionRequestDTO dto) {

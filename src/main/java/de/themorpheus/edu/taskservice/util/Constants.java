@@ -54,11 +54,23 @@ public class Constants {
 
 			public static final String NAME_KEY = "freestyle_solution";
 
+			public static class UserSolutions {
+
+				public static final String NAME_KEY = "freestyle_solution_user";
+
+			}
+
 		}
 
 		public static class Image {
 
 			public static final String NAME_KEY = "image_solution";
+
+			public static class UserSolutions {
+
+				public static final String NAME_KEY = "image_solution_user";
+
+			}
 
 		}
 
