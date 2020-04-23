@@ -8,6 +8,7 @@ import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import static de.themorpheus.edu.taskservice.util.Constants.Difficulty.NAME_KEY;
@@ -17,6 +18,8 @@ public class DifficultyController {
 
 	@Autowired private DifficultyRepository difficultyRepository;
 
+	@Autowired private TaskController taskController;
+
 	public ControllerResult<DifficultyModel> createDifficulty(CreateDifficultyRequestDTO dto) {
 		if (this.difficultyRepository.existsByNameKeyIgnoreCase(dto.getNameKey()))
 			return ControllerResult.of(Error.ALREADY_EXISTS, NAME_KEY);
@@ -24,17 +27,18 @@ public class DifficultyController {
 		return ControllerResult.of(this.difficultyRepository.save(new DifficultyModel(-1, dto.getNameKey())));
 	}
 
-	public ControllerResult<DifficultyModel> getDifficultyByDifficultyId(int difficultyId) {
+	public ControllerResult<DifficultyModel> getDifficulty(int difficultyId) {
 		Optional<DifficultyModel> optionalDifficulty = this.difficultyRepository.findById(difficultyId);
 
-		return optionalDifficulty.map(ControllerResult::of).orElseGet(() -> ControllerResult.of(Error.NOT_FOUND, NAME_KEY));
+		return optionalDifficulty.map(ControllerResult::of)
+				.orElseGet(() -> ControllerResult.of(Error.NOT_FOUND, NAME_KEY));
 	}
 
 	public ControllerResult<DifficultyModel> getDifficultyByNameKey(String nameKey) {
-		DifficultyModel difficulty = this.difficultyRepository.getDifficultyByNameKeyIgnoreCase(nameKey);
-		if (difficulty == null) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+		Optional<DifficultyModel> optionalDifficulty = this.difficultyRepository.findByNameKeyIgnoreCase(nameKey);
 
-		return ControllerResult.of(difficulty);
+		return optionalDifficulty.map(ControllerResult::of)
+				.orElseGet(() -> ControllerResult.of(Error.NOT_FOUND, NAME_KEY));
 	}
 
 	public ControllerResult<GetAllDifficultiesResponseDTO> getAllDifficulties() {
@@ -44,11 +48,31 @@ public class DifficultyController {
 		return ControllerResult.of(new GetAllDifficultiesResponseDTO(difficulties));
 	}
 
-	public ControllerResult<DifficultyModel> deleteDifficulty(String nameKey) {
-		if (!this.difficultyRepository.existsByNameKeyIgnoreCase(nameKey))
-			return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+	@Transactional
+	public ControllerResult<DifficultyModel> deleteDifficultyByNameKey(String nameKey) {
+		Optional<DifficultyModel> optionalDifficulty = this.difficultyRepository.findByNameKeyIgnoreCase(nameKey);
+		if (!optionalDifficulty.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		this.difficultyRepository.deleteDifficultyByNameKeyIgnoreCase(nameKey);
+		DifficultyModel difficulty = optionalDifficulty.get();
+		if (this.taskController.existsByDifficultyId(difficulty))
+			return ControllerResult.of(Error.FAILED_DEPENDENCY, NAME_KEY);
+
+		this.difficultyRepository.delete(difficulty);
+
+		return ControllerResult.empty();
+	}
+
+	@Transactional
+	public ControllerResult<DifficultyModel> deleteDifficulty(int difficultyId) {
+		Optional<DifficultyModel> optionalDifficulty = this.difficultyRepository.findById(difficultyId);
+		if (!optionalDifficulty.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		DifficultyModel difficulty = optionalDifficulty.get();
+		if (this.taskController.existsByDifficultyId(difficulty))
+			return ControllerResult.of(Error.FAILED_DEPENDENCY, NAME_KEY);
+
+		this.difficultyRepository.delete(difficulty);
+
 		return ControllerResult.empty();
 	}
 

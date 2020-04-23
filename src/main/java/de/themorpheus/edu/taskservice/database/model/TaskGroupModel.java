@@ -38,8 +38,8 @@ public class TaskGroupModel {
 	public TaskGroupResponseDTO toResponseDTO(int[] taskIds) {
 		return new TaskGroupResponseDTO(this.taskGroupId,
 				this.nameKey,
-				this.lectureId.getLectureId(),
-				this.difficultyId.getDifficultyId(),
+				this.lectureId.toResponseDTO(),
+				this.difficultyId,
 				this.authorId,
 				taskIds
 		);

@@ -14,7 +14,10 @@ public class UpdateTaskGroupRequestDTO {
 	private int taskGroupId;
 
 	private String nameKey;
+
+	private String lectureNameKey;
 	private int lectureId;
+	private String difficultyNameKey;
 	private int difficultyId;
 
 }

@@ -26,7 +26,12 @@ public class TaskTypeEndpoint {
 
 	@GetMapping("/task_type/{nameKey}")
 	public Object getTaskType(@PathVariable @NotBlank String nameKey) {
-		return this.taskTypeController.getTaskType(nameKey).getHttpResponse();
+		try {
+			int taskTypeId = Integer.parseInt(nameKey);
+			return this.taskTypeController.getTaskType(taskTypeId).getHttpResponse();
+		} catch (NumberFormatException ignored) {
+			return this.taskTypeController.getTaskTypeByNameKey(nameKey).getHttpResponse();
+		}
 	}
 
 	@GetMapping("/task_type")
@@ -36,7 +41,12 @@ public class TaskTypeEndpoint {
 
 	@DeleteMapping("/task_type/{nameKey}")
 	public Object deleteTaskType(@PathVariable @NotBlank String nameKey) {
-		return this.taskTypeController.deleteTaskType(nameKey).getHttpResponse();
+		try {
+			int taskTypeId = Integer.parseInt(nameKey);
+			return this.taskTypeController.deleteTaskType(taskTypeId).getHttpResponse();
+		} catch (NumberFormatException ignored) {
+			return this.taskTypeController.deleteTaskTypeByNameKey(nameKey).getHttpResponse();
+		}
 	}
 
 }

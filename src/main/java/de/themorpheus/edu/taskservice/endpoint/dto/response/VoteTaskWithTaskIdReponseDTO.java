@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VoteTaskResponseDTO {
+public class VoteTaskWithTaskIdReponseDTO {
+
+	@Min(1)
+	private int taskId;
 
 	@Min(1)
 	private int votingModelId;

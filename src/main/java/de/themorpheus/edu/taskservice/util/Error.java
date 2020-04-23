@@ -16,8 +16,8 @@ public class Error extends ResponseEntity<Object> {
 	public static final Error INTERNAL_SERVER_ERROR = new Error(HttpStatus.INTERNAL_SERVER_ERROR, i18n.INTERNAL_SERVER_ERROR);
 	public static final Error UNAUTHORIZED = new Error(HttpStatus.UNAUTHORIZED, i18n.UNAUTHORIZED);
 	public static final Error ALREADY_EXISTS = new Error(HttpStatus.CONFLICT, i18n.ALREADY_EXISTS);
-	public static final Error WRONG_ANSWER = new Error(BAD_REQUEST, i18n.WRONG_ANSWER);
 	public static final Error WRONG_TYPE = new Error(HttpStatus.CONFLICT, i18n.WRONG_TYPE);
+	public static final Error FAILED_DEPENDENCY = new Error(HttpStatus.FAILED_DEPENDENCY, i18n.FAILED_DEPENDENCY);
 
 	private final int status;
 	private final String messageKey;

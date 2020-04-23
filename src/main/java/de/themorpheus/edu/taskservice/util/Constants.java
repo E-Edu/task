@@ -52,6 +52,12 @@ public class Constants {
 
 	}
 
+	public static class TaskVoting {
+
+		public static final String NAME_KEY = "task_voting";
+
+	}
+
 	public static class Solution {
 
 		public static final String NAME_KEY = "solution";

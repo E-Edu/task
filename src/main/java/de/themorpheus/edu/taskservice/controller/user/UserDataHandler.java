@@ -1,5 +1,6 @@
 package de.themorpheus.edu.taskservice.controller.user;
 
+import de.themorpheus.edu.taskservice.util.ControllerResult;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 
@@ -20,11 +21,13 @@ public interface UserDataHandler {
 	/**
 	 * Collects all data where the userId is used and returns it in json format.
 	 *
+	 * <p><b>Return an Error if there is nothing found!</b></p>
+	 *
 	 * @param userId the userId after what the data is collected
 	 *
 	 * @return a String of collected data in json format
 	 */
-	Object getUserData(UUID userId);
+	ControllerResult<Object> getUserData(UUID userId);
 
 	/**
 	 * Registers the class implementing <i>UserHandler</i> in <i>UserController</i>.

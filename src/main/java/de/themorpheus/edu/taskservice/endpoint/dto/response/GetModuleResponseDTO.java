@@ -1,4 +1,4 @@
-package de.themorpheus.edu.taskservice.endpoint.dto.request.solution;
+package de.themorpheus.edu.taskservice.endpoint.dto.response;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -9,12 +9,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateFreestyleSolutionRequestDTO {
+public class GetModuleResponseDTO {
 
 	@Min(1)
-	private int taskId;
+	private int moduleId;
 
 	@NotBlank
-	private String solution;
+	private String nameKey;
+	@Min(1)
+	private int subjectId;
 
 }

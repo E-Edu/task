@@ -26,7 +26,12 @@ public class DifficultyEndpoint {
 
 	@GetMapping("/difficulty/{nameKey}")
 	public Object getDifficulty(@PathVariable @NotBlank String nameKey) {
-		return this.difficultyController.getDifficultyByNameKey(nameKey).getHttpResponse();
+		try {
+			int difficultyId = Integer.parseInt(nameKey);
+			return this.difficultyController.getDifficulty(difficultyId).getHttpResponse();
+		} catch (NumberFormatException ignored) {
+			return this.difficultyController.getDifficultyByNameKey(nameKey).getHttpResponse();
+		}
 	}
 
 	@GetMapping("/difficulty")
@@ -36,7 +41,12 @@ public class DifficultyEndpoint {
 
 	@DeleteMapping("/difficulty/{nameKey}")
 	public Object deleteDifficulty(@PathVariable @NotBlank String nameKey) {
-		return this.difficultyController.deleteDifficulty(nameKey).getHttpResponse();
+		try {
+			int difficultyId = Integer.parseInt(nameKey);
+			return this.difficultyController.deleteDifficulty(difficultyId).getHttpResponse();
+		} catch (NumberFormatException ignored) {
+			return this.difficultyController.deleteDifficultyByNameKey(nameKey).getHttpResponse();
+		}
 	}
 
 }

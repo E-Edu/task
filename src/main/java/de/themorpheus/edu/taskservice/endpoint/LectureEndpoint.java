@@ -26,7 +26,12 @@ public class LectureEndpoint {
 
 	@GetMapping("/lecture/{nameKey}")
 	public Object getLecture(@PathVariable @NotBlank String nameKey) {
-		return this.lectureController.getLectureByNameKey(nameKey).getHttpResponse();
+		try {
+			int lectureId = Integer.parseInt(nameKey);
+			return this.lectureController.getLecture(lectureId).getHttpResponse();
+		} catch (NumberFormatException ignored) {
+			return this.lectureController.getLectureByNameKey(nameKey).getHttpResponse();
+		}
 	}
 
 	@GetMapping("/lecture")
@@ -36,12 +41,22 @@ public class LectureEndpoint {
 
 	@GetMapping("/module/{moduleNameKey}/lecture")
 	public Object getLecturesFromModule(@PathVariable @NotBlank String moduleNameKey) {
-		return this.lectureController.getAllLecturesFromModule(moduleNameKey).getHttpResponse();
+		try {
+			int moduleId = Integer.parseInt(moduleNameKey);
+			return this.lectureController.getAllLecturesByModuleId(moduleId).getHttpResponse();
+		} catch (NumberFormatException ignored) {
+			return this.lectureController.getAllLecturesByModuleNameKey(moduleNameKey).getHttpResponse();
+		}
 	}
 
 	@DeleteMapping("/lecture/{nameKey}")
 	public Object deleteLecture(@PathVariable @NotBlank String nameKey) {
-		return this.lectureController.deleteLecture(nameKey).getHttpResponse();
+		try {
+			int lectureId = Integer.parseInt(nameKey);
+			return this.lectureController.deleteLecture(lectureId).getHttpResponse();
+		} catch (NumberFormatException ignored) {
+			return this.lectureController.deleteLectureByNameKey(nameKey).getHttpResponse();
+		}
 	}
 
 }

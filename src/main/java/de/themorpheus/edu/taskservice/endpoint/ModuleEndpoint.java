@@ -26,7 +26,12 @@ public class ModuleEndpoint {
 
 	@GetMapping("/module/{nameKey}")
 	public Object getModule(@PathVariable @NotBlank String nameKey) {
-		return this.moduleController.getModuleByNameKey(nameKey).getHttpResponse();
+		try {
+			int moduleId = Integer.parseInt(nameKey);
+			return this.moduleController.getModule(moduleId).getHttpResponse();
+		} catch (NumberFormatException ignored) {
+			return this.moduleController.getModuleByNameKey(nameKey).getHttpResponse();
+		}
 	}
 
 	@GetMapping("/module")
@@ -36,12 +41,22 @@ public class ModuleEndpoint {
 
 	@GetMapping("/subject/{subjectNameKey}/module")
 	public Object getModulesFromSubject(@PathVariable @NotBlank String subjectNameKey) {
-		return this.moduleController.getAllModulesFromSubject(subjectNameKey).getHttpResponse();
+		try {
+			int subjectId = Integer.parseInt(subjectNameKey);
+			return this.moduleController.getAllModulesSubjectId(subjectId).getHttpResponse();
+		} catch (NumberFormatException ignored) {
+			return this.moduleController.getAllModulesBySubjectNameKey(subjectNameKey).getHttpResponse();
+		}
 	}
 
 	@DeleteMapping("/module/{nameKey}")
 	public Object deleteModule(@PathVariable @NotBlank String nameKey) {
-		return this.moduleController.deleteModule(nameKey).getHttpResponse();
+		try {
+			int moduleId = Integer.parseInt(nameKey);
+			return this.moduleController.deleteModule(moduleId).getHttpResponse();
+		} catch (NumberFormatException ignored) {
+			return this.moduleController.deleteModuleByNameKey(nameKey).getHttpResponse();
+		}
 	}
 
 }

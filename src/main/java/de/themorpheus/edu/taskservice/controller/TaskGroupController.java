@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import static de.themorpheus.edu.taskservice.util.Constants.TaskGroup.NAME_KEY;
@@ -36,15 +37,22 @@ public class TaskGroupController implements UserDataHandler {
 	@Autowired private DifficultyController difficultyController;
 
 	public ControllerResult<TaskGroupResponseDTO> createTaskGroup(CreateTaskGroupRequestDTO dto) {
-		ControllerResult<LectureModel> lectureResult = this.lectureController.getLectureByLectureId(dto.getLectureId());
-		if (lectureResult.isResultNotPresent()) return ControllerResult.ret(lectureResult);
+		ControllerResult<LectureModel> lectureResult;
+		if (Validation.greaterZero(dto.getLectureId()))
+			lectureResult = this.lectureController.getLectureRaw(dto.getLectureId());
+		else if (Validation.validateNotNullOrEmpty(dto.getLectureNameKey()))
+			lectureResult = this.lectureController.getLectureByNameKeyRaw(dto.getLectureNameKey());
+		else return ControllerResult.of(Error.MISSING_PARAM, Constants.Lecture.NAME_KEY);
 
-		ControllerResult<DifficultyModel> difficultyResult = this.difficultyController
-				.getDifficultyByDifficultyId(dto.getDifficultyId());
-		if (difficultyResult.isResultNotPresent()) return ControllerResult.ret(difficultyResult);
+		ControllerResult<DifficultyModel> difficultyResult;
+		if (Validation.greaterZero(dto.getDifficultyId()))
+			difficultyResult = this.difficultyController.getDifficulty(dto.getDifficultyId());
+		else if (Validation.validateNotNullOrEmpty(dto.getDifficultyNameKey()))
+			difficultyResult = this.difficultyController.getDifficultyByNameKey(dto.getDifficultyNameKey());
+		else return ControllerResult.of(Error.MISSING_PARAM, Constants.Difficulty.NAME_KEY);
 
 		List<ControllerResult<TaskModel>> taskResults = new ArrayList<>();
-		for (int taskId : dto.getTaskIds()) taskResults.add(this.taskController.getTaskByTaskId(taskId));
+		for (int taskId : dto.getTaskIds()) taskResults.add(this.taskController.getTaskRaw(taskId));
 		taskResults.removeIf(ControllerResult::isResultNotPresent);
 		if (taskResults.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, Constants.Task.NAME_KEY);
 
@@ -76,19 +84,26 @@ public class TaskGroupController implements UserDataHandler {
 		Optional<TaskGroupModel> optionalTaskGroup = this.taskGroupRepository.findById(dto.getTaskGroupId());
 		if (!optionalTaskGroup.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		TaskGroupModel taskGroup = optionalTaskGroup.get();
-		ControllerResult<LectureModel> lectureResult = this.lectureController
-				.getLectureByLectureId(dto.getLectureId());
-		ControllerResult<DifficultyModel> difficultyResult = this.difficultyController
-				.getDifficultyByDifficultyId(dto.getDifficultyId());
+		ControllerResult<LectureModel> lectureResult;
+		if (Validation.greaterZero(dto.getLectureId()))
+			lectureResult = this.lectureController.getLectureRaw(dto.getLectureId());
+		else if (Validation.validateNotNullOrEmpty(dto.getLectureNameKey()))
+			lectureResult = this.lectureController.getLectureByNameKeyRaw(dto.getLectureNameKey());
+		else lectureResult = ControllerResult.of(Error.MISSING_PARAM, Constants.Lecture.NAME_KEY);
 
+		ControllerResult<DifficultyModel> difficultyResult;
+		if (Validation.greaterZero(dto.getDifficultyId()))
+			difficultyResult = this.difficultyController.getDifficulty(dto.getDifficultyId());
+		else if (Validation.validateNotNullOrEmpty(dto.getDifficultyNameKey()))
+			difficultyResult = this.difficultyController.getDifficultyByNameKey(dto.getDifficultyNameKey());
+		else difficultyResult = ControllerResult.of(Error.MISSING_PARAM, Constants.Difficulty.NAME_KEY);
+
+		TaskGroupModel taskGroup = optionalTaskGroup.get();
 		if (Validation.validateNotNullOrEmpty(dto.getNameKey())) taskGroup.setNameKey(dto.getNameKey());
 		if (lectureResult.isResultPresent()) taskGroup.setLectureId(lectureResult.getResult());
 		if (difficultyResult.isResultPresent()) taskGroup.setDifficultyId(difficultyResult.getResult());
 
-		taskGroup = this.taskGroupRepository.save(taskGroup);
-
-		return ControllerResult.of(this.getTaskGroupResponseDTO(taskGroup));
+		return ControllerResult.of(this.getTaskGroupResponseDTO(this.taskGroupRepository.save(taskGroup)));
 	}
 
 	public ControllerResult<TaskGroupResponseDTO> getTaskGroup(int taskGroupId) {
@@ -97,17 +112,6 @@ public class TaskGroupController implements UserDataHandler {
 		return optionalTaskGroup.map(taskGroupModel -> ControllerResult.of(
 				this.getTaskGroupResponseDTO(taskGroupModel)))
 				.orElseGet(() -> ControllerResult.of(Error.NOT_FOUND, NAME_KEY));
-	}
-
-	private TaskGroupResponseDTO getTaskGroupResponseDTO(TaskGroupModel taskGroup) {
-		List<TaskGroupTaskModel> taskGroupTasks = this.taskGroupTaskRepository.findAllByTaskGroupId(taskGroup);
-		if (taskGroupTasks.isEmpty()) return taskGroup.toResponseDTO(new int[0]);
-
-		int[] taskIds = new int[taskGroupTasks.size()];
-		for (int i = 0; i < taskIds.length; i++)
-			taskIds[i] = taskGroupTasks.get(i).getTaskId().getTaskId();
-
-		return taskGroup.toResponseDTO(taskIds);
 	}
 
 	public ControllerResult<GetAllTaskGroupsResponseDTO> getTaskGroupsByUser(UUID userId) {
@@ -121,7 +125,21 @@ public class TaskGroupController implements UserDataHandler {
 	}
 
 	public ControllerResult<GetAllTaskGroupsResponseDTO> getTaskGroupsByLecture(int lectureId) {
-		ControllerResult<LectureModel> lectureResult = this.lectureController.getLectureByLectureId(lectureId);
+		ControllerResult<LectureModel> lectureResult = this.lectureController.getLectureRaw(lectureId);
+		if (lectureResult.isResultNotPresent()) return ControllerResult.ret(lectureResult);
+
+		List<TaskGroupModel> taskGroups = this.taskGroupRepository.findAllByLectureId(lectureResult.getResult());
+		if (taskGroups.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		List<TaskGroupResponseDTO> responseDTOs = new ArrayList<>();
+		taskGroups.forEach(taskGroup -> responseDTOs.add(this.getTaskGroupResponseDTO(taskGroup)));
+
+		return ControllerResult.of(new GetAllTaskGroupsResponseDTO(responseDTOs));
+
+	}
+
+	public ControllerResult<Object> getTaskGroupsByLectureNameKey(String lectureNameKey) {
+		ControllerResult<LectureModel> lectureResult = this.lectureController.getLectureByNameKeyRaw(lectureNameKey);
 		if (lectureResult.isResultNotPresent()) return ControllerResult.ret(lectureResult);
 
 		List<TaskGroupModel> taskGroups = this.taskGroupRepository.findAllByLectureId(lectureResult.getResult());
@@ -133,6 +151,7 @@ public class TaskGroupController implements UserDataHandler {
 		return ControllerResult.of(new GetAllTaskGroupsResponseDTO(responseDTOs));
 	}
 
+	@Transactional
 	public ControllerResult<TaskGroupModel> deleteTaskGroup(int taskGroupId) {
 		Optional<TaskGroupModel> optionalTaskGroup = this.taskGroupRepository.findById(taskGroupId);
 		if (!optionalTaskGroup.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
@@ -148,7 +167,7 @@ public class TaskGroupController implements UserDataHandler {
 		Optional<TaskGroupModel> optionalTaskGroup = this.taskGroupRepository.findById(dto.getTaskGroupId());
 		if (!optionalTaskGroup.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		ControllerResult<TaskModel> taskResult = this.taskController.getTaskByTaskId(dto.getTaskId());
+		ControllerResult<TaskModel> taskResult = this.taskController.getTaskRaw(dto.getTaskId());
 		if (taskResult.isResultNotPresent()) return ControllerResult.ret(taskResult);
 
 		if (this.taskGroupTaskRepository.existsByTaskGroupIdAndTaskId(optionalTaskGroup.get(), taskResult.getResult()))
@@ -159,16 +178,28 @@ public class TaskGroupController implements UserDataHandler {
 		return ControllerResult.empty();
 	}
 
+	@Transactional
 	public ControllerResult<TaskGroupModel> removeTaskFromTaskGroup(int taskGroupId, int taskId) {
 		Optional<TaskGroupModel> optionalTaskGroup = this.taskGroupRepository.findById(taskGroupId);
 		if (!optionalTaskGroup.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		ControllerResult<TaskModel> taskResult = this.taskController.getTaskByTaskId(taskId);
+		ControllerResult<TaskModel> taskResult = this.taskController.getTaskRaw(taskId);
 		if (taskResult.isResultNotPresent()) return ControllerResult.ret(taskResult);
 
 		this.taskGroupTaskRepository.deleteByTaskGroupIdAndTaskId(optionalTaskGroup.get(), taskResult.getResult());
 
 		return ControllerResult.empty();
+	}
+
+	private TaskGroupResponseDTO getTaskGroupResponseDTO(TaskGroupModel taskGroup) {
+		List<TaskGroupTaskModel> taskGroupTasks = this.taskGroupTaskRepository.findAllByTaskGroupId(taskGroup);
+		if (taskGroupTasks.isEmpty()) return taskGroup.toResponseDTO(new int[0]);
+
+		int[] taskIds = new int[taskGroupTasks.size()];
+		for (int i = 0; i < taskIds.length; i++)
+			taskIds[i] = taskGroupTasks.get(i).getTaskId().getTaskId();
+
+		return taskGroup.toResponseDTO(taskIds);
 	}
 
 	@Override
@@ -180,8 +211,8 @@ public class TaskGroupController implements UserDataHandler {
 	}
 
 	@Override
-	public Object getUserData(UUID userId) {
-		return this.taskGroupRepository.findAllByAuthorId(userId);
+	public ControllerResult<Object> getUserData(UUID userId) {
+		return ControllerResult.ret(this.getTaskGroupsByUser(userId));
 	}
 
 }

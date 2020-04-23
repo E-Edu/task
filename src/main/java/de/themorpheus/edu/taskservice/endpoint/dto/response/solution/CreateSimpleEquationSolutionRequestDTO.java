@@ -2,6 +2,7 @@ package de.themorpheus.edu.taskservice.endpoint.dto.response.solution;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ public class CreateSimpleEquationSolutionRequestDTO {
 
 	@NotBlank
 	private String result;
-	@NotBlank
+	@Size(min = 1)
 	private String[] steps;
 
 }

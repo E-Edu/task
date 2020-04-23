@@ -6,7 +6,9 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskGroupReques
 import de.themorpheus.edu.taskservice.endpoint.dto.request.UpdateTaskGroupRequestDTO;
 import de.themorpheus.edu.taskservice.util.Constants;
 import java.util.UUID;
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import io.micrometer.core.annotation.Timed;
 
@@ -24,12 +27,12 @@ public class TaskGroupEndpoint {
 	@Autowired private TaskGroupController taskGroupController;
 
 	@PostMapping("/task_group")
-	public Object createTaskGroup(CreateTaskGroupRequestDTO dto) {
+	public Object createTaskGroup(@RequestBody @Valid CreateTaskGroupRequestDTO dto) {
 		return this.taskGroupController.createTaskGroup(dto).getHttpResponse();
 	}
 
 	@PutMapping("/task_group")
-	public Object updateTaskGroup(UpdateTaskGroupRequestDTO dto) {
+	public Object updateTaskGroup(@RequestBody @Valid UpdateTaskGroupRequestDTO dto) {
 		return this.taskGroupController.updateTaskGroup(dto).getHttpResponse();
 	}
 
@@ -48,9 +51,14 @@ public class TaskGroupEndpoint {
 		return this.taskGroupController.getTaskGroupsByUser(userId).getHttpResponse();
 	}
 
-	@GetMapping("/lecture/{lectureId}/task_group")
-	public Object getTaskGroupsOfLecture(@PathVariable @Min(1) int lectureId) {
-		return this.taskGroupController.getTaskGroupsByLecture(lectureId).getHttpResponse();
+	@GetMapping("/lecture/{lectureNameKey}/task_group")
+	public Object getTaskGroupsOfLecture(@PathVariable @NotBlank String lectureNameKey) {
+		try {
+			int lectureId = Integer.parseInt(lectureNameKey);
+			return this.taskGroupController.getTaskGroupsByLecture(lectureId).getHttpResponse();
+		} catch (NumberFormatException ignored) {
+			return this.taskGroupController.getTaskGroupsByLectureNameKey(lectureNameKey).getHttpResponse();
+		}
 	}
 
 	@DeleteMapping("/task_group/{taskGroupId}")
@@ -59,7 +67,7 @@ public class TaskGroupEndpoint {
 	}
 
 	@PostMapping("/task_group/task")
-	public Object addTaskToTaskGroup(AddTaskToTaskGroupRequestDTO dto) {
+	public Object addTaskToTaskGroup(@RequestBody @Valid AddTaskToTaskGroupRequestDTO dto) {
 		return this.taskGroupController.addTaskToTaskGroup(dto).getHttpResponse();
 	}
 

@@ -25,8 +25,13 @@ public class SubjectEndpoint {
 	}
 
 	@GetMapping("/subject/{nameKey}")
-	public Object getSubject(@PathVariable @NotBlank String nameKey) {
-		return this.subjectController.getSubjectByNameKey(nameKey).getHttpResponse();
+	public Object getSubjectByNameKey(@PathVariable @NotBlank String nameKey) {
+		try {
+			int subjectId = Integer.parseInt(nameKey);
+			return this.subjectController.getSubject(subjectId).getHttpResponse();
+		} catch (NumberFormatException ignored) {
+			return this.subjectController.getSubjectByNameKey(nameKey).getHttpResponse();
+		}
 	}
 
 	@GetMapping("/subject")
@@ -36,7 +41,12 @@ public class SubjectEndpoint {
 
 	@DeleteMapping("/subject/{nameKey}")
 	public Object deleteSubject(@PathVariable @NotBlank String nameKey) {
-		return this.subjectController.deleteSubject(nameKey).getHttpResponse();
+		try {
+			int subjectId = Integer.parseInt(nameKey);
+			return this.subjectController.deleteSubject(subjectId).getHttpResponse();
+		} catch (NumberFormatException ignored) {
+			return this.subjectController.deleteSubjectByNameKey(nameKey).getHttpResponse();
+		}
 	}
 
 }
