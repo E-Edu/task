@@ -3,6 +3,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 import de.themorpheus.edu.taskservice.controller.DifficultyController;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateDifficultyRequestDTO;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,14 +25,14 @@ public class DifficultyEndpoint {
 		return this.difficultyController.createDifficulty(dto).getHttpResponse();
 	}
 
-	@GetMapping("/difficulty/{nameKey}")
-	public Object getDifficulty(@PathVariable @NotBlank String nameKey) {
-		try {
-			int difficultyId = Integer.parseInt(nameKey);
-			return this.difficultyController.getDifficulty(difficultyId).getHttpResponse();
-		} catch (NumberFormatException ignored) {
-			return this.difficultyController.getDifficultyByNameKey(nameKey).getHttpResponse();
-		}
+	@GetMapping("/difficulty/{difficultyId:[0-9]+}")
+	public Object getDifficulty(@PathVariable @Min(1) int difficultyId) {
+		return this.difficultyController.getDifficulty(difficultyId).getHttpResponse();
+	}
+
+	@GetMapping("/difficulty/{nameKey:[a-zäöüA-ZÄÖÜ0-9_]*[a-zA-Z][a-zäöüA-ZÄÖÜ0-9_]*}")
+	public Object getDifficultyByNameKey(@PathVariable @NotBlank String nameKey) {
+		return this.difficultyController.getDifficultyByNameKey(nameKey).getHttpResponse();
 	}
 
 	@GetMapping("/difficulty")
@@ -39,14 +40,14 @@ public class DifficultyEndpoint {
 		return this.difficultyController.getAllDifficulties().getHttpResponse();
 	}
 
-	@DeleteMapping("/difficulty/{nameKey}")
-	public Object deleteDifficulty(@PathVariable @NotBlank String nameKey) {
-		try {
-			int difficultyId = Integer.parseInt(nameKey);
-			return this.difficultyController.deleteDifficulty(difficultyId).getHttpResponse();
-		} catch (NumberFormatException ignored) {
-			return this.difficultyController.deleteDifficultyByNameKey(nameKey).getHttpResponse();
-		}
+	@DeleteMapping("/difficulty/{difficultyId:[0-9]+}")
+	public Object deleteDifficulty(@PathVariable @Min(1) int difficultyId) {
+		return this.difficultyController.deleteDifficulty(difficultyId).getHttpResponse();
+	}
+
+	@DeleteMapping("/difficulty/{nameKey:[a-zäöüA-ZÄÖÜ0-9_]*[a-zA-Z][a-zäöüA-ZÄÖÜ0-9_]*}")
+	public Object deleteDifficultyByNameKey(@PathVariable @NotBlank String nameKey) {
+		return this.difficultyController.deleteDifficultyByNameKey(nameKey).getHttpResponse();
 	}
 
 }

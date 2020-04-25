@@ -3,6 +3,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 import de.themorpheus.edu.taskservice.controller.TaskTypeController;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskTypeRequestDTO;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,14 +25,14 @@ public class TaskTypeEndpoint {
 		return this.taskTypeController.createTaskType(dto).getHttpResponse();
 	}
 
-	@GetMapping("/task_type/{nameKey}")
-	public Object getTaskType(@PathVariable @NotBlank String nameKey) {
-		try {
-			int taskTypeId = Integer.parseInt(nameKey);
-			return this.taskTypeController.getTaskType(taskTypeId).getHttpResponse();
-		} catch (NumberFormatException ignored) {
-			return this.taskTypeController.getTaskTypeByNameKey(nameKey).getHttpResponse();
-		}
+	@GetMapping("/task_type/{taskTypeId:[0-9]+}}")
+	public Object getTaskType(@PathVariable @Min(1) int taskTypeId) {
+		return this.taskTypeController.getTaskType(taskTypeId).getHttpResponse();
+	}
+
+	@GetMapping("/task_type/{nameKey:[a-zäöüA-ZÄÖÜ0-9_]*[a-zA-Z][a-zäöüA-ZÄÖÜ0-9_]*}")
+	public Object getTaskTypeByNameKey(@PathVariable @NotBlank String nameKey) {
+		return this.taskTypeController.getTaskTypeByNameKey(nameKey).getHttpResponse();
 	}
 
 	@GetMapping("/task_type")
@@ -39,14 +40,14 @@ public class TaskTypeEndpoint {
 		return this.taskTypeController.getAllTaskTypes().getHttpResponse();
 	}
 
-	@DeleteMapping("/task_type/{nameKey}")
-	public Object deleteTaskType(@PathVariable @NotBlank String nameKey) {
-		try {
-			int taskTypeId = Integer.parseInt(nameKey);
-			return this.taskTypeController.deleteTaskType(taskTypeId).getHttpResponse();
-		} catch (NumberFormatException ignored) {
-			return this.taskTypeController.deleteTaskTypeByNameKey(nameKey).getHttpResponse();
-		}
+	@DeleteMapping("/task_type/{taskTypeId:[0-9]+}}")
+	public Object deleteTaskType(@PathVariable @Min(1) int taskTypeId) {
+		return this.taskTypeController.deleteTaskType(taskTypeId).getHttpResponse();
+	}
+
+	@DeleteMapping("/task_type/{nameKey:[a-zäöüA-ZÄÖÜ0-9_]*[a-zA-Z][a-zäöüA-ZÄÖÜ0-9_]*}")
+	public Object deleteTaskTypeByNameKey(@PathVariable @NotBlank String nameKey) {
+		return this.taskTypeController.deleteTaskTypeByNameKey(nameKey).getHttpResponse();
 	}
 
 }

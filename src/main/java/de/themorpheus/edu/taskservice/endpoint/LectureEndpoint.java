@@ -3,6 +3,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 import de.themorpheus.edu.taskservice.controller.LectureController;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateLectureRequestDTO;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,14 +25,14 @@ public class LectureEndpoint {
 		return this.lectureController.createLecture(dto).getHttpResponse();
 	}
 
-	@GetMapping("/lecture/{nameKey}")
-	public Object getLecture(@PathVariable @NotBlank String nameKey) {
-		try {
-			int lectureId = Integer.parseInt(nameKey);
-			return this.lectureController.getLecture(lectureId).getHttpResponse();
-		} catch (NumberFormatException ignored) {
-			return this.lectureController.getLectureByNameKey(nameKey).getHttpResponse();
-		}
+	@GetMapping("/lecture/{lectureId:[0-9]+}")
+	public Object getLecture(@PathVariable @Min(1) int lectureId) {
+		return this.lectureController.getLecture(lectureId).getHttpResponse();
+	}
+
+	@GetMapping("/lecture/{nameKey:[a-zäöüA-ZÄÖÜ0-9_]*[a-zA-Z][a-zäöüA-ZÄÖÜ0-9_]*}")
+	public Object getLectureByNameKey(@PathVariable @NotBlank String nameKey) {
+		return this.lectureController.getLectureByNameKey(nameKey).getHttpResponse();
 	}
 
 	@GetMapping("/lecture")
@@ -39,24 +40,24 @@ public class LectureEndpoint {
 		return this.lectureController.getAllLectures().getHttpResponse();
 	}
 
-	@GetMapping("/module/{moduleNameKey}/lecture")
-	public Object getLecturesFromModule(@PathVariable @NotBlank String moduleNameKey) {
-		try {
-			int moduleId = Integer.parseInt(moduleNameKey);
-			return this.lectureController.getAllLecturesByModuleId(moduleId).getHttpResponse();
-		} catch (NumberFormatException ignored) {
-			return this.lectureController.getAllLecturesByModuleNameKey(moduleNameKey).getHttpResponse();
-		}
+	@GetMapping("/module/{moduleId:[0-9]+}/lecture")
+	public Object getLecturesFromModule(@PathVariable @Min(1) int moduleId) {
+		return this.lectureController.getAllLecturesByModuleId(moduleId).getHttpResponse();
 	}
 
-	@DeleteMapping("/lecture/{nameKey}")
-	public Object deleteLecture(@PathVariable @NotBlank String nameKey) {
-		try {
-			int lectureId = Integer.parseInt(nameKey);
-			return this.lectureController.deleteLecture(lectureId).getHttpResponse();
-		} catch (NumberFormatException ignored) {
-			return this.lectureController.deleteLectureByNameKey(nameKey).getHttpResponse();
-		}
+	@GetMapping("/module/{moduleNameKey:[a-zäöüA-ZÄÖÜ0-9_]*[a-zA-Z][a-zäöüA-ZÄÖÜ0-9_]*}/lecture")
+	public Object getLecturesFromModuleByModuleNameKey(@PathVariable @NotBlank String moduleNameKey) {
+		return this.lectureController.getAllLecturesByModuleNameKey(moduleNameKey).getHttpResponse();
+	}
+
+	@DeleteMapping("/lecture/{lectureId:[0-9]+}")
+	public Object deleteLecture(@PathVariable @Min(1) int lectureId) {
+		return this.lectureController.deleteLecture(lectureId).getHttpResponse();
+	}
+
+	@DeleteMapping("/lecture/{nameKey:[a-zäöüA-ZÄÖÜ0-9_]*[a-zA-Z][a-zäöüA-ZÄÖÜ0-9_]*}")
+	public Object deleteLectureByNameKey(@PathVariable @NotBlank String nameKey) {
+		return this.lectureController.deleteLectureByNameKey(nameKey).getHttpResponse();
 	}
 
 }
