@@ -62,8 +62,8 @@ public class ImageSolutionController implements Solution, UserDataHandler {
 
 		userImageSolutionRepository.save(new UserImageSolutionModel(
 				-1,
-				optionalImageSolution.get(),
 				dto.getUrl(),
+				optionalImageSolution.get(),
 				Constants.UserId.TEST_UUID
 			)
 		);
@@ -143,8 +143,14 @@ public class ImageSolutionController implements Solution, UserDataHandler {
 	}
 
 	@Override
-	public Object getUserData(UUID userId) {
-		return this.userImageSolutionRepository.findAllByUserId(userId);
+	public ControllerResult<Object> getUserData(UUID userId) {
+		List<GetAllUserImageSolutionsResponseDTOModel> responseDTOs = new ArrayList<>();
+		this.userImageSolutionRepository.findAllByUserId(userId)
+				.forEach(userFreestyleSolution -> responseDTOs.add(userFreestyleSolution.toGetAllResponseDTOModel()));
+		if (responseDTOs.isEmpty())
+			return ControllerResult.of(Error.NOT_FOUND, Constants.Solution.Image.UserSolutions.NAME_KEY);
+
+		return ControllerResult.of(responseDTOs);
 	}
 
 }

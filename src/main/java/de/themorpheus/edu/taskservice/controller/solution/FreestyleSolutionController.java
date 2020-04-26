@@ -51,7 +51,7 @@ public class FreestyleSolutionController implements Solution, UserDataHandler {
 		return ControllerResult.of(new CreateFreestyleSolutionResponseDTO(
 				freestyleSolution.getFreestyleSolutionId(),
 				freestyleSolution.getSolution()
-				)
+			)
 		);
 	}
 
@@ -65,8 +65,8 @@ public class FreestyleSolutionController implements Solution, UserDataHandler {
 
 		userFreestyleSolutionRepository.save(new UserFreestyleSolutionModel(
 				-1,
-				optionalFreestyleSolution.get(),
 				dto.getSolution(),
+				optionalFreestyleSolution.get(),
 				Constants.UserId.TEST_UUID
 			)
 		);
@@ -76,7 +76,7 @@ public class FreestyleSolutionController implements Solution, UserDataHandler {
 				solutionResult.getResult().getTaskId().getAuthorId(),
 				Constants.UserId.TEST_UUID,
 				dto.getSolution()
-				)
+			)
 		);
 
 		return ControllerResult.of(new CheckFreestyleSolutionResponseDTO(optionalFreestyleSolution.get().getSolution()));
@@ -97,7 +97,7 @@ public class FreestyleSolutionController implements Solution, UserDataHandler {
 		return ControllerResult.of(new UpdateFreestyleSolutionResponseDTO(
 				freestyleSolution.getFreestyleSolutionId(),
 				freestyleSolution.getSolution()
-				)
+			)
 		);
 	}
 
@@ -150,8 +150,14 @@ public class FreestyleSolutionController implements Solution, UserDataHandler {
 	}
 
 	@Override
-	public Object getUserData(UUID userId) {
-		return this.userFreestyleSolutionRepository.findAllByUserId(userId);
+	public ControllerResult<Object> getUserData(UUID userId) {
+		List<GetAllUserFreestyleSolutionsResponseDTOModel> responseDTOs = new ArrayList<>();
+		this.userFreestyleSolutionRepository.findAllByUserId(userId)
+				.forEach(userFreestyleSolution -> responseDTOs.add(userFreestyleSolution.toGetAllResponseDTOModel()));
+		if (responseDTOs.isEmpty())
+			return ControllerResult.of(Error.NOT_FOUND, Constants.Solution.Freestyle.UserSolutions.NAME_KEY);
+
+		return ControllerResult.of(responseDTOs);
 	}
 
 }
