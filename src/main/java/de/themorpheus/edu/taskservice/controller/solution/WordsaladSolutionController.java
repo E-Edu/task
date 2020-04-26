@@ -40,7 +40,7 @@ public class WordsaladSolutionController implements Solution {
 		return ControllerResult.of(new CreateWordsaladSolutionResponseDTO(
 				wordsaladSolution.getWordsaladSolutionId(),
 				wordsaladSolution.getSolution()
-				)
+			)
 		);
 	}
 
@@ -72,7 +72,7 @@ public class WordsaladSolutionController implements Solution {
 		return ControllerResult.of(new UpdateWordsaladSolutionResponseDTO(
 				wordsaladSolution.getWordsaladSolutionId(),
 				wordsaladSolution.getSolution()
-				)
+			)
 		);
 	}
 

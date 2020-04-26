@@ -73,7 +73,7 @@ public class ImageSolutionController implements Solution, UserDataHandler {
 				solutionResult.getResult().getTaskId().getAuthorId(),
 				Constants.UserId.TEST_UUID,
 				dto.getUrl()
-				)
+			)
 		);
 
 		return ControllerResult.of(new CheckImageSolutionResponseDTO(optionalImageSolution.get().getUrl()));

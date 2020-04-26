@@ -17,6 +17,8 @@ public class TaskServiceApplication {
 	public static final boolean PRODUCTIVE = Boolean.parseBoolean(System.getenv("PRODUCTIVE"));
 	public static final boolean SENTRY_ENABLED = Boolean.parseBoolean(System.getenv("SENTRY_ENABLED"));
 	public static final boolean INFLUX_ENABLED = Boolean.parseBoolean(System.getenv("INFLUX_ENABLED"));
+	public static final int MAX_TASK_RESULTS = Integer.parseInt(System.getenv("MAX_TASK_RESULTS"));
+	public static final int MAX_TASK_GROUP_RESULTS = Integer.parseInt(System.getenv("MAX_TASK_GROUP_RESULTS"));
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TaskServiceApplication.class.getSimpleName());
 
