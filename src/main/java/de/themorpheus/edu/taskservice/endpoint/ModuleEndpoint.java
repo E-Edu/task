@@ -3,6 +3,7 @@ package de.themorpheus.edu.taskservice.endpoint;
 import de.themorpheus.edu.taskservice.controller.ModuleController;
 import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateModuleRequestDTO;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,8 +25,13 @@ public class ModuleEndpoint {
 		return this.moduleController.createModule(dto).getHttpResponse();
 	}
 
-	@GetMapping("/module/{nameKey}")
-	public Object getModule(@PathVariable @NotBlank String nameKey) {
+	@GetMapping("/module/{moduleId:[0-9]+}")
+	public Object getModule(@PathVariable @Min(1) int moduleId) {
+		return this.moduleController.getModule(moduleId).getHttpResponse();
+	}
+
+	@GetMapping("/module/{nameKey:[a-zäöüA-ZÄÖÜ0-9_]*[a-zA-Z][a-zäöüA-ZÄÖÜ0-9_]*}")
+	public Object getModuleByNameKey(@PathVariable @NotBlank String nameKey) {
 		return this.moduleController.getModuleByNameKey(nameKey).getHttpResponse();
 	}
 
@@ -34,14 +40,24 @@ public class ModuleEndpoint {
 		return this.moduleController.getAllModules().getHttpResponse();
 	}
 
-	@GetMapping("/subject/{subjectNameKey}/module")
-	public Object getModulesFromSubject(@PathVariable @NotBlank String subjectNameKey) {
-		return this.moduleController.getAllModulesFromSubject(subjectNameKey).getHttpResponse();
+	@GetMapping("/subject/{subjectId:[0-9]+}/module")
+	public Object getModulesFromSubject(@PathVariable @Min(1) int subjectId) {
+		return this.moduleController.getAllModulesSubjectId(subjectId).getHttpResponse();
 	}
 
-	@DeleteMapping("/module/{nameKey}")
-	public Object deleteModule(@PathVariable @NotBlank String nameKey) {
-		return this.moduleController.deleteModule(nameKey).getHttpResponse();
+	@GetMapping("/subject/{subjectNameKey:[a-zäöüA-ZÄÖÜ0-9_]*[a-zA-Z][a-zäöüA-ZÄÖÜ0-9_]*}/module")
+	public Object getModulesFromSubjectBySubjectNameKey(@PathVariable @NotBlank String subjectNameKey) {
+		return this.moduleController.getAllModulesBySubjectNameKey(subjectNameKey).getHttpResponse();
+	}
+
+	@DeleteMapping("/module/{moduleId:[0-9]+}")
+	public Object deleteModule(@PathVariable @Min(1) int moduleId) {
+		return this.moduleController.deleteModule(moduleId).getHttpResponse();
+	}
+
+	@DeleteMapping("/module/{nameKey:[a-zäöüA-ZÄÖÜ0-9_]*[a-zA-Z][a-zäöüA-ZÄÖÜ0-9_]*}")
+	public Object deleteModuleByNameKey(@PathVariable @NotBlank String nameKey) {
+		return this.moduleController.deleteModuleByNameKey(nameKey).getHttpResponse();
 	}
 
 }

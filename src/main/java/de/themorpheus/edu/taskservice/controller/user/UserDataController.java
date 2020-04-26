@@ -16,14 +16,18 @@ public class UserDataController {
 
 	public ControllerResult<GetUserDataResponseDTO> getUserData(UUID userId) {
 		List<GetUserDataResponseDTOModel> responseDTOs = new ArrayList<>();
-		for (UserDataHandler userHandler : USER_HANDLERS)
-			responseDTOs.add(new GetUserDataResponseDTOModel(this.getNameKey(userHandler), userHandler.getUserData(userId)));
+		for (UserDataHandler userHandler : USER_HANDLERS) {
+			ControllerResult<Object> result = userHandler.getUserData(userId);
+			if (result.isResultPresent() && result.getResult() != null)
+				responseDTOs.add(new GetUserDataResponseDTOModel(this.getNameKey(userHandler), result.getHttpResponse()));
+		}
 
 		return ControllerResult.of(new GetUserDataResponseDTO(userId, responseDTOs));
 	}
 
 	public ControllerResult deleteUserData(UUID userId) {
 		USER_HANDLERS.forEach(userHandler -> userHandler.deleteOrMaskUserData(userId));
+
 		return ControllerResult.empty();
 	}
 
