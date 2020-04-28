@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class PubSubService {
 
 	@Value("${spring.redis.enabled}")
-	public static boolean ENABLED;
+	public static boolean enabled;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PubSubService.class.getSimpleName());
 

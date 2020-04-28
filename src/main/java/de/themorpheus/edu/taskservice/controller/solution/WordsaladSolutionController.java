@@ -15,6 +15,7 @@ import de.themorpheus.edu.taskservice.util.Error;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,8 @@ import static de.themorpheus.edu.taskservice.util.Constants.Solution.Wordsalad.N
 
 @Component
 public class WordsaladSolutionController implements Solution {
+
+	private static final Random RANDOM = new Random();
 
 	@Autowired private WordsaladSolutionRepository wordsaladSolutionRepository;
 
@@ -102,10 +105,8 @@ public class WordsaladSolutionController implements Solution {
 		for (char c : optionalWordsaladSolution.get().getSolution().toCharArray()) characters.add(c);
 
 		StringBuilder output = new StringBuilder(optionalWordsaladSolution.get().getSolution().length());
-		while (characters.size() != 0) {
-			int randPicker = (int) (Math.random() * characters.size());
-			output.append(characters.remove(randPicker));
-		}
+		while (characters.size() != 0)
+			output.append(characters.remove(RANDOM.nextInt(characters.size())));
 
 		return ControllerResult.of(new GetWordsaladSolutionResponseDTO(output.toString()));
 	}

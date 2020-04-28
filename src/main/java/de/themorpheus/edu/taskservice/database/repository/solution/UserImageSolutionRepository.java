@@ -14,6 +14,6 @@ public interface UserImageSolutionRepository extends JpaRepository<UserImageSolu
 
 	void deleteAllByUserId(UUID userId);
 
-	List<UserImageSolutionModel> findAllByImageSolutionId(ImageSolutionModel ImageSolutionId);
+	List<UserImageSolutionModel> findAllByImageSolutionId(ImageSolutionModel imageSolutionId);
 
 }

@@ -35,7 +35,7 @@ public class MultipleChoiceSolutionEndpoint {
 		return this.multipleChoiceSolutionController.getMultipleChoiceSolution(taskId).getHttpResponse();
 	}
 
-	@GetMapping("/solution/multiple_choice/{task_id}/all")//TODO: Just for teachers
+	@GetMapping("/solution/multiple_choice/{task_id}/all")
 	public Object getAllMultipleChoiceSolutions(@PathVariable @Min(1) int taskId) {
 		return this.multipleChoiceSolutionController.getAllMultipleChoiceSolution(taskId).getHttpResponse();
 	}

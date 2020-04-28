@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import static de.themorpheus.edu.taskservice.util.Constants.TaskVoting.NAME_KEY;
+import static de.themorpheus.edu.taskservice.util.Constants.Task.Voting.NAME_KEY;
 
 @Component
 public class VotingController implements UserDataHandler {

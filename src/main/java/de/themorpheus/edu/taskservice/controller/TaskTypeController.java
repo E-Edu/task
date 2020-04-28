@@ -6,6 +6,7 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateTaskTypeRequest
 import de.themorpheus.edu.taskservice.endpoint.dto.response.GetAllTaskTypesResponseDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
+import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -73,6 +74,13 @@ public class TaskTypeController {
 		this.taskTypeRepository.delete(taskType);
 
 		return ControllerResult.empty();
+	}
+
+	public ControllerResult<TaskTypeModel> getTaskTypeByIdOrNameKey(int id, String nameKey) {
+		if (Validation.greaterZero(id)) return this.getTaskType(id);
+		if (Validation.validateNotNullOrEmpty(nameKey)) return this.getTaskTypeByNameKey(nameKey);
+
+		return ControllerResult.of(Error.MISSING_PARAM, NAME_KEY);
 	}
 
 }

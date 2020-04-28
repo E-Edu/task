@@ -14,6 +14,6 @@ public interface UserFreestyleSolutionRepository extends JpaRepository<UserFrees
 
 	void deleteAllByUserId(UUID userId);
 
-	List<UserFreestyleSolutionModel> findAllByFreestyleSolutionId(FreestyleSolutionModel FreestylSolutionId);
+	List<UserFreestyleSolutionModel> findAllByFreestyleSolutionId(FreestyleSolutionModel freestyleSolutionId);
 
 }

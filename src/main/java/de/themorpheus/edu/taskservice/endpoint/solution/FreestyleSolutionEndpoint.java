@@ -22,7 +22,6 @@ public class FreestyleSolutionEndpoint {
 
 	@Autowired private FreestyleSolutionController freestyleSolutionController;
 
-	//TODO: Just teacher access
 	@GetMapping("/solution/freestyle/user/{taskId}")
 	public Object getAllUserFreestyleSolutions(@PathVariable @Min(1) int taskId) {
 		return this.freestyleSolutionController.getAllUserFreestyleSolution(taskId).getHttpResponse();

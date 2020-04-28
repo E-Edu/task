@@ -139,4 +139,11 @@ public class LectureController {
 		return this.lectureRepository.existsByModuleId(module);
 	}
 
+	public ControllerResult<LectureModel> getLectureByIdOrNameKey(int id, String nameKey) {
+		if (Validation.greaterZero(id)) return this.getLectureRaw(id);
+		if (Validation.validateNotNullOrEmpty(nameKey)) return this.getLectureByNameKeyRaw(nameKey);
+
+		return ControllerResult.of(Error.MISSING_PARAM, NAME_KEY);
+	}
+
 }

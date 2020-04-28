@@ -35,7 +35,7 @@ public class TopicConnectionSolutionEndpoint {
 		return this.topicConnectionSolutionController.getTopicConnectionSolution(taskId).getHttpResponse();
 	}
 
-	@GetMapping("/solution/topic_connection/{taskId}/all") //TODO: Just teacher have permission
+	@GetMapping("/solution/topic_connection/{taskId}/all")
 	public Object getAllTopicConnectionSolutions(@PathVariable @Min(1) int taskId) {
 		return this.topicConnectionSolutionController.getAllTopicConnectionSolutions(taskId).getHttpResponse();
 	}

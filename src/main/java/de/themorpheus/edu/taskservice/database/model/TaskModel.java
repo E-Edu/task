@@ -1,6 +1,8 @@
 package de.themorpheus.edu.taskservice.database.model;
 
 import de.themorpheus.edu.taskservice.endpoint.dto.response.TaskResponseDTO;
+import de.themorpheus.edu.taskservice.util.ControllerResult;
+import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,6 +48,54 @@ public class TaskModel {
 	@ManyToOne
 	private DifficultyModel difficultyId;
 
+	public TaskModel updateTask(String task) {
+		if (Validation.validateNotNullOrEmpty(task) && !task.equals(this.task)) this.task = task;
+
+		return this;
+	}
+
+	public TaskModel updateDescription(String description) {
+		if (Validation.validateNotNullOrEmpty(description) && !description.equals(this.description))
+			this.description = description;
+
+		return this;
+	}
+
+	public TaskModel updateNecessaryPoints(int necessaryPoints) {
+		if (Validation.greaterOne(necessaryPoints) && necessaryPoints != this.necessaryPoints)
+			this.necessaryPoints = necessaryPoints;
+
+		return this;
+	}
+
+	public TaskModel updateLanguage(String language) {
+		if (Validation.validateNotNullOrEmpty(language) && !language.equals(this.language))
+			this.language = language;
+
+		return this;
+	}
+
+	public TaskModel updateLecture(ControllerResult<LectureModel> lectureResult) {
+		if (lectureResult.isResultPresent() && lectureResult.getResult().equals(this.lectureId))
+			this.lectureId = lectureResult.getResult();
+
+		return this;
+	}
+
+	public TaskModel updateTaskType(ControllerResult<TaskTypeModel> taskTypeResult) {
+		if (taskTypeResult.isResultPresent() && taskTypeResult.getResult().equals(this.taskTypeId))
+			this.taskTypeId = taskTypeResult.getResult();
+
+		return this;
+	}
+
+	public TaskModel updateDifficulty(ControllerResult<DifficultyModel> difficultyResult) {
+		if (difficultyResult.isResultPresent() && difficultyResult.getResult().equals(this.difficultyId))
+			this.difficultyId = difficultyResult.getResult();
+
+		return this;
+	}
+
 	public TaskResponseDTO toResponseDTO() {
 		return new TaskResponseDTO(
 				this.taskId,
@@ -70,7 +120,6 @@ public class TaskModel {
 	 * @return a new {@link TaskModel} instance
 	 */
 	public static TaskModel create(int taskId) {
-		//TODO: ObjectPool
 		TaskModel taskModel = new TaskModel();
 		taskModel.setTaskId(taskId);
 		return taskModel;

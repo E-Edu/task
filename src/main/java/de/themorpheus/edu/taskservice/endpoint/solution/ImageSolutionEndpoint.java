@@ -22,7 +22,6 @@ public class ImageSolutionEndpoint {
 
 	@Autowired private ImageSolutionController imageSolutionController;
 
-	//TODO: Just teacher access
 	@GetMapping("/solution/image/user/{taskId}")
 	public Object getAllUserImageSolutions(@PathVariable @Min(1) int taskId) {
 		return this.imageSolutionController.getAllUserImageSolution(taskId).getHttpResponse();
