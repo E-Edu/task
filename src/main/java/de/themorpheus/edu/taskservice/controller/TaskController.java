@@ -83,6 +83,7 @@ public class TaskController implements UserDataHandler {
 			Constants.UserId.TEST_UUID,
 			dto.getNecessaryPoints(),
 			false,
+			dto.getLanguage(),
 			lectureResult.getResult(),
 			taskTypeResult.getResult(),
 			difficultyResult.getResult()
@@ -123,6 +124,7 @@ public class TaskController implements UserDataHandler {
 		if (Validation.validateNotNullOrEmpty(dto.getTask())) task.setTask(dto.getTask());
 		if (Validation.validateNotNullOrEmpty(dto.getDescription())) task.setDescription(dto.getDescription());
 		if (Validation.greaterZero(dto.getNecessaryPoints())) task.setNecessaryPoints(dto.getNecessaryPoints());
+		if (Validation.validateNotNullOrEmpty(dto.getLanguage())) task.setLanguage(dto.getLanguage());
 
 		return ControllerResult.of(this.taskRepository.save(task).toResponseDTO());
 	}
