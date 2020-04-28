@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import io.micrometer.core.annotation.Timed;
 
@@ -42,23 +43,30 @@ public class TaskGroupEndpoint {
 	}
 
 	@GetMapping("/task_group/own")
-	public Object getOwnTaskGroups() {
-		return this.taskGroupController.getTaskGroupsByUser(Constants.UserId.TEST_UUID).getHttpResponse();
+	public Object getOwnTaskGroups(@RequestParam(required = false, defaultValue = "0") int skip,
+									@RequestParam(required = false, defaultValue = "0") int max) {
+		return this.taskGroupController.getTaskGroupsByUser(Constants.UserId.TEST_UUID, skip, max).getHttpResponse();
 	}
 
 	@GetMapping("/task_group/user/{userId}")
-	public Object getTaskGroupsOfUser(@PathVariable @NotNull UUID userId) {
-		return this.taskGroupController.getTaskGroupsByUser(userId).getHttpResponse();
+	public Object getTaskGroupsOfUser(@PathVariable @NotNull UUID userId,
+									  @RequestParam(required = false, defaultValue = "0") int skip,
+									  @RequestParam(required = false, defaultValue = "0") int max) {
+		return this.taskGroupController.getTaskGroupsByUser(userId, skip, max).getHttpResponse();
 	}
 
-	@GetMapping("/lecture/{lectureNameKey}/task_group")
-	public Object getTaskGroupsOfLecture(@PathVariable @NotBlank String lectureNameKey) {
-		try {
-			int lectureId = Integer.parseInt(lectureNameKey);
-			return this.taskGroupController.getTaskGroupsByLecture(lectureId).getHttpResponse();
-		} catch (NumberFormatException ignored) {
-			return this.taskGroupController.getTaskGroupsByLectureNameKey(lectureNameKey).getHttpResponse();
-		}
+	@GetMapping("/lecture/{lectureId:[0-9]+}/task_group")
+	public Object getTaskGroupsOfLecture(@PathVariable @NotBlank int lectureId,
+										 @RequestParam(required = false, defaultValue = "0") int skip,
+										 @RequestParam(required = false, defaultValue = "0") int max) {
+		return this.taskGroupController.getTaskGroupsByLecture(lectureId, skip, max).getHttpResponse();
+	}
+
+	@GetMapping("/lecture/{lectureNameKey:[a-zäöüA-ZÄÖÜ0-9_]*[a-zA-Z][a-zäöüA-ZÄÖÜ0-9_]*}/task_group")
+	public Object getTaskGroupsOfLectureByLectureNameKey(@PathVariable @NotBlank String lectureNameKey,
+														 @RequestParam(required = false, defaultValue = "0") int skip,
+														 @RequestParam(required = false, defaultValue = "0") int max) {
+		return this.taskGroupController.getTaskGroupsByLectureNameKey(lectureNameKey, skip, max).getHttpResponse();
 	}
 
 	@DeleteMapping("/task_group/{taskGroupId}")

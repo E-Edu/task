@@ -1,5 +1,6 @@
 package de.themorpheus.edu.taskservice.controller;
 
+import de.themorpheus.edu.taskservice.TaskServiceApplication;
 import de.themorpheus.edu.taskservice.controller.solution.SolutionController;
 import de.themorpheus.edu.taskservice.controller.user.UserDataHandler;
 import de.themorpheus.edu.taskservice.database.model.DifficultyModel;
@@ -20,6 +21,7 @@ import de.themorpheus.edu.taskservice.endpoint.dto.response.TaskResponseDTO;
 import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
+import de.themorpheus.edu.taskservice.util.PaginationManager;
 import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +30,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import static de.themorpheus.edu.taskservice.util.Constants.Task.NAME_KEY;
 
@@ -154,8 +157,13 @@ public class TaskController implements UserDataHandler {
 		return ControllerResult.of(tasks.get(RANDOM.nextInt(tasks.size())).toResponseDTO());
 	}
 
-	public ControllerResult<GetAllTasksResponseDTO> getAllTaskByUserId(UUID authorId) {
-		List<TaskModel> tasks = this.taskRepository.findAllByAuthorId(authorId);
+	public ControllerResult<GetAllTasksResponseDTO> getTaskByUserId(UUID authorId, int skip, int max) {
+		List<TaskModel> tasks = this.taskRepository
+				.findAllByAuthorId(authorId, PageRequest.of(
+						Math.max(skip, 0),
+						PaginationManager.checkPositiveToMaxOrGetMax(max, TaskServiceApplication.MAX_TASK_RESULTS)
+					)
+				);
 		if (tasks.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
 		List<TaskResponseDTO> responseDTOs = new ArrayList<>();
@@ -164,12 +172,17 @@ public class TaskController implements UserDataHandler {
 		return ControllerResult.of(new GetAllTasksResponseDTO(responseDTOs));
 	}
 
-	public ControllerResult<GetAllTasksResponseDTO> getTasksByLectureId(int lectureId, boolean showBanned) {
+	public ControllerResult<GetAllTasksResponseDTO> getTasksByLectureId(int lectureId, boolean showBanned, int skip, int max) {
 		ControllerResult<LectureModel> lectureResult = this.lectureController
 				.getLectureRaw(lectureId);
 		if (lectureResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, Constants.Lecture.NAME_KEY);
 
-		List<TaskModel> tasks = this.taskRepository.findAllByLectureId(lectureResult.getResult());
+		List<TaskModel> tasks = this.taskRepository
+				.findAllByLectureId(lectureResult.getResult(), PageRequest.of(
+						Math.max(skip, 0),
+						PaginationManager.checkPositiveToMaxOrGetMax(max, TaskServiceApplication.MAX_TASK_RESULTS)
+					)
+				);
 		tasks.removeIf(task -> userBanRepository.existsByUserId(Constants.UserId.TEST_UUID) && !showBanned);
 		if (tasks.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
@@ -179,12 +192,17 @@ public class TaskController implements UserDataHandler {
 		return ControllerResult.of(new GetAllTasksResponseDTO(responseDTOs));
 	}
 
-	public ControllerResult<GetAllTasksResponseDTO> getTasksByLectureNameKey(String lectureNameKey, boolean showBanned) {
+	public ControllerResult<GetAllTasksResponseDTO> getTasksByLectureNameKey(String lectureNameKey, boolean showBanned, int skip, int max) {
 		ControllerResult<LectureModel> lectureResult = this.lectureController
 			.getLectureByNameKeyRaw(lectureNameKey);
 		if (lectureResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, Constants.Lecture.NAME_KEY);
 
-		List<TaskModel> tasks = this.taskRepository.findAllByLectureId(lectureResult.getResult());
+		List<TaskModel> tasks = this.taskRepository
+				.findAllByLectureId(lectureResult.getResult(), PageRequest.of(
+						Math.max(skip, 0),
+						PaginationManager.checkPositiveToMaxOrGetMax(max, TaskServiceApplication.MAX_TASK_RESULTS)
+					)
+				);
 		tasks.removeIf(task -> userBanRepository.existsByUserId(Constants.UserId.TEST_UUID) && !showBanned);
 		if (tasks.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
@@ -228,11 +246,11 @@ public class TaskController implements UserDataHandler {
 			return ControllerResult.of(Error.ALREADY_EXISTS, Constants.Task.TaskDone.NAME_KEY);
 
 		TaskDoneModel taskDone = taskDoneRepository.save(new TaskDoneModel(
-						-1,
-						Constants.UserId.TEST_UUID,
-						task,
-						new Date(System.currentTimeMillis())
-				)
+				-1,
+				Constants.UserId.TEST_UUID,
+				task,
+				new Date(System.currentTimeMillis())
+			)
 		);
 
 		return ControllerResult.of(new GetMarkTaskAsDoneResponseDTO(taskDone.getTaskDoneId(), taskDone.getDate()));
@@ -261,7 +279,11 @@ public class TaskController implements UserDataHandler {
 
 	@Override
 	public ControllerResult<Object> getUserData(UUID userId) {
-		return ControllerResult.ret(this.getAllTaskByUserId(userId));
+		List<TaskResponseDTO> responseDTOs = new ArrayList<>();
+		this.taskRepository.findAllByAuthorId(userId).stream().map(task -> responseDTOs.add(task.toResponseDTO()));
+		if (responseDTOs.isEmpty()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
+
+		return ControllerResult.of(new GetAllTasksResponseDTO(responseDTOs));
 	}
 
 }

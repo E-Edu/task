@@ -42,7 +42,7 @@ public class TopicConnectionSolutionController implements Solution {
 						solutionResult.getResult(),
 						dto.getPointA(),
 						dto.getPointB()
-						)
+					)
 				);
 
 		return ControllerResult.of(new CreateTopicConnectionSolutionResponseDTO(

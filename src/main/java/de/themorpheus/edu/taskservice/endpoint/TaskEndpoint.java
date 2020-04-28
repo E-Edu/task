@@ -36,15 +36,20 @@ public class TaskEndpoint {
 		return this.taskController.createTask(dto).getHttpResponse();
 	}
 
-	@GetMapping("/lecture/{lectureNameKey}/task")
-	public Object getAllTasksFromLecture(@PathVariable @NotBlank String lectureNameKey, @RequestParam(required = false) boolean showBanned) {
-		try {
-			int lectureId = Integer.parseInt(lectureNameKey);
-			return this.taskController.getTasksByLectureId(lectureId, showBanned).getHttpResponse();
-		} catch (NumberFormatException ignored) {
-			return this.taskController.getTasksByLectureNameKey(lectureNameKey, showBanned).getHttpResponse();
-		}
+	@GetMapping("/lecture/{lectureId:[0-9]+}/task")
+	public Object getAllTasksFromLecture(@PathVariable @Min(1) int lectureId,
+										 @RequestParam(required = false) boolean showBanned,
+										 @RequestParam(required = false, defaultValue = "0") int skip,
+										 @RequestParam(required = false, defaultValue = "0") int max) {
+		return this.taskController.getTasksByLectureId(lectureId, showBanned, skip, max).getHttpResponse();
+	}
 
+	@GetMapping("/lecture/{lectureNameKey:[a-zäöüA-ZÄÖÜ0-9_]*[a-zA-Z][a-zäöüA-ZÄÖÜ0-9_]*}/task")
+	public Object getAllTasksFromLectureByLectureNameKey(@PathVariable @NotBlank String lectureNameKey,
+														 @RequestParam(required = false) boolean showBanned,
+														 @RequestParam(required = false, defaultValue = "0") int skip,
+														 @RequestParam(required = false, defaultValue = "0") int max) {
+		return this.taskController.getTasksByLectureNameKey(lectureNameKey, showBanned, skip, max).getHttpResponse();
 	}
 
 	@PatchMapping("/task/verify/{taskId}")
@@ -83,13 +88,16 @@ public class TaskEndpoint {
 	}
 
 	@GetMapping("/task/user/{userId}")
-	public Object getTaskByUser(@PathVariable @NotNull UUID userId) {
-		return this.taskController.getAllTaskByUserId(userId).getHttpResponse();
+	public Object getTaskByUser(@PathVariable @NotNull UUID userId,
+								@RequestParam(required = false, defaultValue = "0") int skip,
+								@RequestParam(required = false, defaultValue = "0") int max) {
+		return this.taskController.getTaskByUserId(userId, skip, max).getHttpResponse();
 	}
 
 	@GetMapping("/task/own")
-	public Object getOwnTasks() {
-		return this.taskController.getAllTaskByUserId(Constants.UserId.TEST_UUID).getHttpResponse();
+	public Object getOwnTasks(@RequestParam(required = false, defaultValue = "0") int skip,
+							  @RequestParam(required = false, defaultValue = "0") int max) {
+		return this.taskController.getTaskByUserId(Constants.UserId.TEST_UUID, skip, max).getHttpResponse();
 	}
 
 	@PatchMapping("task/done/{taskId}")

@@ -45,7 +45,7 @@ public class MultipleChoiceSolutionController implements Solution {
 				multipleChoiceSolution.getMultipleChoiceSolutionId(),
 				multipleChoiceSolution.getSolution(),
 				multipleChoiceSolution.isCorrect()
-				)
+			)
 		);
 	}
 
@@ -64,7 +64,7 @@ public class MultipleChoiceSolutionController implements Solution {
 			checkMultipleChoiceSolutionsResponseDTOs.add(new CheckMultipleChoiceSolutionsResponseDTOModel(
 						multipleChoiceSolution.getMultipleChoiceSolutionId(),
 						multipleChoiceSolution.isCorrect() == dto.getSolutions()[i]
-					)
+				)
 			);
 		}
 
@@ -97,7 +97,7 @@ public class MultipleChoiceSolutionController implements Solution {
 			getMultipleChoiceSolutionResponseDTOs.add(new GetMultipleChoiceSolutionResponseDTOModel(
 						multipleChoiceSolution.getMultipleChoiceSolutionId(),
 						multipleChoiceSolution.getSolution()
-					)
+				)
 			);
 		}
 		Collections.shuffle(getMultipleChoiceSolutionResponseDTOs);
@@ -119,7 +119,7 @@ public class MultipleChoiceSolutionController implements Solution {
 					multipleChoiceSolution.getMultipleChoiceSolutionId(),
 					multipleChoiceSolution.getSolution(),
 					multipleChoiceSolution.isCorrect()
-					)
+				)
 			);
 		}
 

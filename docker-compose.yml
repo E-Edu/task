@@ -64,3 +64,5 @@ services:
       INFLUX_DB: "task"
       INFLUX_STEP: "1m"
       INFLUX_ENABLED: "true"
+      MAX_TASK_RESULTS: 20
+      MAX_TASK_GROUP_RESULTS: 20
