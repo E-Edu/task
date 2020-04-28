@@ -13,6 +13,8 @@ public class CreateTaskGroupRequestDTO {
 
 	@NotBlank
 	private String nameKey;
+	@NotBlank
+	private String language;
 
 	private String lectureNameKey;
 	private int lectureId;

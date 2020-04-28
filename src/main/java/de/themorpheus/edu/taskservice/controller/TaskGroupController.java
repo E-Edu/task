@@ -59,6 +59,7 @@ public class TaskGroupController implements UserDataHandler {
 		TaskGroupModel taskGroup = this.taskGroupRepository.save(new TaskGroupModel(
 				-1,
 				dto.getNameKey(),
+				dto.getLanguage(),
 				lectureResult.getResult(),
 				difficultyResult.getResult(),
 				Constants.UserId.TEST_UUID
@@ -102,6 +103,7 @@ public class TaskGroupController implements UserDataHandler {
 		if (Validation.validateNotNullOrEmpty(dto.getNameKey())) taskGroup.setNameKey(dto.getNameKey());
 		if (lectureResult.isResultPresent()) taskGroup.setLectureId(lectureResult.getResult());
 		if (difficultyResult.isResultPresent()) taskGroup.setDifficultyId(difficultyResult.getResult());
+		if (Validation.validateNotNullOrEmpty(dto.getLanguage())) taskGroup.setLanguage(dto.getLanguage());
 
 		return ControllerResult.of(this.getTaskGroupResponseDTO(this.taskGroupRepository.save(taskGroup)));
 	}

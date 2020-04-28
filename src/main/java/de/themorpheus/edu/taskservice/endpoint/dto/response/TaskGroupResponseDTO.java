@@ -20,6 +20,9 @@ public class TaskGroupResponseDTO {
 
 	@NotBlank
 	private String nameKey;
+	@NotBlank
+	private String language;
+
 	@NotNull
 	private GetLectureResponseDTO lectureId;
 	@NotNull
