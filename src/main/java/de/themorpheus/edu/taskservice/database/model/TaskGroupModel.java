@@ -27,6 +27,9 @@ public class TaskGroupModel {
 
 	@NotBlank
 	private String nameKey;
+	@NotBlank
+	private String language;
+
 	@ManyToOne
 	private LectureModel lectureId;
 	@ManyToOne
@@ -38,6 +41,7 @@ public class TaskGroupModel {
 	public TaskGroupResponseDTO toResponseDTO(int[] taskIds) {
 		return new TaskGroupResponseDTO(this.taskGroupId,
 				this.nameKey,
+				this.language,
 				this.lectureId.toResponseDTO(),
 				this.difficultyId,
 				this.authorId,
