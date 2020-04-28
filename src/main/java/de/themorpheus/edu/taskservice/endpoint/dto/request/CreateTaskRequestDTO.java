@@ -16,6 +16,8 @@ public class CreateTaskRequestDTO {
 	@Min(1)
 	private int necessaryPoints;
 	private String description;
+	@NotBlank
+	private String language;
 
 	private String lectureNameKey;
 	private int lectureId;

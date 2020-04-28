@@ -36,6 +36,8 @@ public class TaskModel {
 	@Min(0)
 	private int necessaryPoints;
 	private boolean verified;
+	@NotBlank
+	private String language;
 
 	@ManyToOne
 	private LectureModel lectureId;
@@ -49,6 +51,7 @@ public class TaskModel {
 				this.taskId,
 				this.task,
 				this.description,
+				this.language,
 				this.authorId,
 				this.necessaryPoints,
 				this.verified,

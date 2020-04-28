@@ -21,6 +21,8 @@ public class TaskResponseDTO {
 	@NotBlank
 	private String task;
 	private String description;
+	@NotBlank
+	private String language;
 
 	@NotNull
 	private UUID authorId;
