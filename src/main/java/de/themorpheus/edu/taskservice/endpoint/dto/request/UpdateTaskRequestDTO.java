@@ -16,6 +16,7 @@ public class UpdateTaskRequestDTO {
 	private String task;
 	private String description;
 	private int necessaryPoints;
+	private String language;
 
 	private String lectureNameKey;
 	private int lectureId;
