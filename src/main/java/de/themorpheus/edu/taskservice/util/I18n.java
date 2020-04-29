@@ -1,5 +1,9 @@
 package de.themorpheus.edu.taskservice.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class I18n {
 
 	public static final String MISSING_PARAM = "MISSING_PARAM";
@@ -11,8 +15,5 @@ public class I18n {
 	public static final String ALREADY_EXISTS = "ALREADY_EXISTS";
 	public static final String WRONG_TYPE = "WRONG_TYPE";
 	public static final String FAILED_DEPENDENCY = "FAILED_DEPENDENCY";
-
-	private I18n() {
-	}
 
 }

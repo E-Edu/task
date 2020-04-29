@@ -76,21 +76,21 @@ public class TaskModel {
 	}
 
 	public TaskModel updateLecture(ControllerResult<LectureModel> lectureResult) {
-		if (lectureResult.isResultPresent() && lectureResult.getResult().equals(this.lectureId))
+		if (lectureResult.isResultPresent() && !lectureResult.getResult().equals(this.lectureId))
 			this.lectureId = lectureResult.getResult();
 
 		return this;
 	}
 
 	public TaskModel updateTaskType(ControllerResult<TaskTypeModel> taskTypeResult) {
-		if (taskTypeResult.isResultPresent() && taskTypeResult.getResult().equals(this.taskTypeId))
+		if (taskTypeResult.isResultPresent() && !taskTypeResult.getResult().equals(this.taskTypeId))
 			this.taskTypeId = taskTypeResult.getResult();
 
 		return this;
 	}
 
 	public TaskModel updateDifficulty(ControllerResult<DifficultyModel> difficultyResult) {
-		if (difficultyResult.isResultPresent() && difficultyResult.getResult().equals(this.difficultyId))
+		if (difficultyResult.isResultPresent() && !difficultyResult.getResult().equals(this.difficultyId))
 			this.difficultyId = difficultyResult.getResult();
 
 		return this;
@@ -120,6 +120,7 @@ public class TaskModel {
 	 * @return a new {@link TaskModel} instance
 	 */
 	public static TaskModel create(int taskId) {
+		//TODO: ObjectPool
 		TaskModel taskModel = new TaskModel();
 		taskModel.setTaskId(taskId);
 		return taskModel;

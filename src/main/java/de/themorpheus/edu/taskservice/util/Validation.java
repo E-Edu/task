@@ -1,9 +1,10 @@
 package de.themorpheus.edu.taskservice.util;
 
-public class Validation {
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-	private Validation() {
-	}
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class Validation {
 
 	public static boolean validateNotNullOrEmpty(String value) {
 		return value != null && !value.isEmpty();

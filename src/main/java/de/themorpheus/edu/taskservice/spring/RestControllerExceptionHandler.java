@@ -11,11 +11,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class RestControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-	private static final Logger EXCEPTION_LOGGER = LoggerFactory.getLogger(RestControllerExceptionHandler.class.getSimpleName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(RestControllerExceptionHandler.class.getSimpleName());
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> exception(Exception exception) {
-		EXCEPTION_LOGGER.error("Caught unhandled error reaching the end of the endpoint pipeline", exception);
+		LOGGER.error("Caught unhandled error reaching the end of the endpoint pipeline", exception);
 
 		Error error = Error.INTERNAL_SERVER_ERROR;
 		String extra = "An internal server error occurred!";

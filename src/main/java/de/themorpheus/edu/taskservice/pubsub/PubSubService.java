@@ -3,6 +3,7 @@ package de.themorpheus.edu.taskservice.pubsub;
 import de.themorpheus.edu.taskservice.pubsub.dto.PubSubDTO;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,8 +22,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class PubSubService {
 
+	@Getter
 	@Value("${spring.redis.enabled}")
-	public static boolean enabled;
+	private static boolean ENABLED;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PubSubService.class.getSimpleName());
 

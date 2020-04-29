@@ -18,7 +18,6 @@ import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.PaginationManager;
-import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,19 +39,12 @@ public class TaskGroupController implements UserDataHandler {
 	@Autowired private DifficultyController difficultyController;
 
 	public ControllerResult<TaskGroupResponseDTO> createTaskGroup(CreateTaskGroupRequestDTO dto) {
-		ControllerResult<LectureModel> lectureResult;
-		if (Validation.greaterZero(dto.getLectureId()))
-			lectureResult = this.lectureController.getLectureRaw(dto.getLectureId());
-		else if (Validation.validateNotNullOrEmpty(dto.getLectureNameKey()))
-			lectureResult = this.lectureController.getLectureByNameKeyRaw(dto.getLectureNameKey());
-		else return ControllerResult.of(Error.MISSING_PARAM, Constants.Lecture.NAME_KEY);
+		ControllerResult<LectureModel> lectureResult = this.lectureController
+				.getLectureByIdOrNameKey(dto.getLectureId(), dto.getLectureNameKey());
 
-		ControllerResult<DifficultyModel> difficultyResult;
-		if (Validation.greaterZero(dto.getDifficultyId()))
-			difficultyResult = this.difficultyController.getDifficulty(dto.getDifficultyId());
-		else if (Validation.validateNotNullOrEmpty(dto.getDifficultyNameKey()))
-			difficultyResult = this.difficultyController.getDifficultyByNameKey(dto.getDifficultyNameKey());
-		else return ControllerResult.of(Error.MISSING_PARAM, Constants.Difficulty.NAME_KEY);
+		ControllerResult<DifficultyModel> difficultyResult = this.difficultyController
+				.getDifficultyByIdOrNameKey(dto.getDifficultyId(), dto.getDifficultyNameKey());
+		if (difficultyResult.isResultNotPresent()) return ControllerResult.ret(difficultyResult);
 
 		List<ControllerResult<TaskModel>> taskResults = new ArrayList<>();
 		for (int taskId : dto.getTaskIds()) taskResults.add(this.taskController.getTaskRaw(taskId));
@@ -88,25 +80,17 @@ public class TaskGroupController implements UserDataHandler {
 		Optional<TaskGroupModel> optionalTaskGroup = this.taskGroupRepository.findById(dto.getTaskGroupId());
 		if (!optionalTaskGroup.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		ControllerResult<LectureModel> lectureResult;
-		if (Validation.greaterZero(dto.getLectureId()))
-			lectureResult = this.lectureController.getLectureRaw(dto.getLectureId());
-		else if (Validation.validateNotNullOrEmpty(dto.getLectureNameKey()))
-			lectureResult = this.lectureController.getLectureByNameKeyRaw(dto.getLectureNameKey());
-		else lectureResult = ControllerResult.of(Error.MISSING_PARAM, Constants.Lecture.NAME_KEY);
+		ControllerResult<LectureModel> lectureResult = this.lectureController
+				.getLectureByIdOrNameKey(dto.getLectureId(), dto.getLectureNameKey());
 
-		ControllerResult<DifficultyModel> difficultyResult;
-		if (Validation.greaterZero(dto.getDifficultyId()))
-			difficultyResult = this.difficultyController.getDifficulty(dto.getDifficultyId());
-		else if (Validation.validateNotNullOrEmpty(dto.getDifficultyNameKey()))
-			difficultyResult = this.difficultyController.getDifficultyByNameKey(dto.getDifficultyNameKey());
-		else difficultyResult = ControllerResult.of(Error.MISSING_PARAM, Constants.Difficulty.NAME_KEY);
+		ControllerResult<DifficultyModel> difficultyResult = this.difficultyController
+				.getDifficultyByIdOrNameKey(dto.getDifficultyId(), dto.getDifficultyNameKey());
 
 		TaskGroupModel taskGroup = optionalTaskGroup.get();
-		if (Validation.validateNotNullOrEmpty(dto.getNameKey())) taskGroup.setNameKey(dto.getNameKey());
-		if (lectureResult.isResultPresent()) taskGroup.setLectureId(lectureResult.getResult());
-		if (difficultyResult.isResultPresent()) taskGroup.setDifficultyId(difficultyResult.getResult());
-		if (Validation.validateNotNullOrEmpty(dto.getLanguage())) taskGroup.setLanguage(dto.getLanguage());
+		taskGroup.updateNameKey(dto.getNameKey())
+				.updateLanguage(dto.getLanguage())
+				.updateLecture(lectureResult)
+				.updateDifficulty(difficultyResult);
 
 		return ControllerResult.of(this.getTaskGroupResponseDTO(this.taskGroupRepository.save(taskGroup)));
 	}

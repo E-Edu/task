@@ -25,13 +25,13 @@ public interface ObjectSubscriber<T> extends Subscriber<Message> {
 
 	@PostConstruct
 	default void registerSubscription() {
-		if (!PubSubService.enabled) return;
+		if (!PubSubService.isENABLED()) return;
 		this.getMessageListenerContainer().addMessageListener(this, this.getTopics().get(this.getMessageClass()));
 	}
 
 	@Override
 	default void receive(Message message) {
-		Object obj = this.getRedisTemplate().getValueSerializer().deserialize(message.getBody());
+		Object obj = this.getRedisTemplate().getValueSerializer().deserialize(message.getBody()); //TODO: Can we check the type before deserialization?
 		if (!this.getMessageClass().isInstance(obj)) return;
 		T dto = (T) obj;
 		this.receive(dto);
