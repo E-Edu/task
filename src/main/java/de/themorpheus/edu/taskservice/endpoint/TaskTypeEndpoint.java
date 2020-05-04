@@ -25,7 +25,7 @@ public class TaskTypeEndpoint {
 		return this.taskTypeController.createTaskType(dto).getHttpResponse();
 	}
 
-	@GetMapping("/task_type/{taskTypeId:[0-9]+}}")
+	@GetMapping("/task_type/{taskTypeId:[0-9]+}")
 	public Object getTaskType(@PathVariable @Min(1) int taskTypeId) {
 		return this.taskTypeController.getTaskType(taskTypeId).getHttpResponse();
 	}
@@ -40,7 +40,7 @@ public class TaskTypeEndpoint {
 		return this.taskTypeController.getAllTaskTypes().getHttpResponse();
 	}
 
-	@DeleteMapping("/task_type/{taskTypeId:[0-9]+}}")
+	@DeleteMapping("/task_type/{taskTypeId:[0-9]+}")
 	public Object deleteTaskType(@PathVariable @Min(1) int taskTypeId) {
 		return this.taskTypeController.deleteTaskType(taskTypeId).getHttpResponse();
 	}

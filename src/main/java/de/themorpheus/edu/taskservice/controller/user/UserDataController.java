@@ -25,7 +25,7 @@ public class UserDataController {
 		return ControllerResult.of(new GetUserDataResponseDTO(userId, responseDTOs));
 	}
 
-	public ControllerResult deleteUserData(UUID userId) {
+	public ControllerResult<UserDataController> deleteUserData(UUID userId) {
 		USER_HANDLERS.forEach(userHandler -> userHandler.deleteOrMaskUserData(userId));
 
 		return ControllerResult.empty();

@@ -16,6 +16,6 @@ public class GetLectureResponseDTO {
 	@NotBlank
 	private String nameKey;
 	@Min(1)
-	private int moduleNameKey;
+	private int moduleId;
 
 }

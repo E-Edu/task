@@ -93,8 +93,8 @@ public class TopicConnectionSolutionController implements Solution {
 		List<String> points = new ArrayList<>();
 		for (TopicConnectionSolutionModel topicConnectionSolution : topicConnectionSolutions) {
 			if (!points.contains(topicConnectionSolution.getPointA())) points.add(topicConnectionSolution.getPointA());
-			if (topicConnectionSolution.getPointB() != null)
-				if (!points.contains(topicConnectionSolution.getPointB())) points.add(topicConnectionSolution.getPointB());
+			if (topicConnectionSolution.getPointB() != null && !points.contains(topicConnectionSolution.getPointB()))
+				points.add(topicConnectionSolution.getPointB());
 		}
 
 		return ControllerResult.of(new GetTopicConnectionSolutionResponseDTO(points));

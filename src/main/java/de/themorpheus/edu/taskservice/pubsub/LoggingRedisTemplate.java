@@ -1,5 +1,6 @@
 package de.themorpheus.edu.taskservice.pubsub;
 
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisCallback;
@@ -7,11 +8,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import java.util.List;
 
 @SuppressWarnings("checkstyle:illegalCatch")
 public class LoggingRedisTemplate<K, V> extends RedisTemplate<K, V> {
 
+	private static final String EXECUTING_CACHE_OPERATION_ERROR = "Error executing cache operation";
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoggingRedisTemplate.class.getSimpleName());
 
 	@Override
@@ -19,7 +20,7 @@ public class LoggingRedisTemplate<K, V> extends RedisTemplate<K, V> {
 		try {
 			return super.execute(action, exposeConnection, pipeline);
 		} catch (Exception ex) {
-			LOGGER.error("Error executing cache operation", ex);
+			LOGGER.error(EXECUTING_CACHE_OPERATION_ERROR, ex);
 			return null;
 		}
 	}
@@ -30,7 +31,7 @@ public class LoggingRedisTemplate<K, V> extends RedisTemplate<K, V> {
 		try {
 			return super.execute(script, keys, args);
 		} catch (Exception ex) {
-			LOGGER.error("Error executing cache operation", ex);
+			LOGGER.error(EXECUTING_CACHE_OPERATION_ERROR, ex);
 			return null;
 		}
 	}
@@ -41,7 +42,7 @@ public class LoggingRedisTemplate<K, V> extends RedisTemplate<K, V> {
 		try {
 			return super.execute(script, argsSerializer, resultSerializer, keys, args);
 		} catch (Exception ex) {
-			LOGGER.error("Error executing cache operation", ex);
+			LOGGER.error(EXECUTING_CACHE_OPERATION_ERROR, ex);
 			return null;
 		}
 	}
@@ -52,7 +53,7 @@ public class LoggingRedisTemplate<K, V> extends RedisTemplate<K, V> {
 		try {
 			return super.execute(session);
 		} catch (Exception ex) {
-			LOGGER.error("Error executing cache operation", ex);
+			LOGGER.error(EXECUTING_CACHE_OPERATION_ERROR, ex);
 			return null;
 		}
 	}

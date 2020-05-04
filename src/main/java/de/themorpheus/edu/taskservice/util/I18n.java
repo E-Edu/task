@@ -1,6 +1,10 @@
 package de.themorpheus.edu.taskservice.util;
 
-public class i18n {
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class I18n {
 
 	public static final String MISSING_PARAM = "MISSING_PARAM";
 	public static final String NOT_FOUND = "NOT_FOUND";

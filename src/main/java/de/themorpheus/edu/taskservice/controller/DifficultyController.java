@@ -6,6 +6,7 @@ import de.themorpheus.edu.taskservice.endpoint.dto.request.CreateDifficultyReque
 import de.themorpheus.edu.taskservice.endpoint.dto.response.GetAllDifficultiesResponseDTO;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
+import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -74,6 +75,13 @@ public class DifficultyController {
 		this.difficultyRepository.delete(difficulty);
 
 		return ControllerResult.empty();
+	}
+
+	public ControllerResult<DifficultyModel> getDifficultyByIdOrNameKey(int id, String nameKey) {
+		if (Validation.greaterZero(id)) return this.getDifficulty(id);
+		if (Validation.validateNotNullOrEmpty(nameKey)) return this.getDifficultyByNameKey(nameKey);
+
+		return ControllerResult.of(Error.MISSING_PARAM, NAME_KEY);
 	}
 
 }

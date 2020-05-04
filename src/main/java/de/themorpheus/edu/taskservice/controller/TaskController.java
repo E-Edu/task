@@ -22,7 +22,6 @@ import de.themorpheus.edu.taskservice.util.Constants;
 import de.themorpheus.edu.taskservice.util.ControllerResult;
 import de.themorpheus.edu.taskservice.util.Error;
 import de.themorpheus.edu.taskservice.util.PaginationManager;
-import de.themorpheus.edu.taskservice.util.Validation;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,42 +50,29 @@ public class TaskController implements UserDataHandler {
 	@Autowired private UserBanRepository userBanRepository;
 
 	public ControllerResult<TaskResponseDTO> createTask(CreateTaskRequestDTO dto) {
-		ControllerResult<LectureModel> lectureResult;
-		if (Validation.greaterZero(dto.getLectureId()))
-			lectureResult = this.lectureController.getLectureRaw(dto.getLectureId());
-		else if (Validation.validateNotNullOrEmpty(dto.getLectureNameKey()))
-			lectureResult = this.lectureController.getLectureByNameKeyRaw(dto.getLectureNameKey());
-		else return ControllerResult.of(Error.MISSING_PARAM, Constants.Lecture.NAME_KEY);
+		ControllerResult<LectureModel> lectureResult = this.lectureController
+				.getLectureByIdOrNameKey(dto.getLectureId(), dto.getLectureNameKey());
+		if (lectureResult.isResultPresent()) return ControllerResult.ret(lectureResult);
 
-		ControllerResult<TaskTypeModel> taskTypeResult;
-		if (Validation.greaterZero(dto.getTaskTypeId()))
-			taskTypeResult = this.taskTypeController.getTaskType(dto.getTaskTypeId());
-		else if (Validation.validateNotNullOrEmpty(dto.getTaskTypeNameKey()))
-			taskTypeResult = this.taskTypeController.getTaskTypeByNameKey(dto.getTaskTypeNameKey());
-		else return ControllerResult.of(Error.MISSING_PARAM, Constants.TaskType.NAME_KEY);
+		ControllerResult<TaskTypeModel> taskTypeResult = this.taskTypeController
+				.getTaskTypeByIdOrNameKey(dto.getTaskTypeId(), dto.getTaskTypeNameKey());
+		if (taskTypeResult.isResultPresent()) return ControllerResult.ret(taskTypeResult);
 
-		ControllerResult<DifficultyModel> difficultyResult;
-		if (Validation.greaterZero(dto.getDifficultyId()))
-			difficultyResult = this.difficultyController.getDifficulty(dto.getDifficultyId());
-		else if (Validation.validateNotNullOrEmpty(dto.getDifficultyNameKey()))
-			difficultyResult = this.difficultyController.getDifficultyByNameKey(dto.getDifficultyNameKey());
-		else return ControllerResult.of(Error.MISSING_PARAM, Constants.Difficulty.NAME_KEY);
-
-		if (lectureResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, Constants.Lecture.NAME_KEY);
-		if (difficultyResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, Constants.Difficulty.NAME_KEY);
-		if (taskTypeResult.isResultNotPresent()) return ControllerResult.of(Error.NOT_FOUND, Constants.TaskType.NAME_KEY);
+		ControllerResult<DifficultyModel> difficultyResult = this.difficultyController
+				.getDifficultyByIdOrNameKey(dto.getDifficultyId(), dto.getDifficultyNameKey());
+		if (difficultyResult.isResultPresent()) return ControllerResult.ret(difficultyResult);
 
 		TaskModel task = new TaskModel(
-			-1,
-			dto.getDescription(),
-			dto.getTask(),
-			Constants.UserId.TEST_UUID,
-			dto.getNecessaryPoints(),
-			false,
-			dto.getLanguage(),
-			lectureResult.getResult(),
-			taskTypeResult.getResult(),
-			difficultyResult.getResult()
+				-1,
+				dto.getDescription(),
+				dto.getTask(),
+				Constants.UserId.TEST_UUID,
+				dto.getNecessaryPoints(),
+				false,
+				dto.getLanguage(),
+				lectureResult.getResult(),
+				taskTypeResult.getResult(),
+				difficultyResult.getResult()
 		);
 
 		return ControllerResult.of(this.taskRepository.save(task).toResponseDTO());
@@ -96,35 +82,23 @@ public class TaskController implements UserDataHandler {
 		Optional<TaskModel> optionalTask = this.taskRepository.findById(dto.getTaskId());
 		if (!optionalTask.isPresent()) return ControllerResult.of(Error.NOT_FOUND, NAME_KEY);
 
-		ControllerResult<LectureModel> lectureResult;
-		if (Validation.greaterZero(dto.getLectureId()))
-			lectureResult = this.lectureController.getLectureRaw(dto.getLectureId());
-		else if (Validation.validateNotNullOrEmpty(dto.getLectureNameKey()))
-			lectureResult = this.lectureController.getLectureByNameKeyRaw(dto.getLectureNameKey());
-		else lectureResult = ControllerResult.of(Error.MISSING_PARAM, Constants.Lecture.NAME_KEY);
+		ControllerResult<LectureModel> lectureResult = this.lectureController
+				.getLectureByIdOrNameKey(dto.getLectureId(), dto.getLectureNameKey());
 
-		ControllerResult<TaskTypeModel> taskTypeResult;
-		if (Validation.greaterZero(dto.getTaskTypeId()))
-			taskTypeResult = this.taskTypeController.getTaskType(dto.getTaskTypeId());
-		else if (Validation.validateNotNullOrEmpty(dto.getTaskTypeNameKey()))
-			taskTypeResult = this.taskTypeController.getTaskTypeByNameKey(dto.getTaskTypeNameKey());
-		else taskTypeResult = ControllerResult.of(Error.MISSING_PARAM, Constants.TaskType.NAME_KEY);
+		ControllerResult<TaskTypeModel> taskTypeResult = this.taskTypeController
+				.getTaskTypeByIdOrNameKey(dto.getTaskTypeId(), dto.getTaskTypeNameKey());
 
-		ControllerResult<DifficultyModel> difficultyResult;
-		if (Validation.greaterZero(dto.getDifficultyId()))
-			difficultyResult = this.difficultyController.getDifficulty(dto.getDifficultyId());
-		else if (Validation.validateNotNullOrEmpty(dto.getDifficultyNameKey()))
-			difficultyResult = this.difficultyController.getDifficultyByNameKey(dto.getDifficultyNameKey());
-		else difficultyResult = ControllerResult.of(Error.MISSING_PARAM, Constants.Difficulty.NAME_KEY);
+		ControllerResult<DifficultyModel> difficultyResult = this.difficultyController
+				.getDifficultyByIdOrNameKey(dto.getDifficultyId(), dto.getDifficultyNameKey());
 
 		TaskModel task = optionalTask.get();
-		if (lectureResult.isResultPresent()) task.setLectureId(lectureResult.getResult());
-		if (taskTypeResult.isResultPresent()) task.setTaskTypeId(taskTypeResult.getResult());
-		if (difficultyResult.isResultPresent()) task.setDifficultyId(difficultyResult.getResult());
-		if (Validation.validateNotNullOrEmpty(dto.getTask())) task.setTask(dto.getTask());
-		if (Validation.validateNotNullOrEmpty(dto.getDescription())) task.setDescription(dto.getDescription());
-		if (Validation.greaterZero(dto.getNecessaryPoints())) task.setNecessaryPoints(dto.getNecessaryPoints());
-		if (Validation.validateNotNullOrEmpty(dto.getLanguage())) task.setLanguage(dto.getLanguage());
+		task.updateTask(dto.getTask())
+				.updateDescription(dto.getDescription())
+				.updateLanguage(dto.getLanguage())
+				.updateNecessaryPoints(dto.getNecessaryPoints())
+				.updateLecture(lectureResult)
+				.updateTaskType(taskTypeResult)
+				.updateDifficulty(difficultyResult);
 
 		return ControllerResult.of(this.taskRepository.save(task).toResponseDTO());
 	}
@@ -243,7 +217,7 @@ public class TaskController implements UserDataHandler {
 
 		TaskModel task = optionalTask.get();
 		if (taskDoneRepository.existsByTaskIdAndUserId(task, Constants.UserId.TEST_UUID))
-			return ControllerResult.of(Error.ALREADY_EXISTS, Constants.Task.TaskDone.NAME_KEY);
+			return ControllerResult.of(Error.ALREADY_EXISTS, Constants.Task.Done.NAME_KEY);
 
 		TaskDoneModel taskDone = taskDoneRepository.save(new TaskDoneModel(
 				-1,

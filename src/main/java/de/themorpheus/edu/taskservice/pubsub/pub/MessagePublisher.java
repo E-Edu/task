@@ -16,7 +16,7 @@ public class MessagePublisher {
 	@Autowired private Map<Class<?>, Topic> topics;
 
 	public void publish(Object message) {
-		if (!PubSubService.ENABLED) return;
+		if (!PubSubService.isENABLED()) return;
 		this.redisTemplate.convertAndSend(this.topics.get(message.getClass()).getTopic(), message);
 	}
 
