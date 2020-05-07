@@ -3,6 +3,9 @@ package de.themorpheus.edu.taskservice.controller.solution;
 import de.themorpheus.edu.taskservice.database.model.solution.SolutionModel;
 import javax.annotation.PostConstruct;
 
+/**
+ * This interface has to be implemented by all <i>GenericSolutionControllers</i>.
+ */
 interface Solution {
 
 	/**

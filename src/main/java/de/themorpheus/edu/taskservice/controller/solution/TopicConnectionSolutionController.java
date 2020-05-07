@@ -32,8 +32,7 @@ public class TopicConnectionSolutionController implements Solution {
 		ControllerResult<SolutionModel> solutionResult = this.solutionController.getOrCreateSolution(dto.getTaskId(), NAME_KEY);
 		if (solutionResult.isResultNotPresent()) return ControllerResult.ret(solutionResult);
 
-		if (dto.getPointB() == null && this.topicConnectionSolutionRepository.existsBySolutionIdAndPointA(solutionResult.getResult(), dto.getPointA()))
-			return ControllerResult.of(Error.ALREADY_EXISTS, NAME_KEY);
+		if (dto.getPointB() == null) dto.setPointB(dto.getPointA());
 		if (this.topicConnectionSolutionRepository.existsBySolutionIdAndPointAAndPointB(solutionResult.getResult(), dto.getPointA(), dto.getPointB()))
 			return ControllerResult.of(Error.ALREADY_EXISTS, NAME_KEY);
 
@@ -43,7 +42,7 @@ public class TopicConnectionSolutionController implements Solution {
 						solutionResult.getResult(),
 						dto.getPointA(),
 						dto.getPointB()
-						)
+					)
 				);
 
 		return ControllerResult.of(new CreateTopicConnectionSolutionResponseDTO(
@@ -94,8 +93,8 @@ public class TopicConnectionSolutionController implements Solution {
 		List<String> points = new ArrayList<>();
 		for (TopicConnectionSolutionModel topicConnectionSolution : topicConnectionSolutions) {
 			if (!points.contains(topicConnectionSolution.getPointA())) points.add(topicConnectionSolution.getPointA());
-			if (topicConnectionSolution.getPointB() != null)
-				if (!points.contains(topicConnectionSolution.getPointB())) points.add(topicConnectionSolution.getPointB());
+			if (topicConnectionSolution.getPointB() != null && !points.contains(topicConnectionSolution.getPointB()))
+				points.add(topicConnectionSolution.getPointB());
 		}
 
 		return ControllerResult.of(new GetTopicConnectionSolutionResponseDTO(points));

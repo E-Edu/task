@@ -2,8 +2,6 @@ package de.themorpheus.edu.taskservice.endpoint.dto.request;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,17 +11,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateTaskRequestDTO {
 
-	@NotNull @NotBlank @NotEmpty
+	@NotBlank
 	private String task;
-	@Min(0)
+	@Min(1)
 	private int necessaryPoints;
 	private String description;
+	@NotBlank
+	private String language;
 
-	@NotNull @NotBlank @NotEmpty
 	private String lectureNameKey;
-	@NotNull @NotBlank @NotEmpty
+	private int lectureId;
 	private String taskTypeNameKey;
-	@NotNull @NotBlank @NotEmpty
+	private int taskTypeId;
 	private String difficultyNameKey;
+	private int difficultyId;
 
 }

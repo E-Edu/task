@@ -16,7 +16,6 @@ public class CreateTopicConnectionSolutionRequestDTO {
 
 	@NotBlank
 	private String pointA;
-	@NotBlank
 	private String pointB;
 
 }

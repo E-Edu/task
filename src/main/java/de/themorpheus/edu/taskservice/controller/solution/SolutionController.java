@@ -66,7 +66,7 @@ public class SolutionController {
 	 * @return the existing solution or a new instance
 	 */
 	protected ControllerResult<SolutionModel> getOrCreateSolution(int taskId, String solutionTypeNameKey) {
-		ControllerResult<TaskModel> taskModelControllerResult = this.taskController.getTaskByTaskId(taskId);
+		ControllerResult<TaskModel> taskModelControllerResult = this.taskController.getTaskRaw(taskId);
 		if (taskModelControllerResult.isResultNotPresent()) return ControllerResult.ret(taskModelControllerResult);
 
 		Optional<SolutionModel> optionalSolution = this.solutionRepository.findSolutionModelByTaskId(taskModelControllerResult.getResult());

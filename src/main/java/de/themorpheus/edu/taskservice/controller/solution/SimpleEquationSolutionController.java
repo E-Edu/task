@@ -47,7 +47,7 @@ public class SimpleEquationSolutionController implements Solution {
 						-1,
 						solution,
 						step
-						)
+					)
 				).toCreateResponseDTOModel());
 
 		responseDTO.getSteps().addAll(createSimpleEquationSolutionResponseDTOs);

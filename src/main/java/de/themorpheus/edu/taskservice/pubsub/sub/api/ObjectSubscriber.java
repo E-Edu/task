@@ -25,7 +25,7 @@ public interface ObjectSubscriber<T> extends Subscriber<Message> {
 
 	@PostConstruct
 	default void registerSubscription() {
-		if (!PubSubService.ENABLED) return;
+		if (!PubSubService.isENABLED()) return;
 		this.getMessageListenerContainer().addMessageListener(this, this.getTopics().get(this.getMessageClass()));
 	}
 
