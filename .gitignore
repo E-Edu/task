@@ -203,3 +203,5 @@ mvnw.cmd
 /task-microservice-mariadb-data/
 
 .sentryEnabled
+
+./redis/dump.rdb
