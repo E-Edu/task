@@ -8,7 +8,7 @@
 		<version>2.3.0.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>de.the-morpheus.e-du</groupId>
+	<groupId>com.gewia</groupId>
 	<artifactId>task-service</artifactId> <!-- D NOT CHANGE this! -->
 	<version>0.1-SNAPSHOT</version> <!-- D NOT CHANGE this! -->
 	<name>task-service</name> <!-- D NOT CHANGE this! -->
