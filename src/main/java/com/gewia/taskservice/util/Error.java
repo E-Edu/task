@@ -51,7 +51,8 @@ public class Error extends ResponseEntity<Object> {
 	}
 
 	public Error copyWithExtra(String extra) {
-		return new Error(HttpStatus.resolve(this.getStatus()), this.getMessageKey(), extra);
+		HttpStatus httpStatus = HttpStatus.resolve(this.getStatus());
+		return new Error(httpStatus == null ? BAD_REQUEST : httpStatus, this.getMessageKey(), extra);
 	}
 
 	@Data

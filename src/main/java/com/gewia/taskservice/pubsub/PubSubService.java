@@ -11,6 +11,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.PatternTopic;
@@ -54,8 +55,11 @@ public class PubSubService {
 	public JedisConnectionFactory jedisConnectionFactory() {
 		JedisConnectionFactory factory = new JedisConnectionFactory();
 
-		factory.getStandaloneConfiguration().setHostName(this.redisHost);
-		factory.getStandaloneConfiguration().setPort(this.redisPort);
+		RedisStandaloneConfiguration config = factory.getStandaloneConfiguration();
+		if (config != null) {
+			config.setHostName(this.redisHost);
+			config.setPort(this.redisPort);
+		}
 
 		return factory;
 	}
