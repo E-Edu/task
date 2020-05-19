@@ -52,15 +52,15 @@ public class TaskController implements UserDataHandler {
 	public ControllerResult<TaskResponseDTO> createTask(CreateTaskRequestDTO dto) {
 		ControllerResult<LectureModel> lectureResult = this.lectureController
 				.getLectureByIdOrNameKey(dto.getLectureId(), dto.getLectureNameKey());
-		if (lectureResult.isResultPresent()) return ControllerResult.ret(lectureResult);
+		if (lectureResult.isResultNotPresent()) return ControllerResult.ret(lectureResult);
 
 		ControllerResult<TaskTypeModel> taskTypeResult = this.taskTypeController
 				.getTaskTypeByIdOrNameKey(dto.getTaskTypeId(), dto.getTaskTypeNameKey());
-		if (taskTypeResult.isResultPresent()) return ControllerResult.ret(taskTypeResult);
+		if (taskTypeResult.isResultNotPresent()) return ControllerResult.ret(taskTypeResult);
 
 		ControllerResult<DifficultyModel> difficultyResult = this.difficultyController
 				.getDifficultyByIdOrNameKey(dto.getDifficultyId(), dto.getDifficultyNameKey());
-		if (difficultyResult.isResultPresent()) return ControllerResult.ret(difficultyResult);
+		if (difficultyResult.isResultNotPresent()) return ControllerResult.ret(difficultyResult);
 
 		TaskModel task = new TaskModel(
 				-1,
