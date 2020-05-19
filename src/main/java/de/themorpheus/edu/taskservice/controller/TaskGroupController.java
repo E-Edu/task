@@ -41,6 +41,7 @@ public class TaskGroupController implements UserDataHandler {
 	public ControllerResult<TaskGroupResponseDTO> createTaskGroup(CreateTaskGroupRequestDTO dto) {
 		ControllerResult<LectureModel> lectureResult = this.lectureController
 				.getLectureByIdOrNameKey(dto.getLectureId(), dto.getLectureNameKey());
+		if (lectureResult.isResultNotPresent()) return ControllerResult.ret(lectureResult);
 
 		ControllerResult<DifficultyModel> difficultyResult = this.difficultyController
 				.getDifficultyByIdOrNameKey(dto.getDifficultyId(), dto.getDifficultyNameKey());
