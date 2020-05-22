@@ -1,7 +1,21 @@
 # E-Edu Task Microservice
 
 This projects contains the source code for the task microservice which
-is responsible for everything related to tasks in the E-Edu system.
+is responsible for everything related to tasks in the [E-Edu System](https://github.com/E-Edu).
+
+## Contribute
+
+You want to contribute to this project? Great!
+
+[Concept and Documentation](https://github.com/E-Edu/concept)<br>
+[Task Ms Conventions](./CONTRIBUTING.md)<br>
+[Git Workflow (German)](https://github.com/E-Edu/general/blob/master/guides/conventions.md)<br>
+
+## Issues
+
+##### Any Bugs, Feature Request or Improvements?
+
+[Write us an issue!](https://github.com/E-Edu/task/issues/new/choose)
 
 ## How to build
 Run:
@@ -13,14 +27,6 @@ Run:
 
 or in detached mode:
 ```sudo docker-compose up -d```
-
-## Contribute
-
-You want to contribute to this project? Great!
-
-[Drafts & Documentation](https://github.com/E-Edu/draft-documents)<br>
-[Git Workflow (German)](https://github.com/E-Edu/general/blob/master/guides/conventions.md)<br>
-[Code Style (German)](https://github.com/E-Edu/general/blob/master/guides/conventions.md#code-style)
 
 ## Sentry error report
 
