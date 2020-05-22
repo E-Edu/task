@@ -1,7 +1,7 @@
-# E-Edu Task Microservice
+# Gewia Task Microservice
 
 This projects contains the source code for the task microservice which
-is responsible for everything related to tasks in the E-Edu system.
+is responsible for everything related to tasks in the Gewia system.
 
 ## How to build
 Run:
@@ -18,8 +18,8 @@ or in detached mode:
 
 You want to contribute to this project? Great!
 
-[Drafts & Documentation](https://github.com/E-Edu/draft-documents)<br>
-[Git Workflow (German)](https://github.com/E-Edu/general/blob/master/guides/conventions.md)<br>
+[Drafts & Documentation](https://github.com/E-Edu/draft-documents) <br>
+[Git Workflow (German)](https://github.com/E-Edu/general/blob/master/guides/conventions.md) <br>
 [Code Style (German)](https://github.com/E-Edu/general/blob/master/guides/conventions.md#code-style)
 
 ## Sentry error report
