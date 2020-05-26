@@ -40,7 +40,7 @@ public class TaskEndpoint {
 	public Object getAllTasksFromLecture(@PathVariable @Min(1) int lectureId,
 										 @RequestParam(required = false) boolean showBanned,
 										 @RequestParam(required = false, defaultValue = "0") int skip,
-										 @RequestParam(required = false, defaultValue = "0") int max) {
+										 @RequestParam(required = false, defaultValue = "1") int max) {
 		return this.taskController.getTasksByLectureId(lectureId, showBanned, skip, max).getHttpResponse();
 	}
 
@@ -48,7 +48,7 @@ public class TaskEndpoint {
 	public Object getAllTasksFromLectureByLectureNameKey(@PathVariable @NotBlank String lectureNameKey,
 														 @RequestParam(required = false) boolean showBanned,
 														 @RequestParam(required = false, defaultValue = "0") int skip,
-														 @RequestParam(required = false, defaultValue = "0") int max) {
+														 @RequestParam(required = false, defaultValue = "1") int max) {
 		return this.taskController.getTasksByLectureNameKey(lectureNameKey, showBanned, skip, max).getHttpResponse();
 	}
 
@@ -90,13 +90,13 @@ public class TaskEndpoint {
 	@GetMapping("/task/user/{userId}")
 	public Object getTaskByUser(@PathVariable @NotNull UUID userId,
 								@RequestParam(required = false, defaultValue = "0") int skip,
-								@RequestParam(required = false, defaultValue = "0") int max) {
+								@RequestParam(required = false, defaultValue = "1") int max) {
 		return this.taskController.getTaskByUserId(userId, skip, max).getHttpResponse();
 	}
 
 	@GetMapping("/task/own")
 	public Object getOwnTasks(@RequestParam(required = false, defaultValue = "0") int skip,
-							  @RequestParam(required = false, defaultValue = "0") int max) {
+							  @RequestParam(required = false, defaultValue = "1") int max) {
 		return this.taskController.getTaskByUserId(Constants.UserId.TEST_UUID, skip, max).getHttpResponse();
 	}
 
