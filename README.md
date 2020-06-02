@@ -1,3 +1,9 @@
+![Build](https://github.com/Gewia/task-ms/workflows/Build/badge.svg?style=flat&logo=appveyor)
+![GitHub](https://img.shields.io/github/license/Gewia/task-ms)
+[![GitHub contributors](https://img.shields.io/github/contributors/Gewia/task-ms.svg?style=flat)](https://GitHub.com/Gewia/task-ms/graphs/contributors/)
+[![Discord](https://img.shields.io/discord/691078100272021514?color=7289DA&label=discord&logo=discord&logoColor=white)](https://discord.gg/XW5jzs6)
+[![Website](https://img.shields.io/website?down_color=red&down_message=offline&up_message=online&url=https%3A%2F%2Ftask.gewia.com)](https://task.gewia.com)
+
 # Gewia Task Microservice
 
 This projects contains the source code for the task microservice which
