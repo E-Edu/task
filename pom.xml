@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>io.sentry</groupId>
 			<artifactId>sentry-log4j2</artifactId>
-			<version>1.7.30</version>
+			<version>3.2.1</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
