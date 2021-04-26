@@ -239,7 +239,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.0.0</version>
+				<version>4.2.3</version>
 				<configuration>
 					<omitVisitors>FindReturnRef</omitVisitors>
 					<failOnError>true</failOnError>
@@ -277,7 +277,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.0.0</version>
+				<version>4.2.3</version>
 			</plugin>
 		</plugins>
 	</reporting>
